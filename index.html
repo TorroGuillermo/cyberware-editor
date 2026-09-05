@@ -25,31 +25,19 @@
   }
   .body-container {
     position: relative;
-    width: 200px;
-    height: 500px;
-  }
-  .skeleton {
     width: 100%;
-    height: 100%;
-    border: 1px solid #ff3b3b33;
+    max-width: 700px;
+  }
+  .body-container img {
+    width: 100%;
+    display: block;
     border-radius: 8px;
-    background: repeating-linear-gradient(
-      180deg,
-      #0f141c,
-      #0f141c 20px,
-      #131924 20px,
-      #131924 21px
-    );
   }
   .zone {
     position: absolute;
     border: 1px dashed #ff3b3b66;
     border-radius: 6px;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
     transition: all 0.2s ease;
   }
   .zone:hover {
@@ -60,12 +48,13 @@
     box-shadow: 0 0 15px #ff3b3b88;
     border-color: #ff3b3b;
   }
-  .head   { top: 10px;  left: 60px; width: 80px; height: 60px; }
-  .arm-l  { top: 90px;  left: 10px; width: 40px; height: 150px; }
-  .arm-r  { top: 90px;  left: 150px;width: 40px; height: 150px; }
-  .torso  { top: 90px;  left: 60px; width: 80px; height: 140px; }
-  .leg-l  { top: 250px; left: 60px; width: 35px; height: 220px; }
-  .leg-r  { top: 250px; left: 105px;width: 35px; height: 220px; }
+  /* Positions en % pour rester proportionnel quelle que soit la taille d'affichage */
+  .head   { top: 27.5%; left: 46.8%; width: 6.5%;  height: 11.8%; }
+  .torso  { top: 38%;   left: 42.1%; width: 15.7%; height: 22.3%; }
+  .arm-l  { top: 39.3%; left: 38.4%; width: 4.2%;  height: 26.2%; }
+  .arm-r  { top: 39.3%; left: 57.9%; width: 4.2%;  height: 26.2%; }
+  .leg-l  { top: 60.3%; left: 43.5%; width: 4.2%;  height: 30.1%; }
+  .leg-r  { top: 60.3%; left: 51.4%; width: 4.2%;  height: 30.1%; }
 
   .status {
     margin-top: 30px;
@@ -82,11 +71,11 @@
   <p class="instructions">Clique sur une zone du corps pour (dés)installer du cyberware.<br>Prototype v1 — pas encore sauvegardé entre visiteurs.</p>
 
   <div class="body-container">
-    <div class="skeleton"></div>
+    <img src="skeleton.png" alt="Squelette cyberpunk">
     <div class="zone head"  data-name="Œil cybernétique"></div>
+    <div class="zone torso" data-name="Torse / Internal"></div>
     <div class="zone arm-l" data-name="Bras gauche"></div>
     <div class="zone arm-r" data-name="Bras droit"></div>
-    <div class="zone torso" data-name="Torse / Internal"></div>
     <div class="zone leg-l" data-name="Jambe gauche"></div>
     <div class="zone leg-r" data-name="Jambe droite"></div>
   </div>
