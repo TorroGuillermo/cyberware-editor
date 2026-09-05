@@ -13,6 +13,10 @@
     --red-dim: #b5333a;
     --amber: #e0a940;
     --amber-dim: #b5872f;
+    --purple: #a978d9;
+    --purple-dim: #7d569f;
+    --blue: #4ea3d1;
+    --blue-dim: #38759a;
     --text: #d8dce2;
     --text-dim: #7d8590;
   }
@@ -27,40 +31,40 @@
     color: var(--text);
     font-family: 'Courier New', monospace;
     margin: 0;
-    padding: 30px;
+    padding: 36px;
     min-height: 100vh;
   }
 
   h1 {
-    font-size: 15px;
+    font-size: 16px;
     letter-spacing: 4px;
     text-transform: uppercase;
     color: var(--red);
-    margin: 0 0 25px 0;
-    padding-bottom: 10px;
+    margin: 0 0 28px 0;
+    padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
   }
 
   .layout {
     display: flex;
-    gap: 20px;
+    gap: 24px;
     align-items: flex-start;
-    max-width: 1400px;
+    max-width: 1600px;
   }
 
   .panel {
     background: var(--bg-panel);
     border: 1px solid var(--border);
     border-radius: 4px;
-    padding: 16px 18px;
+    padding: 18px 20px;
   }
 
   .panel-title {
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--text-dim);
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -68,10 +72,44 @@
 
   /* ---- Colonne gauche : stats + barres ---- */
   .left-column {
-    width: 300px;
+    width: 340px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 18px;
+    flex-shrink: 0;
+  }
+
+  /* ---- Profils ---- */
+  .profiles {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    margin-bottom: 16px;
+  }
+  .profile-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 8.5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 7px 2px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .15s ease;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .profile-btn:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .profile-btn.active {
+    background: var(--red);
+    border-color: var(--red);
+    color: #000;
+    font-weight: bold;
   }
 
   .points-remaining {
@@ -84,30 +122,30 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 6px 0;
+    padding: 7px 0;
     border-bottom: 1px solid #ffffff0d;
   }
   .stat-row:last-child { border-bottom: none; }
 
   .stat-name {
-    font-size: 12px;
+    font-size: 13px;
     color: var(--text);
-    width: 100px;
+    width: 110px;
   }
 
   .stat-controls {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 9px;
   }
 
   .stat-btn {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     border: 1px solid var(--border-strong);
     background: transparent;
     color: var(--red);
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1;
     cursor: pointer;
     border-radius: 3px;
@@ -124,9 +162,9 @@
   .stat-btn:disabled:hover { background: transparent; color: var(--red); }
 
   .stat-value {
-    width: 36px;
+    width: 38px;
     text-align: center;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
     color: var(--amber);
     letter-spacing: 1px;
@@ -140,24 +178,27 @@
   }
 
   /* ---- Barres ---- */
-  .bar-block { margin-bottom: 4px; }
+  .bar-block { margin-bottom: 18px; }
+  .bar-block:last-child { margin-bottom: 0; }
 
   .bar-label {
     display: flex;
     justify-content: space-between;
-    font-size: 10px;
+    font-size: 10.5px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
   }
 
   .bar-label .name.humanite { color: var(--red); }
   .bar-label .name.cybercap { color: var(--amber); }
+  .bar-label .name.ram { color: var(--purple); }
+  .bar-label .name.glace { color: var(--blue); }
   .bar-label .value { color: var(--text-dim); }
 
   .bar-track {
     position: relative;
-    height: 14px;
+    height: 15px;
     background: #05070a;
     border: 1px solid var(--border);
     border-radius: 2px;
@@ -176,49 +217,69 @@
     background: linear-gradient(90deg, var(--amber-dim), var(--amber));
     box-shadow: 0 0 8px #e0a94066;
   }
-
-  .bar-pips {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    display: flex;
+  .bar-fill.ram {
+    background: linear-gradient(90deg, var(--purple-dim), var(--purple));
+    box-shadow: 0 0 8px #a978d966;
   }
-  .pip-divider {
-    flex: 1;
-    border-right: 1px solid #00000099;
+  .bar-fill.glace {
+    background: linear-gradient(90deg, var(--blue-dim), var(--blue));
+    box-shadow: 0 0 8px #4ea3d166;
   }
-  .pip-divider:last-child { border-right: none; }
 
-  .bar-max-input {
-    background: transparent;
-    border: none;
-    border-bottom: 1px dashed var(--text-dim);
-    color: var(--text-dim);
-    font-family: inherit;
-    font-size: 10px;
-    width: 40px;
-    text-align: right;
-  }
-  .bar-max-input:focus { outline: none; border-color: var(--amber); }
-
-  .bar-config {
+  .bar-setup {
     display: flex;
     justify-content: flex-end;
-    gap: 6px;
+    align-items: center;
+    gap: 8px;
+    margin-top: 7px;
+  }
+  .bar-setup .setup-label {
     font-size: 9px;
     color: var(--text-dim);
+    margin-right: auto;
+  }
+  .stepper-btn {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--text);
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s ease;
+  }
+  .stepper-btn:hover { background: var(--text); color: #000; }
+  .stepper-btn:disabled { opacity: 0.25; cursor: not-allowed; }
+  .stepper-btn:disabled:hover { background: transparent; color: var(--text); }
+
+  .stepper-value {
+    font-size: 11px;
+    color: var(--text-dim);
+    min-width: 34px;
+    text-align: center;
+  }
+
+  .bar-note {
+    font-size: 8.5px;
+    color: #545c66;
     margin-top: 4px;
+    font-style: italic;
   }
 
   /* placeholder zones for next phases */
   .placeholder {
     flex: 1;
-    min-height: 500px;
+    min-height: 560px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-dim);
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 1px;
     border-style: dashed;
   }
@@ -230,10 +291,19 @@
 
   <div class="layout">
 
-    <!-- COLONNE GAUCHE : Stats + Barres -->
+    <!-- COLONNE GAUCHE : Profils + Stats + Barres -->
     <div class="left-column">
 
       <div class="panel">
+        <div class="panel-title"><span>Profil</span></div>
+        <div class="profiles" id="profiles">
+          <button class="profile-btn" data-profile="ASSAUT">Assaut</button>
+          <button class="profile-btn" data-profile="TANK">Tank</button>
+          <button class="profile-btn" data-profile="NETRUNNER">Netrunner</button>
+          <button class="profile-btn" data-profile="SAMOURAI">Samouraï</button>
+          <button class="profile-btn" data-profile="TIREUR">Tireur</button>
+        </div>
+
         <div class="panel-title">
           <span>Statistiques</span>
           <span class="points-remaining" id="pointsRemaining">10 pts restants</span>
@@ -244,34 +314,69 @@
       <div class="panel">
         <div class="panel-title"><span>État du personnage</span></div>
 
+        <!-- HUMANITÉ -->
         <div class="bar-block">
           <div class="bar-label">
             <span class="name humanite">Humanité</span>
-            <span class="value" id="humaniteValue">100%</span>
+            <span class="value" id="humaniteValue">100 / 100</span>
           </div>
           <div class="bar-track">
             <div class="bar-fill humanite" id="humaniteFill" style="width:100%"></div>
-            <div class="bar-pips" id="humanitePips"></div>
           </div>
-          <div class="bar-config">
-            <span>Paliers :</span>
-            <input type="number" class="bar-max-input" id="humanitePaliers" value="5" min="1" max="20">
-          </div>
+          <div class="bar-note">100 par défaut, décroît selon les implants installés.</div>
         </div>
 
-        <div class="bar-block" style="margin-top:14px;">
+        <!-- CYBERCAPACITÉ -->
+        <div class="bar-block">
           <div class="bar-label">
             <span class="name cybercap">Cybercapacité</span>
-            <span class="value" id="cybercapValue">0 / 500</span>
+            <span class="value" id="cybercapValue">0 / 0</span>
           </div>
           <div class="bar-track">
             <div class="bar-fill cybercap" id="cybercapFill" style="width:0%"></div>
-            <div class="bar-pips" id="cybercapPips"></div>
           </div>
-          <div class="bar-config">
-            <span>Max :</span>
-            <input type="number" class="bar-max-input" id="cybercapMax" value="500" min="1" step="10">
+          <div class="bar-setup">
+            <span class="setup-label">Max du perso (500 max)</span>
+            <button class="stepper-btn" data-target="cybercap" data-dir="-1">−</button>
+            <span class="stepper-value" id="cybercapMaxDisplay">0</span>
+            <button class="stepper-btn" data-target="cybercap" data-dir="1">+</button>
           </div>
+        </div>
+
+        <!-- RAM -->
+        <div class="bar-block">
+          <div class="bar-label">
+            <span class="name ram">RAM</span>
+            <span class="value" id="ramValue">0 / 0</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill ram" id="ramFill" style="width:0%"></div>
+          </div>
+          <div class="bar-setup">
+            <span class="setup-label">Base du perso (30 max)</span>
+            <button class="stepper-btn" data-target="ram" data-dir="-1">−</button>
+            <span class="stepper-value" id="ramMaxDisplay">0</span>
+            <button class="stepper-btn" data-target="ram" data-dir="1">+</button>
+          </div>
+          <div class="bar-note">Augmente avec certains implants (Phase 2).</div>
+        </div>
+
+        <!-- GLACE -->
+        <div class="bar-block">
+          <div class="bar-label">
+            <span class="name glace">Glace</span>
+            <span class="value" id="glaceValue">0 / 0</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill glace" id="glaceFill" style="width:0%"></div>
+          </div>
+          <div class="bar-setup">
+            <span class="setup-label">Base du perso (100 max)</span>
+            <button class="stepper-btn" data-target="glace" data-dir="-1">−</button>
+            <span class="stepper-value" id="glaceMaxDisplay">0</span>
+            <button class="stepper-btn" data-target="glace" data-dir="1">+</button>
+          </div>
+          <div class="bar-note">Augmente avec certains implants (Phase 2).</div>
         </div>
 
       </div>
@@ -294,12 +399,34 @@
 
   const ROMAN = ["", "I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV"];
 
+  // Maximums absolus des ressources
+  const RESOURCE_CONFIG = {
+    cybercap: { max: 500, step: 10 },
+    ram:      { max: 30,  step: 1  },
+    glace:    { max: 100, step: 5  },
+  };
+
+  // Répartitions de départ par profil — VALEURS PLACEHOLDER, à ajuster librement.
+  // Chaque valeur = points ADDITIONNELS par rapport à la base de 1 (doit totaliser 10).
+  const PROFILES = {
+    ASSAUT:     { Force:4, "Réflexes":2, Vitesse:1, Endurance:3, "Résistance":0, Esprit:0 },
+    TANK:       { Force:2, "Réflexes":0, Vitesse:0, Endurance:4, "Résistance":4, Esprit:0 },
+    NETRUNNER:  { Force:0, "Réflexes":3, Vitesse:2, Endurance:0, "Résistance":1, Esprit:4 },
+    SAMOURAI:   { Force:2, "Réflexes":4, Vitesse:3, Endurance:1, "Résistance":0, Esprit:0 },
+    TIREUR:     { Force:0, "Réflexes":4, Vitesse:3, Endurance:1, "Résistance":0, Esprit:2 },
+  };
+
   // état du personnage (sera étendu avec les implants en phase 2)
   let character = {
     baseStats: Object.fromEntries(STAT_NAMES.map(n => [n, 1])), // départ à I
     implantBonus: Object.fromEntries(STAT_NAMES.map(n => [n, 0])), // viendra des cyberwares (phase 2)
-    humanite: 100,
-    cybercap: 0,
+    humanite: 100,            // baisse via implants (phase 2)
+    cybercapUsed: 0,          // consommé par les implants (phase 2)
+    cybercapMax: 0,           // défini par le joueur via +/-
+    ramBonus: 0,              // ajouté par les implants (phase 2)
+    ramBase: 0,               // défini par le joueur via +/-
+    glaceBonus: 0,            // ajouté par les implants (phase 2)
+    glaceBase: 0,             // défini par le joueur via +/-
   };
 
   function pointsUsed() {
@@ -348,43 +475,78 @@
         if (newVal >= 1 && newVal <= BASE_CAP) {
           if (dir > 0 && pointsUsed() >= TOTAL_POINTS) return;
           character.baseStats[stat] = newVal;
+          document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('active'));
           renderStats();
         }
       });
     });
   }
 
+  // ----- Profils -----
+  document.querySelectorAll('.profile-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const profile = PROFILES[btn.dataset.profile];
+      STAT_NAMES.forEach(name => {
+        character.baseStats[name] = 1 + (profile[name] || 0);
+      });
+      document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderStats();
+    });
+  });
+
+  // ----- Steppers (Cybercapacité / RAM / Glace) -----
+  document.querySelectorAll('.stepper-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.target; // 'cybercap' | 'ram' | 'glace'
+      const dir = parseInt(btn.dataset.dir);
+      const cfg = RESOURCE_CONFIG[target];
+      const key = target === 'cybercap' ? 'cybercapMax' : (target === 'ram' ? 'ramBase' : 'glaceBase');
+      let newVal = character[key] + dir * cfg.step;
+      newVal = Math.max(0, Math.min(cfg.max, newVal));
+      character[key] = newVal;
+      renderBars();
+    });
+  });
+
   // ----- Barres -----
-  function buildPips(container, count) {
-    container.innerHTML = '';
-    for (let i = 0; i < count; i++) {
-      const d = document.createElement('div');
-      d.className = 'pip-divider';
-      container.appendChild(d);
-    }
-  }
-
   function renderBars() {
-    // Humanité (descend depuis 100%)
-    const humaniteFill = document.getElementById('humaniteFill');
-    const humaniteValue = document.getElementById('humaniteValue');
-    humaniteFill.style.width = character.humanite + '%';
-    humaniteValue.textContent = character.humanite + '%';
-    const humanitePaliers = parseInt(document.getElementById('humanitePaliers').value) || 5;
-    buildPips(document.getElementById('humanitePips'), humanitePaliers);
+    // Humanité : toujours base 100, descend via implants (phase 2)
+    const humaniteCurrent = Math.max(0, character.humanite);
+    document.getElementById('humaniteFill').style.width = humaniteCurrent + '%';
+    document.getElementById('humaniteValue').textContent = humaniteCurrent + ' / 100';
 
-    // Cybercapacité (monte vers un max personnalisable)
-    const cybercapMax = parseInt(document.getElementById('cybercapMax').value) || 500;
-    const cybercapFill = document.getElementById('cybercapFill');
-    const cybercapValue = document.getElementById('cybercapValue');
-    const pct = Math.min(100, (character.cybercap / cybercapMax) * 100);
-    cybercapFill.style.width = pct + '%';
-    cybercapValue.textContent = character.cybercap + ' / ' + cybercapMax;
-    buildPips(document.getElementById('cybercapPips'), 10);
+    // Cybercapacité : max défini par le joueur (0-500), rempli par les implants
+    const cybercapPct = character.cybercapMax > 0 ? Math.min(100, (character.cybercapUsed / character.cybercapMax) * 100) : 0;
+    document.getElementById('cybercapFill').style.width = cybercapPct + '%';
+    document.getElementById('cybercapValue').textContent = character.cybercapUsed + ' / ' + character.cybercapMax;
+    document.getElementById('cybercapMaxDisplay').textContent = character.cybercapMax;
+
+    // RAM : base définie par le joueur (0-30) + bonus d'implants
+    const ramTotal = character.ramBase + character.ramBonus;
+    const ramPct = character.ramBase > 0 ? Math.min(100, (ramTotal / character.ramBase) * 100) : 0;
+    document.getElementById('ramFill').style.width = ramPct + '%';
+    document.getElementById('ramValue').textContent = ramTotal + ' / ' + character.ramBase;
+    document.getElementById('ramMaxDisplay').textContent = character.ramBase;
+
+    // Glace : base définie par le joueur (0-100) + bonus d'implants
+    const glaceTotal = character.glaceBase + character.glaceBonus;
+    const glacePct = character.glaceBase > 0 ? Math.min(100, (glaceTotal / character.glaceBase) * 100) : 0;
+    document.getElementById('glaceFill').style.width = glacePct + '%';
+    document.getElementById('glaceValue').textContent = glaceTotal + ' / ' + character.glaceBase;
+    document.getElementById('glaceMaxDisplay').textContent = character.glaceBase;
+
+    // Boutons désactivés en butée
+    document.querySelectorAll('.stepper-btn').forEach(btn => {
+      const target = btn.dataset.target;
+      const dir = parseInt(btn.dataset.dir);
+      const cfg = RESOURCE_CONFIG[target];
+      const key = target === 'cybercap' ? 'cybercapMax' : (target === 'ram' ? 'ramBase' : 'glaceBase');
+      const val = character[key];
+      if (dir < 0) btn.disabled = val <= 0;
+      else btn.disabled = val >= cfg.max;
+    });
   }
-
-  document.getElementById('humanitePaliers').addEventListener('input', renderBars);
-  document.getElementById('cybercapMax').addEventListener('input', renderBars);
 
   renderStats();
   renderBars();
