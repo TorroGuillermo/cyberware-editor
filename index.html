@@ -2,107 +2,393 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Cyberware Editor</title>
+<title>Fiche de personnage — Cyberware Editor</title>
 <style>
+  :root {
+    --bg: #0a0e14;
+    --bg-panel: #10151d;
+    --border: #ff3b3b44;
+    --border-strong: #ff3b3b99;
+    --red: #ff3b3b;
+    --red-dim: #b5333a;
+    --amber: #e0a940;
+    --amber-dim: #b5872f;
+    --text: #d8dce2;
+    --text-dim: #7d8590;
+  }
+
+  * { box-sizing: border-box; }
+
   body {
-    background: #0a0e14;
-    color: #ff3b3b;
-    font-family: monospace;
+    background: var(--bg);
+    background-image:
+      radial-gradient(circle at 50% 0%, #14202b 0%, transparent 60%),
+      repeating-linear-gradient(0deg, rgba(255,59,59,0.02) 0px, rgba(255,59,59,0.02) 1px, transparent 1px, transparent 3px);
+    color: var(--text);
+    font-family: 'Courier New', monospace;
+    margin: 0;
+    padding: 30px;
+    min-height: 100vh;
+  }
+
+  h1 {
+    font-size: 15px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin: 0 0 25px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    max-width: 1400px;
+  }
+
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px 18px;
+  }
+
+  .panel-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ---- Colonne gauche : stats + barres ---- */
+  .left-column {
+    width: 300px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 40px;
-    margin: 0;
+    gap: 16px;
   }
-  h1 {
-    letter-spacing: 3px;
-    text-transform: uppercase;
-  }
-  .instructions {
-    color: #888;
-    margin-bottom: 30px;
-    text-align: center;
-  }
-  .body-container {
-    position: relative;
-    width: 100%;
-    max-width: 700px;
-  }
-  .body-container img {
-    width: 100%;
-    display: block;
-    border-radius: 8px;
-  }
-  .zone {
-    position: absolute;
-    border: 1px dashed #ff3b3b66;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .zone:hover {
-    border-color: #ff3b3b;
-  }
-  .zone.active {
-    background: #ff3b3b33;
-    box-shadow: 0 0 15px #ff3b3b88;
-    border-color: #ff3b3b;
-  }
-  /* Positions en % pour rester proportionnel quelle que soit la taille d'affichage */
-  .head   { top: 27.5%; left: 46.8%; width: 6.5%;  height: 11.8%; }
-  .torso  { top: 38%;   left: 42.1%; width: 15.7%; height: 22.3%; }
-  .arm-l  { top: 39.3%; left: 38.4%; width: 4.2%;  height: 26.2%; }
-  .arm-r  { top: 39.3%; left: 57.9%; width: 4.2%;  height: 26.2%; }
-  .leg-l  { top: 60.3%; left: 43.5%; width: 4.2%;  height: 30.1%; }
-  .leg-r  { top: 60.3%; left: 51.4%; width: 4.2%;  height: 30.1%; }
 
-  .status {
-    margin-top: 30px;
-    font-size: 13px;
-    color: #aaa;
-    max-width: 300px;
+  .points-remaining {
+    font-size: 10px;
+    color: var(--amber);
+  }
+  .points-remaining.zero { color: var(--text-dim); }
+
+  .stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #ffffff0d;
+  }
+  .stat-row:last-child { border-bottom: none; }
+
+  .stat-name {
+    font-size: 12px;
+    color: var(--text);
+    width: 100px;
+  }
+
+  .stat-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .stat-btn {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: var(--red);
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s ease;
+  }
+  .stat-btn:hover { background: var(--red); color: #000; }
+  .stat-btn:disabled {
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+  .stat-btn:disabled:hover { background: transparent; color: var(--red); }
+
+  .stat-value {
+    width: 36px;
     text-align: center;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--amber);
+    letter-spacing: 1px;
+  }
+  .stat-value.locked-boost { color: var(--red); }
+
+  .stat-lock {
+    font-size: 9px;
+    color: var(--text-dim);
+    width: 14px;
+  }
+
+  /* ---- Barres ---- */
+  .bar-block { margin-bottom: 4px; }
+
+  .bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+
+  .bar-label .name.humanite { color: var(--red); }
+  .bar-label .name.cybercap { color: var(--amber); }
+  .bar-label .value { color: var(--text-dim); }
+
+  .bar-track {
+    position: relative;
+    height: 14px;
+    background: #05070a;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    transition: width .3s ease;
+  }
+  .bar-fill.humanite {
+    background: linear-gradient(90deg, var(--red-dim), var(--red));
+    box-shadow: 0 0 8px #ff3b3b66;
+  }
+  .bar-fill.cybercap {
+    background: linear-gradient(90deg, var(--amber-dim), var(--amber));
+    box-shadow: 0 0 8px #e0a94066;
+  }
+
+  .bar-pips {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+  }
+  .pip-divider {
+    flex: 1;
+    border-right: 1px solid #00000099;
+  }
+  .pip-divider:last-child { border-right: none; }
+
+  .bar-max-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed var(--text-dim);
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 10px;
+    width: 40px;
+    text-align: right;
+  }
+  .bar-max-input:focus { outline: none; border-color: var(--amber); }
+
+  .bar-config {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* placeholder zones for next phases */
+  .placeholder {
+    flex: 1;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+    font-size: 11px;
+    letter-spacing: 1px;
+    border-style: dashed;
   }
 </style>
 </head>
 <body>
 
-  <h1>Cyberware Editor</h1>
-  <p class="instructions">Clique sur une zone du corps pour (dés)installer du cyberware.<br>Prototype v1 — pas encore sauvegardé entre visiteurs.</p>
+  <h1>// Fiche de personnage</h1>
 
-  <div class="body-container">
-    <img src="skeleton.png" alt="Squelette cyberpunk">
-    <div class="zone head"  data-name="Œil cybernétique"></div>
-    <div class="zone torso" data-name="Torse / Internal"></div>
-    <div class="zone arm-l" data-name="Bras gauche"></div>
-    <div class="zone arm-r" data-name="Bras droit"></div>
-    <div class="zone leg-l" data-name="Jambe gauche"></div>
-    <div class="zone leg-r" data-name="Jambe droite"></div>
+  <div class="layout">
+
+    <!-- COLONNE GAUCHE : Stats + Barres -->
+    <div class="left-column">
+
+      <div class="panel">
+        <div class="panel-title">
+          <span>Statistiques</span>
+          <span class="points-remaining" id="pointsRemaining">10 pts restants</span>
+        </div>
+        <div id="statsList"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span>État du personnage</span></div>
+
+        <div class="bar-block">
+          <div class="bar-label">
+            <span class="name humanite">Humanité</span>
+            <span class="value" id="humaniteValue">100%</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill humanite" id="humaniteFill" style="width:100%"></div>
+            <div class="bar-pips" id="humanitePips"></div>
+          </div>
+          <div class="bar-config">
+            <span>Paliers :</span>
+            <input type="number" class="bar-max-input" id="humanitePaliers" value="5" min="1" max="20">
+          </div>
+        </div>
+
+        <div class="bar-block" style="margin-top:14px;">
+          <div class="bar-label">
+            <span class="name cybercap">Cybercapacité</span>
+            <span class="value" id="cybercapValue">0 / 500</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill cybercap" id="cybercapFill" style="width:0%"></div>
+            <div class="bar-pips" id="cybercapPips"></div>
+          </div>
+          <div class="bar-config">
+            <span>Max :</span>
+            <input type="number" class="bar-max-input" id="cybercapMax" value="500" min="1" step="10">
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ZONE CENTRALE : squelette + cyberware (phase 2) -->
+    <div class="panel placeholder">
+      Squelette + grille de cyberware — arrive en Phase 2
+    </div>
+
   </div>
 
-  <div class="status" id="status">Aucun cyberware installé.</div>
+<script>
+  // ----- Données de base -----
+  const STAT_NAMES = ["Force", "Réflexes", "Vitesse", "Endurance", "Résistance", "Esprit"];
+  const TOTAL_POINTS = 10;
+  const BASE_CAP = 5;   // plafond en allocation libre
+  const MAX_LEVEL = 15; // plafond absolu (XV)
 
-  <script>
-    const zones = document.querySelectorAll('.zone');
-    const status = document.getElementById('status');
+  const ROMAN = ["", "I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV"];
 
-    zones.forEach(zone => {
-      zone.addEventListener('click', () => {
-        zone.classList.toggle('active');
-        updateStatus();
-      });
+  // état du personnage (sera étendu avec les implants en phase 2)
+  let character = {
+    baseStats: Object.fromEntries(STAT_NAMES.map(n => [n, 1])), // départ à I
+    implantBonus: Object.fromEntries(STAT_NAMES.map(n => [n, 0])), // viendra des cyberwares (phase 2)
+    humanite: 100,
+    cybercap: 0,
+  };
+
+  function pointsUsed() {
+    return STAT_NAMES.reduce((sum, n) => sum + (character.baseStats[n] - 1), 0);
+  }
+
+  function renderStats() {
+    const container = document.getElementById('statsList');
+    container.innerHTML = '';
+    const used = pointsUsed();
+    const remaining = TOTAL_POINTS - used;
+
+    const remainingEl = document.getElementById('pointsRemaining');
+    remainingEl.textContent = remaining + ' pts restants';
+    remainingEl.classList.toggle('zero', remaining === 0);
+
+    STAT_NAMES.forEach(name => {
+      const base = character.baseStats[name];
+      const bonus = character.implantBonus[name];
+      const total = Math.min(base + bonus, MAX_LEVEL);
+      const isBoosted = bonus > 0;
+
+      const row = document.createElement('div');
+      row.className = 'stat-row';
+
+      const canDecrease = base > 1;
+      const canIncrease = base < BASE_CAP && remaining > 0;
+
+      row.innerHTML = `
+        <span class="stat-name">${name}</span>
+        <div class="stat-controls">
+          <button class="stat-btn" data-stat="${name}" data-dir="-1" ${canDecrease ? '' : 'disabled'}>−</button>
+          <span class="stat-value ${isBoosted ? 'locked-boost' : ''}">${ROMAN[total]}</span>
+          <button class="stat-btn" data-stat="${name}" data-dir="1" ${canIncrease ? '' : 'disabled'}>+</button>
+          <span class="stat-lock">${base >= BASE_CAP ? '🔒' : ''}</span>
+        </div>
+      `;
+      container.appendChild(row);
     });
 
-    function updateStatus() {
-      const active = [...zones].filter(z => z.classList.contains('active'));
-      if (active.length === 0) {
-        status.textContent = "Aucun cyberware installé.";
-      } else {
-        const names = active.map(z => z.dataset.name).join(', ');
-        status.textContent = "Installé : " + names;
-      }
+    container.querySelectorAll('.stat-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const stat = btn.dataset.stat;
+        const dir = parseInt(btn.dataset.dir);
+        const newVal = character.baseStats[stat] + dir;
+        if (newVal >= 1 && newVal <= BASE_CAP) {
+          if (dir > 0 && pointsUsed() >= TOTAL_POINTS) return;
+          character.baseStats[stat] = newVal;
+          renderStats();
+        }
+      });
+    });
+  }
+
+  // ----- Barres -----
+  function buildPips(container, count) {
+    container.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+      const d = document.createElement('div');
+      d.className = 'pip-divider';
+      container.appendChild(d);
     }
-  </script>
+  }
+
+  function renderBars() {
+    // Humanité (descend depuis 100%)
+    const humaniteFill = document.getElementById('humaniteFill');
+    const humaniteValue = document.getElementById('humaniteValue');
+    humaniteFill.style.width = character.humanite + '%';
+    humaniteValue.textContent = character.humanite + '%';
+    const humanitePaliers = parseInt(document.getElementById('humanitePaliers').value) || 5;
+    buildPips(document.getElementById('humanitePips'), humanitePaliers);
+
+    // Cybercapacité (monte vers un max personnalisable)
+    const cybercapMax = parseInt(document.getElementById('cybercapMax').value) || 500;
+    const cybercapFill = document.getElementById('cybercapFill');
+    const cybercapValue = document.getElementById('cybercapValue');
+    const pct = Math.min(100, (character.cybercap / cybercapMax) * 100);
+    cybercapFill.style.width = pct + '%';
+    cybercapValue.textContent = character.cybercap + ' / ' + cybercapMax;
+    buildPips(document.getElementById('cybercapPips'), 10);
+  }
+
+  document.getElementById('humanitePaliers').addEventListener('input', renderBars);
+  document.getElementById('cybercapMax').addEventListener('input', renderBars);
+
+  renderStats();
+  renderBars();
+</script>
 
 </body>
 </html>
