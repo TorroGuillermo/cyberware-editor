@@ -7,6 +7,8 @@
   :root {
     --bg: #0a0e14;
     --bg-panel: #10151d;
+    --bg-row: #161c26;
+    --bg-row-hover: #1c2330;
     --border: #ff3b3b44;
     --border-strong: #ff3b3b99;
     --red: #ff3b3b;
@@ -17,6 +19,7 @@
     --purple-dim: #7d569f;
     --blue: #4ea3d1;
     --blue-dim: #38759a;
+    --green: #4caf7d;
     --text: #d8dce2;
     --text-dim: #7d8590;
   }
@@ -45,11 +48,12 @@
     border-bottom: 1px solid var(--border);
   }
 
-  .layout {
+  .top-layout {
     display: flex;
     gap: 24px;
     align-items: flex-start;
     max-width: 1600px;
+    flex-wrap: wrap;
   }
 
   .panel {
@@ -79,7 +83,6 @@
     flex-shrink: 0;
   }
 
-  /* ---- Profils ---- */
   .profiles {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -98,98 +101,38 @@
     border-radius: 3px;
     cursor: pointer;
     transition: all .15s ease;
-    white-space: nowrap;
     text-align: center;
   }
-  .profile-btn:hover {
-    border-color: var(--red);
-    color: var(--red);
-  }
-  .profile-btn.active {
-    background: var(--red);
-    border-color: var(--red);
-    color: #000;
-    font-weight: bold;
-  }
+  .profile-btn:hover { border-color: var(--red); color: var(--red); }
+  .profile-btn.active { background: var(--red); border-color: var(--red); color: #000; font-weight: bold; }
 
-  .points-remaining {
-    font-size: 10px;
-    color: var(--amber);
-  }
+  .points-remaining { font-size: 10px; color: var(--amber); }
   .points-remaining.zero { color: var(--text-dim); }
 
   .stat-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 7px 0;
-    border-bottom: 1px solid #ffffff0d;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 0; border-bottom: 1px solid #ffffff0d;
   }
   .stat-row:last-child { border-bottom: none; }
-
-  .stat-name {
-    font-size: 13px;
-    color: var(--text);
-    width: 110px;
-  }
-
-  .stat-controls {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-  }
-
+  .stat-name { font-size: 13px; color: var(--text); width: 110px; }
+  .stat-controls { display: flex; align-items: center; gap: 9px; }
   .stat-btn {
-    width: 22px;
-    height: 22px;
-    border: 1px solid var(--border-strong);
-    background: transparent;
-    color: var(--red);
-    font-size: 13px;
-    line-height: 1;
-    cursor: pointer;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 22px; height: 22px; border: 1px solid var(--border-strong);
+    background: transparent; color: var(--red); font-size: 13px; line-height: 1;
+    cursor: pointer; border-radius: 3px; display: flex; align-items: center; justify-content: center;
     transition: all .15s ease;
   }
   .stat-btn:hover { background: var(--red); color: #000; }
-  .stat-btn:disabled {
-    opacity: 0.25;
-    cursor: not-allowed;
-  }
+  .stat-btn:disabled { opacity: 0.25; cursor: not-allowed; }
   .stat-btn:disabled:hover { background: transparent; color: var(--red); }
-
-  .stat-value {
-    width: 38px;
-    text-align: center;
-    font-size: 14px;
-    font-weight: bold;
-    color: var(--amber);
-    letter-spacing: 1px;
-  }
+  .stat-value { width: 38px; text-align: center; font-size: 14px; font-weight: bold; color: var(--amber); letter-spacing: 1px; }
   .stat-value.locked-boost { color: var(--red); }
-
-  .stat-lock {
-    font-size: 9px;
-    color: var(--text-dim);
-    width: 14px;
-  }
+  .stat-lock { font-size: 9px; color: var(--text-dim); width: 14px; }
 
   /* ---- Barres ---- */
   .bar-block { margin-bottom: 18px; }
   .bar-block:last-child { margin-bottom: 0; }
-
-  .bar-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 10.5px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 6px;
-  }
-
+  .bar-label { display: flex; justify-content: space-between; font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
   .bar-label .name.humanite { color: var(--red); }
   .bar-label .name.cybercap { color: var(--amber); }
   .bar-label .name.ram { color: var(--purple); }
@@ -197,99 +140,290 @@
   .bar-label .value { color: var(--text-dim); }
 
   .bar-track {
-    position: relative;
-    height: 15px;
-    background: #05070a;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    overflow: hidden;
+    position: relative; height: 15px; background: #05070a;
+    border: 1px solid var(--border); border-radius: 2px; overflow: hidden;
+  }
+  .bar-fill { height: 100%; transition: width .3s ease; }
+  .bar-fill.humanite { background: linear-gradient(90deg, var(--red-dim), var(--red)); box-shadow: 0 0 8px #ff3b3b66; }
+  .bar-fill.cybercap { background: linear-gradient(90deg, var(--amber-dim), var(--amber)); box-shadow: 0 0 8px #e0a94066; }
+  .bar-fill.ram { background: linear-gradient(90deg, var(--purple-dim), var(--purple)); box-shadow: 0 0 8px #a978d966; }
+  .bar-fill.glace { background: linear-gradient(90deg, var(--blue-dim), var(--blue)); box-shadow: 0 0 8px #4ea3d166; }
+
+  .bar-marker {
+    position: absolute; top: -2px; bottom: -2px; width: 2px;
+    background: #fff; box-shadow: 0 0 6px #fff, 0 0 2px #fff;
+    transition: left .3s ease;
   }
 
-  .bar-fill {
-    height: 100%;
-    transition: width .3s ease;
-  }
-  .bar-fill.humanite {
-    background: linear-gradient(90deg, var(--red-dim), var(--red));
-    box-shadow: 0 0 8px #ff3b3b66;
-  }
-  .bar-fill.cybercap {
-    background: linear-gradient(90deg, var(--amber-dim), var(--amber));
-    box-shadow: 0 0 8px #e0a94066;
-  }
-  .bar-fill.ram {
-    background: linear-gradient(90deg, var(--purple-dim), var(--purple));
-    box-shadow: 0 0 8px #a978d966;
-  }
-  .bar-fill.glace {
-    background: linear-gradient(90deg, var(--blue-dim), var(--blue));
-    box-shadow: 0 0 8px #4ea3d166;
-  }
-
-  .bar-setup {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 8px;
-    margin-top: 7px;
-  }
-  .bar-setup .setup-label {
-    font-size: 9px;
-    color: var(--text-dim);
-    margin-right: auto;
-  }
+  .bar-setup { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 7px; }
+  .bar-setup .setup-label { font-size: 9px; color: var(--text-dim); margin-right: auto; }
   .stepper-btn {
-    width: 20px;
-    height: 20px;
-    border: 1px solid var(--border-strong);
-    background: transparent;
-    color: var(--text);
-    font-size: 12px;
-    line-height: 1;
-    cursor: pointer;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all .15s ease;
+    width: 20px; height: 20px; border: 1px solid var(--border-strong); background: transparent;
+    color: var(--text); font-size: 12px; line-height: 1; cursor: pointer; border-radius: 3px;
+    display: flex; align-items: center; justify-content: center; transition: all .15s ease;
   }
   .stepper-btn:hover { background: var(--text); color: #000; }
   .stepper-btn:disabled { opacity: 0.25; cursor: not-allowed; }
   .stepper-btn:disabled:hover { background: transparent; color: var(--text); }
+  .stepper-value { font-size: 11px; color: var(--text-dim); min-width: 34px; text-align: center; }
+  .bar-note { font-size: 8.5px; color: #545c66; margin-top: 4px; font-style: italic; }
 
-  .stepper-value {
-    font-size: 11px;
-    color: var(--text-dim);
-    min-width: 34px;
-    text-align: center;
-  }
-
-  .bar-note {
-    font-size: 8.5px;
-    color: #545c66;
-    margin-top: 4px;
-    font-style: italic;
-  }
-
-  /* placeholder zones for next phases */
-  .placeholder {
+  /* ---- Squelette central ---- */
+  .skeleton-panel {
     flex: 1;
-    min-height: 560px;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .skeleton-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+  }
+  .skeleton-wrap img { width: 100%; display: block; border-radius: 6px; }
+  .zone-marker {
+    position: absolute;
+    border: 1px dashed #ff3b3b33;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .2s ease;
+  }
+  .zone-marker:hover { border-color: var(--red); background: #ff3b3b11; }
+  .zone-marker.equipped {
+    border-color: var(--amber);
+    background: #e0a94022;
+    box-shadow: 0 0 14px #e0a94066 inset;
+  }
+  .zone-badge {
+    position: absolute;
+    top: -8px; right: -8px;
+    background: var(--amber);
+    color: #000;
+    font-size: 9px;
+    font-weight: bold;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+  .zone-marker.equipped .zone-badge { opacity: 1; }
+
+  .skeleton-legend {
+    margin-top: 14px;
+    font-size: 9px;
+    color: var(--text-dim);
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  /* ---- Cyberware catalogue ---- */
+  .catalogue {
+    max-width: 1600px;
+    margin-top: 24px;
+  }
+  .catalogue-title {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .legend-row {
+    display: flex;
+    gap: 18px;
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .legend-row span { display: flex; align-items: center; gap: 5px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .dot.legal { background: var(--green); }
+  .dot.illegal { background: var(--red); }
+  .badge-sample {
+    font-size: 8px; padding: 1px 5px; border-radius: 3px; border: 1px solid;
+  }
+
+  .category {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .category-header:hover { background: var(--bg-row-hover); }
+  .category-header .cat-name {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .category-header .cat-meta {
+    font-size: 9px;
+    color: var(--text-dim);
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: var(--text-dim);
-    font-size: 12px;
-    letter-spacing: 1px;
-    border-style: dashed;
+    gap: 10px;
   }
+  .cat-count.active { color: var(--amber); }
+  .cat-arrow { transition: transform .2s ease; color: var(--text-dim); }
+  .category.open .cat-arrow { transform: rotate(90deg); }
+
+  .category-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .25s ease;
+  }
+  .category.open .category-body { max-height: 600px; }
+
+  .item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    border-top: 1px solid #ffffff0d;
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  .item-row:hover { background: var(--bg-row-hover); }
+  .item-row.selected { background: #ff3b3b14; }
+  .item-row.item-equipped { border-left: 2px solid var(--amber); }
+
+  .item-name { font-size: 11.5px; color: var(--text); flex: 1; }
+  .item-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+
+  .badge {
+    font-size: 8.5px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .badge.cc { color: var(--amber); border-color: var(--amber-dim); }
+  .badge.hu { color: var(--red); border-color: var(--red-dim); }
+  .badge.ram { color: var(--purple); border-color: var(--purple-dim); }
+  .badge.glace { color: var(--blue); border-color: var(--blue-dim); }
+  .badge.equipped-tag { color: #000; background: var(--amber); border-color: var(--amber); font-weight: bold; }
+
+  /* ---- Détail / fiche cyberware ---- */
+  .detail-panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    padding: 20px;
+    margin-top: 14px;
+    max-width: 1600px;
+  }
+  .detail-empty {
+    color: var(--text-dim);
+    font-size: 11px;
+    text-align: center;
+    padding: 20px;
+  }
+  .detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+  }
+  .detail-name {
+    font-size: 15px;
+    color: var(--amber);
+    letter-spacing: 1px;
+  }
+  .detail-nature {
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 3px;
+    border: 1px solid;
+  }
+  .detail-nature.legal { color: var(--green); border-color: var(--green); }
+  .detail-nature.illegal { color: var(--red); border-color: var(--red); }
+
+  .detail-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    font-size: 11px;
+    margin-bottom: 16px;
+  }
+  .detail-field .field-label {
+    color: var(--text-dim);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+  .detail-field .field-value { color: var(--text); line-height: 1.5; }
+
+  .detail-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .equip-btn {
+    background: var(--amber);
+    color: #000;
+    border: none;
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 22px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .equip-btn:hover { filter: brightness(1.15); }
+  .equip-btn.remove { background: transparent; border: 1px solid var(--red); color: var(--red); }
+  .equip-btn.remove:hover { background: var(--red); color: #000; }
+  .equip-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .equip-error {
+    font-size: 10px;
+    color: var(--red);
+    flex: 1;
+  }
+
+  /* ---- Tooltip flottant ---- */
+  #tooltip {
+    position: fixed;
+    z-index: 999;
+    background: #0c1017;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-size: 10px;
+    color: var(--text);
+    max-width: 220px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .12s ease;
+    box-shadow: 0 4px 18px #000000aa;
+  }
+  #tooltip.visible { opacity: 1; }
+  #tooltip .tt-name { color: var(--amber); font-size: 11px; margin-bottom: 4px; }
+  #tooltip .tt-loc { color: var(--text-dim); font-size: 9px; margin-bottom: 6px; }
+  #tooltip .tt-effets { color: var(--text); }
 </style>
 </head>
 <body>
 
   <h1>// Fiche de personnage</h1>
 
-  <div class="layout">
+  <div class="top-layout">
 
     <!-- COLONNE GAUCHE : Profils + Stats + Barres -->
     <div class="left-column">
@@ -314,7 +448,6 @@
       <div class="panel">
         <div class="panel-title"><span>État du personnage</span></div>
 
-        <!-- HUMANITÉ -->
         <div class="bar-block">
           <div class="bar-label">
             <span class="name humanite">Humanité</span>
@@ -326,7 +459,6 @@
           <div class="bar-note">100 par défaut, décroît selon les implants installés.</div>
         </div>
 
-        <!-- CYBERCAPACITÉ -->
         <div class="bar-block">
           <div class="bar-label">
             <span class="name cybercap">Cybercapacité</span>
@@ -334,6 +466,7 @@
           </div>
           <div class="bar-track">
             <div class="bar-fill cybercap" id="cybercapFill" style="width:0%"></div>
+            <div class="bar-marker" id="cybercapMarker" style="left:0%"></div>
           </div>
           <div class="bar-setup">
             <span class="setup-label">Max du perso (500 max)</span>
@@ -341,13 +474,13 @@
             <span class="stepper-value" id="cybercapMaxDisplay">0</span>
             <button class="stepper-btn" data-target="cybercap" data-dir="1">+</button>
           </div>
+          <div class="bar-note">Le repère blanc marque ton plafond. Le remplissage = ce qui est consommé par tes implants.</div>
         </div>
 
-        <!-- RAM -->
         <div class="bar-block">
           <div class="bar-label">
             <span class="name ram">RAM</span>
-            <span class="value" id="ramValue">0 / 0</span>
+            <span class="value" id="ramValue">0 / 30</span>
           </div>
           <div class="bar-track">
             <div class="bar-fill ram" id="ramFill" style="width:0%"></div>
@@ -358,14 +491,13 @@
             <span class="stepper-value" id="ramMaxDisplay">0</span>
             <button class="stepper-btn" data-target="ram" data-dir="1">+</button>
           </div>
-          <div class="bar-note">Augmente avec certains implants (Phase 2).</div>
+          <div class="bar-note">Augmente avec certains implants.</div>
         </div>
 
-        <!-- GLACE -->
         <div class="bar-block">
           <div class="bar-label">
             <span class="name glace">Glace</span>
-            <span class="value" id="glaceValue">0 / 0</span>
+            <span class="value" id="glaceValue">0 / 100</span>
           </div>
           <div class="bar-track">
             <div class="bar-fill glace" id="glaceFill" style="width:0%"></div>
@@ -376,38 +508,66 @@
             <span class="stepper-value" id="glaceMaxDisplay">0</span>
             <button class="stepper-btn" data-target="glace" data-dir="1">+</button>
           </div>
-          <div class="bar-note">Augmente avec certains implants (Phase 2).</div>
+          <div class="bar-note">Augmente avec certains implants.</div>
         </div>
 
       </div>
 
     </div>
 
-    <!-- ZONE CENTRALE : squelette + cyberware (phase 2) -->
-    <div class="panel placeholder">
-      Squelette + grille de cyberware — arrive en Phase 2
+    <!-- SQUELETTE CENTRAL -->
+    <div class="panel skeleton-panel">
+      <div class="skeleton-wrap">
+        <img src="skeleton.png" alt="Squelette cyberpunk">
+        <div class="zone-marker" data-zone="tete"      style="top:27.5%; left:46.8%; width:6.5%;  height:11.8%;"><span class="zone-badge">0</span></div>
+        <div class="zone-marker" data-zone="tronc"     style="top:38%;   left:42.1%; width:15.7%; height:22.3%;"><span class="zone-badge">0</span></div>
+        <div class="zone-marker" data-zone="bras_g"    style="top:39.3%; left:38.4%; width:4.2%;  height:26.2%;"><span class="zone-badge">0</span></div>
+        <div class="zone-marker" data-zone="bras_d"    style="top:39.3%; left:57.9%; width:4.2%;  height:26.2%;"><span class="zone-badge">0</span></div>
+        <div class="zone-marker" data-zone="jambe_g"   style="top:60.3%; left:43.5%; width:4.2%;  height:30.1%;"><span class="zone-badge">0</span></div>
+        <div class="zone-marker" data-zone="jambe_d"   style="top:60.3%; left:51.4%; width:4.2%;  height:30.1%;"><span class="zone-badge">0</span></div>
+      </div>
+      <div class="skeleton-legend">Clique une zone pour ouvrir sa catégorie de cyberware en bas.</div>
     </div>
 
   </div>
 
+  <!-- CATALOGUE DE CYBERWARES -->
+  <div class="catalogue">
+    <div class="catalogue-title">// Cyberwares disponibles</div>
+    <div class="legend-row">
+      <span><span class="dot legal"></span> Légal</span>
+      <span><span class="dot illegal"></span> Illégal</span>
+      <span class="badge-sample badge cc">CC = Coût Cybercapacité</span>
+      <span class="badge-sample badge hu">HU = Coût Humanité</span>
+      <span class="badge-sample badge ram">RAM = Bonus RAM</span>
+      <span class="badge-sample badge glace">GLC = Bonus Glace</span>
+    </div>
+    <div id="categoryList"></div>
+  </div>
+
+  <!-- FICHE DÉTAIL -->
+  <div class="detail-panel" id="detailPanel">
+    <div class="detail-empty">Sélectionne un cyberware dans la liste ci-dessus pour voir sa fiche.</div>
+  </div>
+
+  <div id="tooltip"></div>
+
 <script>
-  // ----- Données de base -----
+  // =====================================================
+  // DONNÉES DE BASE — STATS
+  // =====================================================
   const STAT_NAMES = ["Force", "Réflexes", "Vitesse", "Endurance", "Résistance", "Esprit"];
   const TOTAL_POINTS = 10;
-  const BASE_CAP = 5;   // plafond en allocation libre
-  const MAX_LEVEL = 15; // plafond absolu (XV)
-
+  const BASE_CAP = 5;
+  const MAX_LEVEL = 15;
   const ROMAN = ["", "I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV"];
 
-  // Maximums absolus des ressources
   const RESOURCE_CONFIG = {
     cybercap: { max: 500, step: 10 },
     ram:      { max: 30,  step: 1  },
     glace:    { max: 100, step: 5  },
   };
 
-  // Répartitions de départ par profil — VALEURS PLACEHOLDER, à ajuster librement.
-  // Chaque valeur = points ADDITIONNELS par rapport à la base de 1 (doit totaliser 10).
   const PROFILES = {
     ASSAUT:     { Force:4, "Réflexes":2, Vitesse:1, Endurance:3, "Résistance":0, Esprit:0 },
     TANK:       { Force:2, "Réflexes":0, Vitesse:0, Endurance:4, "Résistance":4, Esprit:0 },
@@ -416,19 +576,226 @@
     TIREUR:     { Force:0, "Réflexes":4, Vitesse:3, Endurance:1, "Résistance":0, Esprit:2 },
   };
 
-  // état du personnage (sera étendu avec les implants en phase 2)
-  let character = {
-    baseStats: Object.fromEntries(STAT_NAMES.map(n => [n, 1])), // départ à I
-    implantBonus: Object.fromEntries(STAT_NAMES.map(n => [n, 0])), // viendra des cyberwares (phase 2)
-    humanite: 100,            // baisse via implants (phase 2)
-    cybercapUsed: 0,          // consommé par les implants (phase 2)
-    cybercapMax: 0,           // défini par le joueur via +/-
-    ramBonus: 0,              // ajouté par les implants (phase 2)
-    ramBase: 0,               // défini par le joueur via +/-
-    glaceBonus: 0,            // ajouté par les implants (phase 2)
-    glaceBase: 0,             // défini par le joueur via +/-
+  // =====================================================
+  // DONNÉES DE BASE — CATALOGUE DE CYBERWARES
+  // Ajoute tes propres objets ici (même structure).
+  // categorie doit être une des clés de ZONES ci-dessous.
+  // =====================================================
+  const ZONES = {
+    tete:    "Tête",
+    tronc:   "Tronc",
+    bras_g:  "Bras gauche",
+    bras_d:  "Bras droit",
+    jambe_g: "Jambe gauche",
+    jambe_d: "Jambe droite",
   };
 
+  const CATALOGUE = [
+    {
+      id: "kiroshi_optics",
+      nom: "Kiroshi Optics Mk.2",
+      categorie: "tete",
+      emplacementDetaille: "Yeux",
+      effets: "Vision nocturne, zoom x4, détection de menace",
+      description: "Remplacement oculaire complet, standard chez Kiroshi. Fiable et discret.",
+      cybercapacite: 40,
+      humanite: 5,
+      nature: "legal",
+      statistiques: { Esprit: 1 },
+      ram: 0,
+      glace: 0,
+      incompatibleWith: ["militech_optics"]
+    },
+    {
+      id: "militech_optics",
+      nom: "Militech Reaper HUD",
+      categorie: "tete",
+      emplacementDetaille: "Yeux",
+      effets: "Tracking de cible, marquage ennemi automatique",
+      description: "Optique militaire agressive. Mal vue en dehors des zones de guerre.",
+      cybercapacite: 55,
+      humanite: 10,
+      nature: "illegal",
+      statistiques: { "Réflexes": 1 },
+      ram: 0,
+      glace: 0,
+      incompatibleWith: ["kiroshi_optics"]
+    },
+    {
+      id: "cortex_deck",
+      nom: "Cortex Deck Cortical",
+      categorie: "tete",
+      emplacementDetaille: "Crâne",
+      effets: "Interface réseau directe, accès rapide au Net",
+      description: "Puce d'interfaçage neuronal utilisée par les netrunners.",
+      cybercapacite: 60,
+      humanite: 8,
+      nature: "legal",
+      statistiques: { Esprit: 2 },
+      ram: 8,
+      glace: 0,
+      incompatibleWith: []
+    },
+    {
+      id: "subdermal_armor",
+      nom: "Armure Subdermale",
+      categorie: "tronc",
+      emplacementDetaille: "Torse",
+      effets: "Réduction des dégâts physiques",
+      description: "Plaques de kevlar tissées directement sous la peau.",
+      cybercapacite: 70,
+      humanite: 12,
+      nature: "legal",
+      statistiques: { "Résistance": 1 },
+      ram: 0,
+      glace: 0,
+      incompatibleWith: []
+    },
+    {
+      id: "ice_shield",
+      nom: "Bouclier ICE Spinal",
+      categorie: "tronc",
+      emplacementDetaille: "Colonne vertébrale",
+      effets: "Renforce les défenses contre les intrusions numériques",
+      description: "Module de contre-intrusion greffé directement à la moelle épinière.",
+      cybercapacite: 65,
+      humanite: 10,
+      nature: "legal",
+      statistiques: {},
+      ram: 0,
+      glace: 15,
+      incompatibleWith: []
+    },
+    {
+      id: "mono_blade_g",
+      nom: "Lame Mono (gauche)",
+      categorie: "bras_g",
+      emplacementDetaille: "Avant-bras gauche",
+      effets: "Arme de mêlée rétractable",
+      description: "Lame monomoléculaire dissimulée dans l'avant-bras.",
+      cybercapacite: 45,
+      humanite: 8,
+      nature: "illegal",
+      statistiques: { Force: 1 },
+      ram: 0,
+      glace: 0,
+      incompatibleWith: []
+    },
+    {
+      id: "mono_blade_d",
+      nom: "Lame Mono (droite)",
+      categorie: "bras_d",
+      emplacementDetaille: "Avant-bras droit",
+      effets: "Arme de mêlée rétractable",
+      description: "Lame monomoléculaire dissimulée dans l'avant-bras.",
+      cybercapacite: 45,
+      humanite: 8,
+      nature: "illegal",
+      statistiques: { Force: 1 },
+      ram: 0,
+      glace: 0,
+      incompatibleWith: ["reinforced_arm_d"]
+    },
+    {
+      id: "reinforced_arm_d",
+      nom: "Bras Renforcé",
+      categorie: "bras_d",
+      emplacementDetaille: "Bras droit complet",
+      effets: "Force de préhension augmentée",
+      description: "Remplacement complet du bras par une structure en alliage léger.",
+      cybercapacite: 80,
+      humanite: 15,
+      nature: "legal",
+      statistiques: { Force: 2, Endurance: 1 },
+      ram: 0,
+      glace: 0,
+      incompatibleWith: ["mono_blade_d"]
+    },
+    {
+      id: "reinforced_leg_g",
+      nom: "Jambe Renforcée (gauche)",
+      categorie: "jambe_g",
+      emplacementDetaille: "Jambe gauche",
+      effets: "Saut amélioré, meilleure absorption des chocs",
+      description: "Structure interne renforcée par fibre de carbone.",
+      cybercapacite: 50,
+      humanite: 9,
+      nature: "legal",
+      statistiques: { Vitesse: 1 },
+      ram: 0,
+      glace: 0,
+      incompatibleWith: []
+    },
+    {
+      id: "reinforced_leg_d",
+      nom: "Jambe Renforcée (droite)",
+      categorie: "jambe_d",
+      emplacementDetaille: "Jambe droite",
+      effets: "Saut amélioré, meilleure absorption des chocs",
+      description: "Structure interne renforcée par fibre de carbone.",
+      cybercapacite: 50,
+      humanite: 9,
+      nature: "legal",
+      statistiques: { Vitesse: 1 },
+      ram: 0,
+      glace: 0,
+      incompatibleWith: []
+    },
+  ];
+
+  // =====================================================
+  // ÉTAT DU PERSONNAGE
+  // =====================================================
+  let character = {
+    baseStats: Object.fromEntries(STAT_NAMES.map(n => [n, 1])),
+    cybercapMax: 0,
+    ramBase: 0,
+    glaceBase: 0,
+    equipped: [], // liste d'ids de cyberwares installés
+  };
+
+  let selectedItemId = null;
+  let openCategories = new Set(); // catégories dépliées
+
+  // valeurs calculées à partir des implants équipés
+  let computed = {
+    implantBonus: Object.fromEntries(STAT_NAMES.map(n => [n, 0])),
+    humanite: 100,
+    cybercapUsed: 0,
+    ramBonus: 0,
+    glaceBonus: 0,
+  };
+
+  function getItem(id) {
+    return CATALOGUE.find(i => i.id === id);
+  }
+
+  function recompute() {
+    const bonus = Object.fromEntries(STAT_NAMES.map(n => [n, 0]));
+    let humaniteCost = 0, cybercapUsed = 0, ramBonus = 0, glaceBonus = 0;
+
+    character.equipped.forEach(id => {
+      const item = getItem(id);
+      if (!item) return;
+      Object.entries(item.statistiques || {}).forEach(([stat, val]) => {
+        bonus[stat] = (bonus[stat] || 0) + val;
+      });
+      humaniteCost += item.humanite || 0;
+      cybercapUsed += item.cybercapacite || 0;
+      ramBonus += item.ram || 0;
+      glaceBonus += item.glace || 0;
+    });
+
+    computed.implantBonus = bonus;
+    computed.humanite = Math.max(0, 100 - humaniteCost);
+    computed.cybercapUsed = cybercapUsed;
+    computed.ramBonus = ramBonus;
+    computed.glaceBonus = glaceBonus;
+  }
+
+  // =====================================================
+  // STATS
+  // =====================================================
   function pointsUsed() {
     return STAT_NAMES.reduce((sum, n) => sum + (character.baseStats[n] - 1), 0);
   }
@@ -445,13 +812,12 @@
 
     STAT_NAMES.forEach(name => {
       const base = character.baseStats[name];
-      const bonus = character.implantBonus[name];
+      const bonus = computed.implantBonus[name] || 0;
       const total = Math.min(base + bonus, MAX_LEVEL);
       const isBoosted = bonus > 0;
 
       const row = document.createElement('div');
       row.className = 'stat-row';
-
       const canDecrease = base > 1;
       const canIncrease = base < BASE_CAP && remaining > 0;
 
@@ -482,7 +848,6 @@
     });
   }
 
-  // ----- Profils -----
   document.querySelectorAll('.profile-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const profile = PROFILES[btn.dataset.profile];
@@ -495,10 +860,12 @@
     });
   });
 
-  // ----- Steppers (Cybercapacité / RAM / Glace) -----
+  // =====================================================
+  // BARRES
+  // =====================================================
   document.querySelectorAll('.stepper-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const target = btn.dataset.target; // 'cybercap' | 'ram' | 'glace'
+      const target = btn.dataset.target;
       const dir = parseInt(btn.dataset.dir);
       const cfg = RESOURCE_CONFIG[target];
       const key = target === 'cybercap' ? 'cybercapMax' : (target === 'ram' ? 'ramBase' : 'glaceBase');
@@ -509,47 +876,259 @@
     });
   });
 
-  // ----- Barres -----
   function renderBars() {
-    // Humanité : toujours base 100, descend via implants (phase 2)
-    const humaniteCurrent = Math.max(0, character.humanite);
-    document.getElementById('humaniteFill').style.width = humaniteCurrent + '%';
-    document.getElementById('humaniteValue').textContent = humaniteCurrent + ' / 100';
+    // Humanité
+    document.getElementById('humaniteFill').style.width = computed.humanite + '%';
+    document.getElementById('humaniteValue').textContent = computed.humanite + ' / 100';
 
-    // Cybercapacité : max défini par le joueur (0-500), rempli par les implants
-    const cybercapPct = character.cybercapMax > 0 ? Math.min(100, (character.cybercapUsed / character.cybercapMax) * 100) : 0;
-    document.getElementById('cybercapFill').style.width = cybercapPct + '%';
-    document.getElementById('cybercapValue').textContent = character.cybercapUsed + ' / ' + character.cybercapMax;
+    // Cybercapacité — le remplissage suit la consommation réelle (échelle 0-500), le repère montre le plafond choisi
+    const cybercapFillPct = (computed.cybercapUsed / RESOURCE_CONFIG.cybercap.max) * 100;
+    const cybercapMarkerPct = (character.cybercapMax / RESOURCE_CONFIG.cybercap.max) * 100;
+    document.getElementById('cybercapFill').style.width = Math.min(100, cybercapFillPct) + '%';
+    document.getElementById('cybercapMarker').style.left = Math.min(100, cybercapMarkerPct) + '%';
+    document.getElementById('cybercapValue').textContent = computed.cybercapUsed + ' / ' + character.cybercapMax;
     document.getElementById('cybercapMaxDisplay').textContent = character.cybercapMax;
 
-    // RAM : base définie par le joueur (0-30) + bonus d'implants
-    const ramTotal = character.ramBase + character.ramBonus;
-    const ramPct = character.ramBase > 0 ? Math.min(100, (ramTotal / character.ramBase) * 100) : 0;
-    document.getElementById('ramFill').style.width = ramPct + '%';
-    document.getElementById('ramValue').textContent = ramTotal + ' / ' + character.ramBase;
+    // RAM — remplissage direct sur l'échelle absolue (0-30)
+    const ramTotal = character.ramBase + computed.ramBonus;
+    document.getElementById('ramFill').style.width = Math.min(100, (ramTotal / RESOURCE_CONFIG.ram.max) * 100) + '%';
+    document.getElementById('ramValue').textContent = ramTotal + ' / ' + RESOURCE_CONFIG.ram.max;
     document.getElementById('ramMaxDisplay').textContent = character.ramBase;
 
-    // Glace : base définie par le joueur (0-100) + bonus d'implants
-    const glaceTotal = character.glaceBase + character.glaceBonus;
-    const glacePct = character.glaceBase > 0 ? Math.min(100, (glaceTotal / character.glaceBase) * 100) : 0;
-    document.getElementById('glaceFill').style.width = glacePct + '%';
-    document.getElementById('glaceValue').textContent = glaceTotal + ' / ' + character.glaceBase;
+    // Glace — remplissage direct sur l'échelle absolue (0-100)
+    const glaceTotal = character.glaceBase + computed.glaceBonus;
+    document.getElementById('glaceFill').style.width = Math.min(100, (glaceTotal / RESOURCE_CONFIG.glace.max) * 100) + '%';
+    document.getElementById('glaceValue').textContent = glaceTotal + ' / ' + RESOURCE_CONFIG.glace.max;
     document.getElementById('glaceMaxDisplay').textContent = character.glaceBase;
 
-    // Boutons désactivés en butée
     document.querySelectorAll('.stepper-btn').forEach(btn => {
       const target = btn.dataset.target;
       const dir = parseInt(btn.dataset.dir);
       const cfg = RESOURCE_CONFIG[target];
       const key = target === 'cybercap' ? 'cybercapMax' : (target === 'ram' ? 'ramBase' : 'glaceBase');
       const val = character[key];
-      if (dir < 0) btn.disabled = val <= 0;
-      else btn.disabled = val >= cfg.max;
+      btn.disabled = dir < 0 ? val <= 0 : val >= cfg.max;
     });
   }
 
-  renderStats();
-  renderBars();
+  // =====================================================
+  // ZONES DU SQUELETTE
+  // =====================================================
+  function renderZones() {
+    document.querySelectorAll('.zone-marker').forEach(marker => {
+      const zone = marker.dataset.zone;
+      const count = character.equipped.filter(id => getItem(id)?.categorie === zone).length;
+      marker.classList.toggle('equipped', count > 0);
+      marker.querySelector('.zone-badge').textContent = count;
+    });
+  }
+
+  document.querySelectorAll('.zone-marker').forEach(marker => {
+    marker.addEventListener('click', () => {
+      const zone = marker.dataset.zone;
+      openCategories.add(zone);
+      renderCategories();
+      document.querySelector(`.category[data-zone="${zone}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
+  // =====================================================
+  // CATALOGUE / CATÉGORIES
+  // =====================================================
+  function canEquip(item) {
+    if (character.equipped.includes(item.id)) return { ok: true };
+
+    const projectedUsed = computed.cybercapUsed + item.cybercapacite;
+    if (projectedUsed > character.cybercapMax) {
+      return { ok: false, reason: `Cybercapacité insuffisante (${projectedUsed} / ${character.cybercapMax})` };
+    }
+
+    const conflict = character.equipped
+      .map(id => getItem(id))
+      .find(eq => eq && (
+        (eq.incompatibleWith || []).includes(item.id) ||
+        (item.incompatibleWith || []).includes(eq.id)
+      ));
+    if (conflict) {
+      return { ok: false, reason: `Incompatible avec "${conflict.nom}" déjà équipé` };
+    }
+
+    return { ok: true };
+  }
+
+  function renderCategories() {
+    const container = document.getElementById('categoryList');
+    container.innerHTML = '';
+
+    Object.entries(ZONES).forEach(([zoneKey, zoneLabel]) => {
+      const items = CATALOGUE.filter(i => i.categorie === zoneKey);
+      const equippedCount = items.filter(i => character.equipped.includes(i.id)).length;
+      const isOpen = openCategories.has(zoneKey);
+
+      const cat = document.createElement('div');
+      cat.className = 'category' + (isOpen ? ' open' : '');
+      cat.dataset.zone = zoneKey;
+
+      cat.innerHTML = `
+        <div class="category-header">
+          <span class="cat-name">${zoneLabel}</span>
+          <span class="cat-meta">
+            <span class="cat-count ${equippedCount > 0 ? 'active' : ''}">${equippedCount > 0 ? equippedCount + ' équipé(s)' : ''}</span>
+            <span>${items.length} disponible(s)</span>
+            <span class="cat-arrow">▶</span>
+          </span>
+        </div>
+        <div class="category-body">
+          ${items.map(item => {
+            const isEquipped = character.equipped.includes(item.id);
+            return `
+              <div class="item-row ${item.id === selectedItemId ? 'selected' : ''} ${isEquipped ? 'item-equipped' : ''}" data-item="${item.id}">
+                <span class="dot ${item.nature}"></span>
+                <span class="item-name">${item.nom}</span>
+                <div class="item-badges">
+                  ${isEquipped ? '<span class="badge equipped-tag">Équipé</span>' : ''}
+                  <span class="badge cc">${item.cybercapacite} CC</span>
+                  <span class="badge hu">-${item.humanite} HU</span>
+                  ${item.ram ? `<span class="badge ram">+${item.ram} RAM</span>` : ''}
+                  ${item.glace ? `<span class="badge glace">+${item.glace} GLC</span>` : ''}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+
+      cat.querySelector('.category-header').addEventListener('click', () => {
+        if (openCategories.has(zoneKey)) openCategories.delete(zoneKey);
+        else openCategories.add(zoneKey);
+        renderCategories();
+      });
+
+      container.appendChild(cat);
+    });
+
+    // Listeners lignes d'items : clic = sélection, survol = tooltip
+    container.querySelectorAll('.item-row').forEach(row => {
+      const item = getItem(row.dataset.item);
+
+      row.addEventListener('click', () => {
+        selectedItemId = item.id;
+        renderCategories();
+        renderDetail();
+      });
+
+      row.addEventListener('mouseenter', (e) => showTooltip(e, item));
+      row.addEventListener('mousemove', (e) => moveTooltip(e));
+      row.addEventListener('mouseleave', hideTooltip);
+    });
+  }
+
+  // =====================================================
+  // FICHE DÉTAIL + ÉQUIPEMENT
+  // =====================================================
+  function renderDetail() {
+    const panel = document.getElementById('detailPanel');
+    if (!selectedItemId) {
+      panel.innerHTML = '<div class="detail-empty">Sélectionne un cyberware dans la liste ci-dessus pour voir sa fiche.</div>';
+      return;
+    }
+
+    const item = getItem(selectedItemId);
+    const isEquipped = character.equipped.includes(item.id);
+    const check = canEquip(item);
+    const statsText = Object.entries(item.statistiques || {}).map(([k, v]) => `${k} +${v}`).join(', ') || 'Aucun';
+
+    panel.innerHTML = `
+      <div class="detail-header">
+        <div>
+          <div class="detail-name">${item.nom}</div>
+        </div>
+        <div class="detail-nature ${item.nature}">${item.nature === 'legal' ? 'Légal' : 'Illégal'}</div>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-field">
+          <div class="field-label">Emplacement détaillé</div>
+          <div class="field-value">${ZONES[item.categorie]} — ${item.emplacementDetaille}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Effets</div>
+          <div class="field-value">${item.effets}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Description</div>
+          <div class="field-value">${item.description}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Cybercapacité</div>
+          <div class="field-value">${item.cybercapacite}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Coût en Humanité</div>
+          <div class="field-value">-${item.humanite}</div>
+        </div>
+        <div class="detail-field">
+          <div class="field-label">Statistiques</div>
+          <div class="field-value">${statsText}</div>
+        </div>
+      </div>
+      <div class="detail-actions">
+        <button class="equip-btn ${isEquipped ? 'remove' : ''}" id="equipBtn" ${(!isEquipped && !check.ok) ? 'disabled' : ''}>
+          ${isEquipped ? 'Retirer' : 'Équiper'}
+        </button>
+        ${(!isEquipped && !check.ok) ? `<span class="equip-error">${check.reason}</span>` : ''}
+      </div>
+    `;
+
+    document.getElementById('equipBtn').addEventListener('click', () => {
+      if (isEquipped) {
+        character.equipped = character.equipped.filter(id => id !== item.id);
+      } else {
+        const c = canEquip(item);
+        if (!c.ok) return;
+        character.equipped.push(item.id);
+      }
+      refreshAll();
+    });
+  }
+
+  // =====================================================
+  // TOOLTIP
+  // =====================================================
+  const tooltipEl = document.getElementById('tooltip');
+  function showTooltip(e, item) {
+    tooltipEl.innerHTML = `
+      <div class="tt-name">${item.nom}</div>
+      <div class="tt-loc">${ZONES[item.categorie]} — ${item.emplacementDetaille}</div>
+      <div class="tt-effets">${item.effets}</div>
+    `;
+    tooltipEl.classList.add('visible');
+    moveTooltip(e);
+  }
+  function moveTooltip(e) {
+    const offset = 14;
+    let x = e.clientX + offset;
+    let y = e.clientY + offset;
+    if (x + 230 > window.innerWidth) x = e.clientX - 230 - offset;
+    tooltipEl.style.left = x + 'px';
+    tooltipEl.style.top = y + 'px';
+  }
+  function hideTooltip() {
+    tooltipEl.classList.remove('visible');
+  }
+
+  // =====================================================
+  // REFRESH GLOBAL
+  // =====================================================
+  function refreshAll() {
+    recompute();
+    renderStats();
+    renderBars();
+    renderZones();
+    renderCategories();
+    renderDetail();
+  }
+
+  refreshAll();
 </script>
 
 </body>
