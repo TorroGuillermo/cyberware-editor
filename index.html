@@ -76,33 +76,13 @@
   }
 
   /* ---- Colonne gauche : stats + barres ---- */
-  .left-column {
-    width: 340px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    flex-shrink: 0;
-  }
+  .left-column { width: 340px; display: flex; flex-direction: column; gap: 18px; flex-shrink: 0; }
 
-  .profiles {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    margin-bottom: 16px;
-  }
+  .profiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 16px; }
   .profile-btn {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    font-family: inherit;
-    font-size: 8.5px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    padding: 7px 2px;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: all .15s ease;
-    text-align: center;
+    background: transparent; border: 1px solid var(--border); color: var(--text-dim);
+    font-family: inherit; font-size: 8.5px; letter-spacing: 0.5px; text-transform: uppercase;
+    padding: 7px 2px; border-radius: 3px; cursor: pointer; transition: all .15s ease; text-align: center;
   }
   .profile-btn:hover { border-color: var(--red); color: var(--red); }
   .profile-btn.active { background: var(--red); border-color: var(--red); color: #000; font-weight: bold; }
@@ -110,18 +90,14 @@
   .points-remaining { font-size: 10px; color: var(--amber); }
   .points-remaining.zero { color: var(--text-dim); }
 
-  .stat-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 7px 0; border-bottom: 1px solid #ffffff0d;
-  }
+  .stat-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #ffffff0d; }
   .stat-row:last-child { border-bottom: none; }
   .stat-name { font-size: 13px; color: var(--text); width: 110px; }
   .stat-controls { display: flex; align-items: center; gap: 9px; }
   .stat-btn {
-    width: 22px; height: 22px; border: 1px solid var(--border-strong);
-    background: transparent; color: var(--red); font-size: 13px; line-height: 1;
-    cursor: pointer; border-radius: 3px; display: flex; align-items: center; justify-content: center;
-    transition: all .15s ease;
+    width: 22px; height: 22px; border: 1px solid var(--border-strong); background: transparent; color: var(--red);
+    font-size: 13px; line-height: 1; cursor: pointer; border-radius: 3px; display: flex; align-items: center;
+    justify-content: center; transition: all .15s ease;
   }
   .stat-btn:hover { background: var(--red); color: #000; }
   .stat-btn:disabled { opacity: 0.25; cursor: not-allowed; }
@@ -140,24 +116,12 @@
   .bar-label .name.glace { color: var(--blue); }
   .bar-label .value { color: var(--text-dim); }
 
-  .bar-track {
-    position: relative;
-    height: 20px;
-    background: #05070a;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    overflow: hidden;
-    cursor: pointer;
-  }
+  .bar-track { position: relative; height: 20px; background: #05070a; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+  .bar-track.draggable { cursor: pointer; }
   .bar-track.draggable:hover { border-color: var(--border-strong); }
   .bar-track.draggable::after {
-    content: '⇔';
-    position: absolute;
-    right: 4px; top: 50%;
-    transform: translateY(-50%);
-    font-size: 9px;
-    color: #ffffff33;
-    pointer-events: none;
+    content: '⇔'; position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+    font-size: 9px; color: #ffffff33; pointer-events: none;
   }
 
   .bar-fill { position: absolute; top: 0; left: 0; height: 100%; transition: width .15s ease; }
@@ -168,143 +132,126 @@
   .bar-fill.glace { background: linear-gradient(90deg, var(--blue-dim), var(--blue)); box-shadow: 0 0 8px #4ea3d166; }
 
   .bar-handle {
-    position: absolute;
-    top: -1px; bottom: -1px;
-    width: 3px;
-    background: #fff;
-    box-shadow: 0 0 6px #fff;
-    z-index: 3;
-    pointer-events: none;
-    transform: translateX(-50%);
+    position: absolute; top: -1px; bottom: -1px; width: 3px; background: #fff;
+    box-shadow: 0 0 6px #fff; z-index: 3; pointer-events: none; transform: translateX(-50%);
   }
 
   .bar-note { font-size: 8.5px; color: #545c66; margin-top: 5px; font-style: italic; }
 
   /* ---- Squelette central ---- */
-  .skeleton-panel {
-    flex: 1;
-    min-width: 320px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .skeleton-wrap {
-    position: relative;
-    height: 640px;
-    max-width: 100%;
-  }
+  .skeleton-panel { flex: 1; min-width: 320px; display: flex; flex-direction: column; align-items: center; }
+  .skeleton-wrap { position: relative; height: 640px; max-width: 100%; }
   .skeleton-wrap img { height: 100%; width: auto; display: block; border-radius: 6px; margin: 0 auto; }
-  .zone-marker {
-    position: absolute;
-    border: 1px dashed #ff3b3b33;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all .2s ease;
-  }
+  .zone-marker { position: absolute; border: 1px dashed #ff3b3b33; border-radius: 6px; cursor: pointer; transition: all .2s ease; }
   .zone-marker:hover { border-color: var(--red); background: #ff3b3b11; }
-  .zone-marker.equipped {
-    border-color: var(--amber);
-    background: #e0a94022;
-    box-shadow: 0 0 14px #e0a94066 inset;
-  }
+  .zone-marker.equipped { border-color: var(--amber); background: #e0a94022; box-shadow: 0 0 14px #e0a94066 inset; }
   .zone-badge {
-    position: absolute;
-    top: -8px; right: -8px;
-    background: var(--amber);
-    color: #000;
-    font-size: 9px;
-    font-weight: bold;
-    width: 16px; height: 16px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    opacity: 0;
-    transition: opacity .2s ease;
+    position: absolute; top: -8px; right: -8px; background: var(--amber); color: #000; font-size: 9px; font-weight: bold;
+    width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .2s ease;
   }
   .zone-marker.equipped .zone-badge { opacity: 1; }
+  .skeleton-legend { margin-top: 14px; font-size: 9px; color: var(--text-dim); text-align: center; letter-spacing: 0.5px; }
 
-  .skeleton-legend {
-    margin-top: 14px;
-    font-size: 9px;
-    color: var(--text-dim);
-    text-align: center;
-    letter-spacing: 0.5px;
+  /* ---- Équipement installé : bande de tuiles compactes ---- */
+  .equipped-strip-wrap { max-width: 1600px; margin-top: 22px; }
+  .equipped-empty { color: var(--text-dim); font-size: 11px; padding: 12px 4px; }
+  .equipped-strip {
+    display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;
+    scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
   }
+  .equipped-strip::-webkit-scrollbar { height: 5px; }
+  .equipped-strip::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
 
-  /* ---- Équipement installé (résumé lisible) ---- */
-  .equipped-summary {
-    max-width: 1600px;
-    margin-top: 20px;
-  }
-  .equipped-empty {
-    color: var(--text-dim);
-    font-size: 11px;
-    padding: 16px;
-    text-align: center;
-  }
-  .equipped-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 10px;
-  }
-  .equipped-card {
+  .equip-chip {
+    flex-shrink: 0;
     background: var(--bg-row);
     border: 1px solid var(--border);
     border-left: 3px solid var(--amber);
     border-radius: 4px;
-    padding: 12px 14px;
+    padding: 8px 10px;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .equipped-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 8px;
-  }
-  .equipped-card-name { font-size: 12px; color: var(--text); }
-  .equipped-card-zone { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-  .equipped-remove {
-    background: transparent;
-    border: 1px solid var(--red-dim);
-    color: var(--red);
-    font-size: 9px;
-    padding: 3px 8px;
-    border-radius: 3px;
     cursor: pointer;
-    white-space: nowrap;
-    flex-shrink: 0;
+    transition: background .15s ease;
+    max-width: 220px;
   }
-  .equipped-remove:hover { background: var(--red); color: #000; }
-  .equipped-card-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+  .equip-chip:hover { background: var(--bg-row-hover); }
+  .equip-chip .chip-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .equip-chip .chip-name { font-size: 10.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .equip-chip .chip-zone { font-size: 8px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .chip-remove {
+    background: transparent; border: none; color: var(--red); font-size: 13px; cursor: pointer; line-height: 1;
+    flex-shrink: 0; padding: 2px 4px;
+  }
+  .chip-remove:hover { color: #fff; }
 
-  /* ---- Cyberware catalogue ---- */
+  /* ---- Catalogue : onglets + grille de cartes ---- */
   .catalogue { max-width: 1600px; margin-top: 24px; }
   .catalogue-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
   .legend-row { display: flex; gap: 18px; font-size: 9px; color: var(--text-dim); margin-bottom: 14px; flex-wrap: wrap; }
   .legend-row span { display: flex; align-items: center; gap: 5px; }
-  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
   .dot.legal { background: var(--green); }
   .dot.illegal { background: var(--red); }
   .badge-sample { font-size: 8px; padding: 1px 5px; border-radius: 3px; border: 1px solid; }
 
-  .category { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 4px; margin-bottom: 10px; overflow: hidden; }
-  .category-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; cursor: pointer; user-select: none; }
-  .category-header:hover { background: var(--bg-row-hover); }
-  .category-header .cat-name { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text); }
-  .category-header .cat-meta { font-size: 9px; color: var(--text-dim); display: flex; align-items: center; gap: 10px; }
-  .cat-count.active { color: var(--amber); }
-  .cat-arrow { transition: transform .2s ease; color: var(--text-dim); }
-  .category.open .cat-arrow { transform: rotate(90deg); }
-  .category-body { max-height: 0; overflow: hidden; transition: max-height .25s ease; }
-  .category.open .category-body { max-height: 600px; }
+  .zone-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .zone-tab {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 10.5px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all .15s ease;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .zone-tab:hover { border-color: var(--red); color: var(--red); }
+  .zone-tab.active { background: var(--red); border-color: var(--red); color: #000; font-weight: bold; }
+  .zone-tab .tab-count {
+    font-size: 8.5px;
+    background: #00000033;
+    padding: 1px 6px;
+    border-radius: 8px;
+  }
+  .zone-tab.active .tab-count { background: #00000044; }
 
-  .item-row { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-top: 1px solid #ffffff0d; cursor: pointer; transition: background .15s ease; }
-  .item-row:hover { background: var(--bg-row-hover); }
-  .item-row.selected { background: #ff3b3b14; }
-  .item-row.item-equipped { border-left: 2px solid var(--amber); }
-  .item-name { font-size: 11.5px; color: var(--text); flex: 1; }
-  .item-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 10px;
+  }
+  .item-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all .15s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .item-card:hover { border-color: var(--border-strong); background: var(--bg-row-hover); transform: translateY(-1px); }
+  .item-card.item-equipped { border-color: var(--amber); box-shadow: 0 0 10px #e0a94033; }
+  .item-card.selected { border-color: var(--red); }
+
+  .item-card-top { display: flex; align-items: center; gap: 7px; }
+  .item-card-name { font-size: 12px; color: var(--text); flex: 1; }
+  .item-card-badges { display: flex; gap: 5px; flex-wrap: wrap; }
 
   .badge { font-size: 8.5px; padding: 2px 6px; border-radius: 3px; border: 1px solid; white-space: nowrap; }
   .badge.cc { color: var(--amber); border-color: var(--amber-dim); }
@@ -313,30 +260,51 @@
   .badge.glace { color: var(--blue); border-color: var(--blue-dim); }
   .badge.equipped-tag { color: #000; background: var(--amber); border-color: var(--amber); font-weight: bold; }
 
-  /* ---- Détail / fiche cyberware ---- */
-  .detail-panel { background: var(--bg-panel); border: 1px solid var(--border-strong); border-radius: 4px; padding: 20px; margin-top: 14px; max-width: 1600px; }
-  .detail-empty { color: var(--text-dim); font-size: 11px; text-align: center; padding: 20px; }
-  .detail-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-  .detail-name { font-size: 15px; color: var(--amber); letter-spacing: 1px; }
-  .detail-nature { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; border: 1px solid; }
+  /* ---- Panneau détail glissant (drawer) ---- */
+  #drawerBackdrop {
+    position: fixed; inset: 0; background: #000000aa; z-index: 100;
+    opacity: 0; pointer-events: none; transition: opacity .25s ease;
+  }
+  #drawerBackdrop.open { opacity: 1; pointer-events: auto; }
+
+  #detailDrawer {
+    position: fixed; top: 0; right: 0; height: 100vh; width: 380px; max-width: 90vw;
+    background: var(--bg-panel); border-left: 1px solid var(--border-strong);
+    z-index: 101; transform: translateX(100%); transition: transform .28s ease;
+    padding: 24px 22px; overflow-y: auto;
+    box-shadow: -10px 0 30px #000000aa;
+  }
+  #detailDrawer.open { transform: translateX(0); }
+
+  .drawer-close {
+    position: absolute; top: 18px; right: 18px;
+    background: transparent; border: 1px solid var(--border-strong); color: var(--text-dim);
+    width: 26px; height: 26px; border-radius: 3px; cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .drawer-close:hover { color: var(--red); border-color: var(--red); }
+
+  .detail-header { margin: 4px 30px 18px 0; }
+  .detail-name { font-size: 16px; color: var(--amber); letter-spacing: 1px; margin-bottom: 8px; }
+  .detail-nature { display: inline-block; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; border: 1px solid; }
   .detail-nature.legal { color: var(--green); border-color: var(--green); }
   .detail-nature.illegal { color: var(--red); border-color: var(--red); }
 
-  .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 11px; margin-bottom: 16px; }
-  .detail-field .field-label { color: var(--text-dim); font-size: 9px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+  .detail-field { margin-bottom: 14px; font-size: 11px; }
+  .detail-field .field-label { color: var(--text-dim); font-size: 9px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
   .detail-field .field-value { color: var(--text); line-height: 1.5; }
 
-  .detail-actions { display: flex; align-items: center; gap: 14px; }
+  .detail-actions { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
   .equip-btn {
     background: var(--amber); color: #000; border: none; font-family: inherit; font-weight: bold;
-    font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 10px 22px; border-radius: 3px;
+    font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 12px; border-radius: 3px;
     cursor: pointer; transition: all .15s ease;
   }
   .equip-btn:hover { filter: brightness(1.15); }
   .equip-btn.remove { background: transparent; border: 1px solid var(--red); color: var(--red); }
   .equip-btn.remove:hover { background: var(--red); color: #000; }
   .equip-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .equip-error { font-size: 10px; color: var(--red); flex: 1; }
+  .equip-error { font-size: 10px; color: var(--red); text-align: center; }
 
   /* ---- Tooltip flottant ---- */
   #tooltip {
@@ -400,7 +368,7 @@
             <div class="bar-fill cybercap-used" id="cybercapUsedFill" style="width:0%"></div>
             <div class="bar-handle" id="cybercapHandle" style="left:0%"></div>
           </div>
-          <div class="bar-note">Glisse sur la barre pour régler ton plafond (0-500). Zone vive = consommé par tes implants.</div>
+          <div class="bar-note">Glisse pour régler ton plafond (0-500). Zone vive = consommé par tes implants.</div>
         </div>
 
         <div class="bar-block">
@@ -408,11 +376,10 @@
             <span class="name ram">RAM</span>
             <span class="value" id="ramValue">0 / 30</span>
           </div>
-          <div class="bar-track draggable" id="ramTrack">
+          <div class="bar-track">
             <div class="bar-fill ram" id="ramFill" style="width:0%"></div>
-            <div class="bar-handle" id="ramHandle" style="left:0%"></div>
           </div>
-          <div class="bar-note">Glisse pour régler ta base (0-30). Augmente aussi avec certains implants.</div>
+          <div class="bar-note">Uniquement augmentée par certains implants — pas de réglage manuel.</div>
         </div>
 
         <div class="bar-block">
@@ -420,11 +387,10 @@
             <span class="name glace">Glace</span>
             <span class="value" id="glaceValue">0 / 100</span>
           </div>
-          <div class="bar-track draggable" id="glaceTrack">
+          <div class="bar-track">
             <div class="bar-fill glace" id="glaceFill" style="width:0%"></div>
-            <div class="bar-handle" id="glaceHandle" style="left:0%"></div>
           </div>
-          <div class="bar-note">Glisse pour régler ta base (0-100). Augmente aussi avec certains implants.</div>
+          <div class="bar-note">Uniquement augmentée par certains implants — pas de réglage manuel.</div>
         </div>
 
       </div>
@@ -442,18 +408,18 @@
         <div class="zone-marker" data-zone="jambe_g"   style="top:53.4%; left:29.4%; width:13.2%; height:39.0%;"><span class="zone-badge">0</span></div>
         <div class="zone-marker" data-zone="jambe_d"   style="top:53.4%; left:54.4%; width:13.2%; height:39.0%;"><span class="zone-badge">0</span></div>
       </div>
-      <div class="skeleton-legend">Clique une zone pour ouvrir sa catégorie de cyberware en bas.</div>
+      <div class="skeleton-legend">Clique une zone pour ouvrir son onglet de cyberware en bas.</div>
     </div>
 
   </div>
 
-  <!-- ÉQUIPEMENT INSTALLÉ (résumé lisible) -->
-  <div class="equipped-summary">
+  <!-- ÉQUIPEMENT INSTALLÉ : bande compacte -->
+  <div class="equipped-strip-wrap">
     <div class="catalogue-title">// Équipement installé</div>
-    <div id="equippedList"></div>
+    <div id="equippedStrip"></div>
   </div>
 
-  <!-- CATALOGUE DE CYBERWARES -->
+  <!-- CATALOGUE : onglets + cartes -->
   <div class="catalogue">
     <div class="catalogue-title">// Cyberwares disponibles</div>
     <div class="legend-row">
@@ -464,12 +430,15 @@
       <span class="badge-sample badge ram">RAM = Bonus RAM</span>
       <span class="badge-sample badge glace">GLC = Bonus Glace</span>
     </div>
-    <div id="categoryList"></div>
+    <div class="zone-tabs" id="zoneTabs"></div>
+    <div class="card-grid" id="cardGrid"></div>
   </div>
 
-  <!-- FICHE DÉTAIL -->
-  <div class="detail-panel" id="detailPanel">
-    <div class="detail-empty">Sélectionne un cyberware dans la liste ci-dessus pour voir sa fiche.</div>
+  <!-- DRAWER DÉTAIL -->
+  <div id="drawerBackdrop"></div>
+  <div id="detailDrawer">
+    <button class="drawer-close" id="drawerClose">✕</button>
+    <div id="drawerContent"></div>
   </div>
 
   <div id="tooltip"></div>
@@ -486,8 +455,8 @@
 
   const RESOURCE_CONFIG = {
     cybercap: { max: 500, step: 10 },
-    ram:      { max: 30,  step: 1  },
-    glace:    { max: 100, step: 5  },
+    ram:      { max: 30  },
+    glace:    { max: 100 },
   };
 
   const PROFILES = {
@@ -569,13 +538,11 @@
   let character = {
     baseStats: Object.fromEntries(STAT_NAMES.map(n => [n, 1])),
     cybercapMax: 0,
-    ramBase: 0,
-    glaceBase: 0,
     equipped: [],
   };
 
   let selectedItemId = null;
-  let openCategories = new Set();
+  let activeZone = "tete";
 
   let computed = {
     implantBonus: Object.fromEntries(STAT_NAMES.map(n => [n, 0])),
@@ -678,11 +645,10 @@
   });
 
   // =====================================================
-  // BARRES — glissables + steppers au clavier (accessibilité basique)
+  // BARRE CYBERCAPACITÉ — seule barre réglable manuellement
   // =====================================================
   function setupDraggableBar(trackId, key, cfg, onChange) {
     const track = document.getElementById(trackId);
-
     function setFromClientX(clientX) {
       const rect = track.getBoundingClientRect();
       let ratio = (clientX - rect.left) / rect.width;
@@ -693,30 +659,18 @@
       character[key] = stepped;
       onChange();
     }
-
     let dragging = false;
-    track.addEventListener('pointerdown', (e) => {
-      dragging = true;
-      track.setPointerCapture(e.pointerId);
-      setFromClientX(e.clientX);
-    });
-    track.addEventListener('pointermove', (e) => {
-      if (dragging) setFromClientX(e.clientX);
-    });
+    track.addEventListener('pointerdown', (e) => { dragging = true; track.setPointerCapture(e.pointerId); setFromClientX(e.clientX); });
+    track.addEventListener('pointermove', (e) => { if (dragging) setFromClientX(e.clientX); });
     track.addEventListener('pointerup', () => { dragging = false; });
     track.addEventListener('pointercancel', () => { dragging = false; });
   }
-
   setupDraggableBar('cybercapTrack', 'cybercapMax', RESOURCE_CONFIG.cybercap, renderBars);
-  setupDraggableBar('ramTrack', 'ramBase', RESOURCE_CONFIG.ram, renderBars);
-  setupDraggableBar('glaceTrack', 'glaceBase', RESOURCE_CONFIG.glace, renderBars);
 
   function renderBars() {
-    // Humanité
     document.getElementById('humaniteFill').style.width = computed.humanite + '%';
     document.getElementById('humaniteValue').textContent = computed.humanite + ' / 100';
 
-    // Cybercapacité — deux couches : plafond choisi (mate) + consommation réelle (vive)
     const maxPct = (character.cybercapMax / RESOURCE_CONFIG.cybercap.max) * 100;
     const usedPct = (computed.cybercapUsed / RESOURCE_CONFIG.cybercap.max) * 100;
     document.getElementById('cybercapMaxFill').style.width = Math.min(100, maxPct) + '%';
@@ -724,19 +678,11 @@
     document.getElementById('cybercapHandle').style.left = Math.min(100, maxPct) + '%';
     document.getElementById('cybercapValue').textContent = computed.cybercapUsed + ' utilisé / ' + character.cybercapMax + ' max';
 
-    // RAM
-    const ramTotal = character.ramBase + computed.ramBonus;
-    const ramPct = (ramTotal / RESOURCE_CONFIG.ram.max) * 100;
-    document.getElementById('ramFill').style.width = Math.min(100, ramPct) + '%';
-    document.getElementById('ramHandle').style.left = Math.min(100, (character.ramBase / RESOURCE_CONFIG.ram.max) * 100) + '%';
-    document.getElementById('ramValue').textContent = ramTotal + ' / ' + RESOURCE_CONFIG.ram.max;
+    document.getElementById('ramFill').style.width = Math.min(100, (computed.ramBonus / RESOURCE_CONFIG.ram.max) * 100) + '%';
+    document.getElementById('ramValue').textContent = computed.ramBonus + ' / ' + RESOURCE_CONFIG.ram.max;
 
-    // Glace
-    const glaceTotal = character.glaceBase + computed.glaceBonus;
-    const glacePct = (glaceTotal / RESOURCE_CONFIG.glace.max) * 100;
-    document.getElementById('glaceFill').style.width = Math.min(100, glacePct) + '%';
-    document.getElementById('glaceHandle').style.left = Math.min(100, (character.glaceBase / RESOURCE_CONFIG.glace.max) * 100) + '%';
-    document.getElementById('glaceValue').textContent = glaceTotal + ' / ' + RESOURCE_CONFIG.glace.max;
+    document.getElementById('glaceFill').style.width = Math.min(100, (computed.glaceBonus / RESOURCE_CONFIG.glace.max) * 100) + '%';
+    document.getElementById('glaceValue').textContent = computed.glaceBonus + ' / ' + RESOURCE_CONFIG.glace.max;
   }
 
   // =====================================================
@@ -753,49 +699,47 @@
 
   document.querySelectorAll('.zone-marker').forEach(marker => {
     marker.addEventListener('click', () => {
-      const zone = marker.dataset.zone;
-      openCategories.add(zone);
-      renderCategories();
-      document.querySelector(`.category[data-zone="${zone}"]`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      activeZone = marker.dataset.zone;
+      renderTabs();
+      renderCardGrid();
+      document.getElementById('zoneTabs').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   });
 
   // =====================================================
-  // ÉQUIPEMENT INSTALLÉ (résumé lisible)
+  // ÉQUIPEMENT INSTALLÉ — bande compacte
   // =====================================================
-  function renderEquippedSummary() {
-    const container = document.getElementById('equippedList');
+  function renderEquippedStrip() {
+    const container = document.getElementById('equippedStrip');
     if (character.equipped.length === 0) {
       container.innerHTML = '<div class="equipped-empty">Aucun cyberware installé pour le moment.</div>';
       return;
     }
-
-    container.innerHTML = `<div class="equipped-grid">
+    container.innerHTML = `<div class="equipped-strip">
       ${character.equipped.map(id => {
         const item = getItem(id);
         if (!item) return '';
         return `
-          <div class="equipped-card">
-            <div class="equipped-card-top">
-              <div>
-                <div class="equipped-card-name">${item.nom}</div>
-                <div class="equipped-card-zone">${ZONES[item.categorie]}</div>
-              </div>
-              <button class="equipped-remove" data-remove="${item.id}">Retirer</button>
+          <div class="equip-chip" data-open="${item.id}">
+            <div class="chip-text">
+              <span class="chip-name">${item.nom}</span>
+              <span class="chip-zone">${ZONES[item.categorie]}</span>
             </div>
-            <div class="equipped-card-badges">
-              <span class="badge cc">${item.cybercapacite} CC</span>
-              <span class="badge hu">-${item.humanite} HU</span>
-              ${item.ram ? `<span class="badge ram">+${item.ram} RAM</span>` : ''}
-              ${item.glace ? `<span class="badge glace">+${item.glace} GLC</span>` : ''}
-            </div>
+            <button class="chip-remove" data-remove="${item.id}" title="Retirer">✕</button>
           </div>
         `;
       }).join('')}
     </div>`;
 
+    container.querySelectorAll('[data-open]').forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        if (e.target.closest('[data-remove]')) return;
+        openDrawer(chip.dataset.open);
+      });
+    });
     container.querySelectorAll('[data-remove]').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         character.equipped = character.equipped.filter(id => id !== btn.dataset.remove);
         refreshAll();
       });
@@ -803,123 +747,103 @@
   }
 
   // =====================================================
-  // CATALOGUE / CATÉGORIES
+  // ONGLETS DE ZONE + GRILLE DE CARTES
   // =====================================================
   function canEquip(item) {
     if (character.equipped.includes(item.id)) return { ok: true };
-
     const projectedUsed = computed.cybercapUsed + item.cybercapacite;
     if (projectedUsed > character.cybercapMax) {
       return { ok: false, reason: `Cybercapacité insuffisante (${projectedUsed} / ${character.cybercapMax})` };
     }
-
     const conflict = character.equipped
       .map(id => getItem(id))
-      .find(eq => eq && (
-        (eq.incompatibleWith || []).includes(item.id) ||
-        (item.incompatibleWith || []).includes(eq.id)
-      ));
-    if (conflict) {
-      return { ok: false, reason: `Incompatible avec "${conflict.nom}" déjà équipé` };
-    }
-
+      .find(eq => eq && ((eq.incompatibleWith || []).includes(item.id) || (item.incompatibleWith || []).includes(eq.id)));
+    if (conflict) return { ok: false, reason: `Incompatible avec "${conflict.nom}" déjà équipé` };
     return { ok: true };
   }
 
-  function renderCategories() {
-    const container = document.getElementById('categoryList');
+  function renderTabs() {
+    const container = document.getElementById('zoneTabs');
     container.innerHTML = '';
-
     Object.entries(ZONES).forEach(([zoneKey, zoneLabel]) => {
       const items = CATALOGUE.filter(i => i.categorie === zoneKey);
       const equippedCount = items.filter(i => character.equipped.includes(i.id)).length;
-      const isOpen = openCategories.has(zoneKey);
+      const tab = document.createElement('button');
+      tab.className = 'zone-tab' + (zoneKey === activeZone ? ' active' : '');
+      tab.innerHTML = `${zoneLabel} <span class="tab-count">${equippedCount > 0 ? equippedCount : items.length}</span>`;
+      tab.addEventListener('click', () => { activeZone = zoneKey; renderTabs(); renderCardGrid(); });
+      container.appendChild(tab);
+    });
+  }
 
-      const cat = document.createElement('div');
-      cat.className = 'category' + (isOpen ? ' open' : '');
-      cat.dataset.zone = zoneKey;
-
-      cat.innerHTML = `
-        <div class="category-header">
-          <span class="cat-name">${zoneLabel}</span>
-          <span class="cat-meta">
-            <span class="cat-count ${equippedCount > 0 ? 'active' : ''}">${equippedCount > 0 ? equippedCount + ' équipé(s)' : ''}</span>
-            <span>${items.length} disponible(s)</span>
-            <span class="cat-arrow">▶</span>
-          </span>
-        </div>
-        <div class="category-body">
-          ${items.map(item => {
-            const isEquipped = character.equipped.includes(item.id);
-            return `
-              <div class="item-row ${item.id === selectedItemId ? 'selected' : ''} ${isEquipped ? 'item-equipped' : ''}" data-item="${item.id}">
-                <span class="dot ${item.nature}"></span>
-                <span class="item-name">${item.nom}</span>
-                <div class="item-badges">
-                  ${isEquipped ? '<span class="badge equipped-tag">Équipé</span>' : ''}
-                  <span class="badge cc">${item.cybercapacite} CC</span>
-                  <span class="badge hu">-${item.humanite} HU</span>
-                  ${item.ram ? `<span class="badge ram">+${item.ram} RAM</span>` : ''}
-                  ${item.glace ? `<span class="badge glace">+${item.glace} GLC</span>` : ''}
-                </div>
-              </div>
-            `;
-          }).join('')}
+  function renderCardGrid() {
+    const container = document.getElementById('cardGrid');
+    const items = CATALOGUE.filter(i => i.categorie === activeZone);
+    container.innerHTML = items.map(item => {
+      const isEquipped = character.equipped.includes(item.id);
+      return `
+        <div class="item-card ${isEquipped ? 'item-equipped' : ''} ${item.id === selectedItemId ? 'selected' : ''}" data-item="${item.id}">
+          <div class="item-card-top">
+            <span class="dot ${item.nature}"></span>
+            <span class="item-card-name">${item.nom}</span>
+          </div>
+          <div class="item-card-badges">
+            ${isEquipped ? '<span class="badge equipped-tag">Équipé</span>' : ''}
+            <span class="badge cc">${item.cybercapacite} CC</span>
+            <span class="badge hu">-${item.humanite} HU</span>
+            ${item.ram ? `<span class="badge ram">+${item.ram} RAM</span>` : ''}
+            ${item.glace ? `<span class="badge glace">+${item.glace} GLC</span>` : ''}
+          </div>
         </div>
       `;
+    }).join('');
 
-      cat.querySelector('.category-header').addEventListener('click', () => {
-        if (openCategories.has(zoneKey)) openCategories.delete(zoneKey);
-        else openCategories.add(zoneKey);
-        renderCategories();
-      });
-
-      container.appendChild(cat);
-    });
-
-    container.querySelectorAll('.item-row').forEach(row => {
-      const item = getItem(row.dataset.item);
-
-      row.addEventListener('click', () => {
-        selectedItemId = item.id;
-        renderCategories();
-        renderDetail();
-      });
-
-      row.addEventListener('mouseenter', (e) => showTooltip(e, item));
-      row.addEventListener('mousemove', (e) => moveTooltip(e));
-      row.addEventListener('mouseleave', hideTooltip);
+    container.querySelectorAll('.item-card').forEach(card => {
+      const item = getItem(card.dataset.item);
+      card.addEventListener('click', () => openDrawer(item.id));
+      card.addEventListener('mouseenter', (e) => showTooltip(e, item));
+      card.addEventListener('mousemove', (e) => moveTooltip(e));
+      card.addEventListener('mouseleave', hideTooltip);
     });
   }
 
   // =====================================================
-  // FICHE DÉTAIL + ÉQUIPEMENT
+  // DRAWER DE DÉTAIL
   // =====================================================
-  function renderDetail() {
-    const panel = document.getElementById('detailPanel');
-    if (!selectedItemId) {
-      panel.innerHTML = '<div class="detail-empty">Sélectionne un cyberware dans la liste ci-dessus pour voir sa fiche.</div>';
-      return;
-    }
+  const drawer = document.getElementById('detailDrawer');
+  const backdrop = document.getElementById('drawerBackdrop');
 
+  function openDrawer(itemId) {
+    selectedItemId = itemId;
+    renderDrawerContent();
+    drawer.classList.add('open');
+    backdrop.classList.add('open');
+  }
+  function closeDrawer() {
+    drawer.classList.remove('open');
+    backdrop.classList.remove('open');
+  }
+  document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+  backdrop.addEventListener('click', closeDrawer);
+
+  function renderDrawerContent() {
     const item = getItem(selectedItemId);
+    if (!item) return;
     const isEquipped = character.equipped.includes(item.id);
     const check = canEquip(item);
     const statsText = Object.entries(item.statistiques || {}).map(([k, v]) => `${k} +${v}`).join(', ') || 'Aucun';
 
-    panel.innerHTML = `
+    document.getElementById('drawerContent').innerHTML = `
       <div class="detail-header">
         <div class="detail-name">${item.nom}</div>
         <div class="detail-nature ${item.nature}">${item.nature === 'legal' ? 'Légal' : 'Illégal'}</div>
       </div>
-      <div class="detail-grid">
-        <div class="detail-field"><div class="field-label">Emplacement détaillé</div><div class="field-value">${ZONES[item.categorie]} — ${item.emplacementDetaille}</div></div>
-        <div class="detail-field"><div class="field-label">Effets</div><div class="field-value">${item.effets}</div></div>
-        <div class="detail-field"><div class="field-label">Description</div><div class="field-value">${item.description}</div></div>
-        <div class="detail-field"><div class="field-label">Cybercapacité</div><div class="field-value">${item.cybercapacite}</div></div>
-        <div class="detail-field"><div class="field-label">Coût en Humanité</div><div class="field-value">-${item.humanite}</div></div>
-        <div class="detail-field"><div class="field-label">Statistiques</div><div class="field-value">${statsText}</div></div>
-      </div>
+      <div class="detail-field"><div class="field-label">Emplacement détaillé</div><div class="field-value">${ZONES[item.categorie]} — ${item.emplacementDetaille}</div></div>
+      <div class="detail-field"><div class="field-label">Effets</div><div class="field-value">${item.effets}</div></div>
+      <div class="detail-field"><div class="field-label">Description</div><div class="field-value">${item.description}</div></div>
+      <div class="detail-field"><div class="field-label">Cybercapacité</div><div class="field-value">${item.cybercapacite}</div></div>
+      <div class="detail-field"><div class="field-label">Coût en Humanité</div><div class="field-value">-${item.humanite}</div></div>
+      <div class="detail-field"><div class="field-label">Statistiques</div><div class="field-value">${statsText}</div></div>
       <div class="detail-actions">
         <button class="equip-btn ${isEquipped ? 'remove' : ''}" id="equipBtn" ${(!isEquipped && !check.ok) ? 'disabled' : ''}>
           ${isEquipped ? 'Retirer' : 'Équiper'}
@@ -937,6 +861,7 @@
         character.equipped.push(item.id);
       }
       refreshAll();
+      renderDrawerContent();
     });
   }
 
@@ -971,9 +896,9 @@
     renderStats();
     renderBars();
     renderZones();
-    renderEquippedSummary();
-    renderCategories();
-    renderDetail();
+    renderEquippedStrip();
+    renderTabs();
+    renderCardGrid();
   }
 
   refreshAll();
