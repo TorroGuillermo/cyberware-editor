@@ -49,30 +49,13 @@
     border-bottom: 1px solid var(--border);
   }
 
-  .top-layout {
-    display: flex;
-    gap: 24px;
-    align-items: flex-start;
-    max-width: 1600px;
-    flex-wrap: wrap;
-  }
+  .top-layout { display: flex; gap: 24px; align-items: flex-start; max-width: 1600px; flex-wrap: wrap; }
 
-  .panel {
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 18px 20px;
-  }
+  .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; }
 
   .panel-title {
-    font-size: 12px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim);
+    margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
   }
 
   /* ---- Colonne gauche : stats + barres ---- */
@@ -153,38 +136,28 @@
   .zone-marker.equipped .zone-badge { opacity: 1; }
   .skeleton-legend { margin-top: 14px; font-size: 9px; color: var(--text-dim); text-align: center; letter-spacing: 0.5px; }
 
-  /* ---- Équipement installé : bande de tuiles compactes ---- */
-  .equipped-strip-wrap { max-width: 1600px; margin-top: 22px; }
-  .equipped-empty { color: var(--text-dim); font-size: 11px; padding: 12px 4px; }
-  .equipped-strip {
+  /* ---- Bandes compactes (équipement / atouts) ---- */
+  .strip-wrap { max-width: 1600px; margin-top: 22px; }
+  .strip-empty { color: var(--text-dim); font-size: 11px; padding: 12px 4px; }
+  .item-strip {
     display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;
     scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
   }
-  .equipped-strip::-webkit-scrollbar { height: 5px; }
-  .equipped-strip::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+  .item-strip::-webkit-scrollbar { height: 5px; }
+  .item-strip::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
 
-  .equip-chip {
-    flex-shrink: 0;
-    background: var(--bg-row);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--amber);
-    border-radius: 4px;
-    padding: 8px 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: background .15s ease;
+  .strip-chip {
+    flex-shrink: 0; background: var(--bg-row); border: 1px solid var(--border);
+    border-left: 3px solid var(--amber); border-radius: 4px; padding: 8px 10px;
+    display: flex; align-items: center; gap: 8px; cursor: pointer; transition: background .15s ease;
     max-width: 220px;
   }
-  .equip-chip:hover { background: var(--bg-row-hover); }
-  .equip-chip .chip-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-  .equip-chip .chip-name { font-size: 10.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .equip-chip .chip-zone { font-size: 8px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
-  .chip-remove {
-    background: transparent; border: none; color: var(--red); font-size: 13px; cursor: pointer; line-height: 1;
-    flex-shrink: 0; padding: 2px 4px;
-  }
+  .strip-chip.atout-chip { border-left-color: var(--purple); }
+  .strip-chip:hover { background: var(--bg-row-hover); }
+  .strip-chip .chip-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .strip-chip .chip-name { font-size: 10.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .strip-chip .chip-zone { font-size: 8px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .chip-remove { background: transparent; border: none; color: var(--red); font-size: 13px; cursor: pointer; line-height: 1; flex-shrink: 0; padding: 2px 4px; }
   .chip-remove:hover { color: #fff; }
 
   /* ---- Catalogue : onglets + grille de cartes ---- */
@@ -197,61 +170,31 @@
   .dot.illegal { background: var(--red); }
   .badge-sample { font-size: 8px; padding: 1px 5px; border-radius: 3px; border: 1px solid; }
 
-  .zone-tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
+  .zone-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
   .zone-tab {
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    font-family: inherit;
-    font-size: 10.5px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 10px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all .15s ease;
-    display: flex;
-    align-items: center;
-    gap: 7px;
+    background: var(--bg-panel); border: 1px solid var(--border); color: var(--text-dim);
+    font-family: inherit; font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase;
+    padding: 10px 16px; border-radius: 4px; cursor: pointer; transition: all .15s ease;
+    display: flex; align-items: center; gap: 7px;
   }
   .zone-tab:hover { border-color: var(--red); color: var(--red); }
   .zone-tab.active { background: var(--red); border-color: var(--red); color: #000; font-weight: bold; }
-  .zone-tab .tab-count {
-    font-size: 8.5px;
-    background: #00000033;
-    padding: 1px 6px;
-    border-radius: 8px;
-  }
+  .zone-tab .tab-count { font-size: 8.5px; background: #00000033; padding: 1px 6px; border-radius: 8px; }
   .zone-tab.active .tab-count { background: #00000044; }
 
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 10px;
-  }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
   .item-card {
-    background: var(--bg-panel);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 14px;
-    cursor: pointer;
-    transition: all .15s ease;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    background: var(--bg-panel); border: 1px solid var(--border); border-radius: 5px; padding: 14px;
+    cursor: pointer; transition: all .15s ease; display: flex; flex-direction: column; gap: 8px;
   }
   .item-card:hover { border-color: var(--border-strong); background: var(--bg-row-hover); transform: translateY(-1px); }
   .item-card.item-equipped { border-color: var(--amber); box-shadow: 0 0 10px #e0a94033; }
-  .item-card.selected { border-color: var(--red); }
+  .item-card.atout-card.item-equipped { border-color: var(--purple); box-shadow: 0 0 10px #a978d933; }
 
   .item-card-top { display: flex; align-items: center; gap: 7px; }
   .item-card-name { font-size: 12px; color: var(--text); flex: 1; }
   .item-card-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+  .item-card-desc { font-size: 10px; color: var(--text-dim); line-height: 1.4; }
 
   .badge { font-size: 8.5px; padding: 2px 6px; border-radius: 3px; border: 1px solid; white-space: nowrap; }
   .badge.cc { color: var(--amber); border-color: var(--amber-dim); }
@@ -259,33 +202,30 @@
   .badge.ram { color: var(--purple); border-color: var(--purple-dim); }
   .badge.glace { color: var(--blue); border-color: var(--blue-dim); }
   .badge.equipped-tag { color: #000; background: var(--amber); border-color: var(--amber); font-weight: bold; }
+  .badge.atout-tag { color: #000; background: var(--purple); border-color: var(--purple); font-weight: bold; }
 
   /* ---- Panneau détail glissant (drawer) ---- */
-  #drawerBackdrop {
-    position: fixed; inset: 0; background: #000000aa; z-index: 100;
-    opacity: 0; pointer-events: none; transition: opacity .25s ease;
-  }
+  #drawerBackdrop { position: fixed; inset: 0; background: #000000aa; z-index: 100; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
   #drawerBackdrop.open { opacity: 1; pointer-events: auto; }
 
   #detailDrawer {
     position: fixed; top: 0; right: 0; height: 100vh; width: 380px; max-width: 90vw;
     background: var(--bg-panel); border-left: 1px solid var(--border-strong);
     z-index: 101; transform: translateX(100%); transition: transform .28s ease;
-    padding: 24px 22px; overflow-y: auto;
-    box-shadow: -10px 0 30px #000000aa;
+    padding: 24px 22px; overflow-y: auto; box-shadow: -10px 0 30px #000000aa;
   }
   #detailDrawer.open { transform: translateX(0); }
 
   .drawer-close {
-    position: absolute; top: 18px; right: 18px;
-    background: transparent; border: 1px solid var(--border-strong); color: var(--text-dim);
-    width: 26px; height: 26px; border-radius: 3px; cursor: pointer; font-size: 14px;
+    position: absolute; top: 18px; right: 18px; background: transparent; border: 1px solid var(--border-strong);
+    color: var(--text-dim); width: 26px; height: 26px; border-radius: 3px; cursor: pointer; font-size: 14px;
     display: flex; align-items: center; justify-content: center;
   }
   .drawer-close:hover { color: var(--red); border-color: var(--red); }
 
   .detail-header { margin: 4px 30px 18px 0; }
   .detail-name { font-size: 16px; color: var(--amber); letter-spacing: 1px; margin-bottom: 8px; }
+  .detail-name.atout-color { color: var(--purple); }
   .detail-nature { display: inline-block; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; border: 1px solid; }
   .detail-nature.legal { color: var(--green); border-color: var(--green); }
   .detail-nature.illegal { color: var(--red); border-color: var(--red); }
@@ -300,11 +240,78 @@
     font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 12px; border-radius: 3px;
     cursor: pointer; transition: all .15s ease;
   }
+  .equip-btn.atout-btn { background: var(--purple); }
   .equip-btn:hover { filter: brightness(1.15); }
   .equip-btn.remove { background: transparent; border: 1px solid var(--red); color: var(--red); }
   .equip-btn.remove:hover { background: var(--red); color: #000; }
   .equip-btn:disabled { opacity: 0.3; cursor: not-allowed; }
   .equip-error { font-size: 10px; color: var(--red); text-align: center; }
+
+  /* ---- Bouton + volet Fiche partageable ---- */
+  .sheet-toggle-btn {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 90;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all .15s ease;
+    box-shadow: 0 2px 10px #00000066;
+  }
+  .sheet-toggle-btn:hover { border-color: var(--red); color: var(--red); }
+
+  #sheetBackdrop { position: fixed; inset: 0; background: #000000aa; z-index: 110; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
+  #sheetBackdrop.open { opacity: 1; pointer-events: auto; }
+
+  #sheetDrawer {
+    position: fixed; top: 0; right: 0; height: 100vh; width: 420px; max-width: 92vw;
+    background: var(--bg-panel); border-left: 1px solid var(--border-strong);
+    z-index: 111; transform: translateX(100%); transition: transform .28s ease;
+    padding: 24px 22px; overflow-y: auto; box-shadow: -10px 0 30px #000000aa;
+  }
+  #sheetDrawer.open { transform: translateX(0); }
+
+  .sheet-section-title {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber);
+    margin: 26px 0 10px 0;
+  }
+  .sheet-section-title:first-of-type { margin-top: 4px; }
+  .sheet-hint { font-size: 9.5px; color: var(--text-dim); margin-bottom: 10px; line-height: 1.5; }
+
+  .sheet-textarea {
+    width: 100%; min-height: 110px; background: #05070a; border: 1px solid var(--border);
+    color: var(--green); font-family: inherit; font-size: 10px; padding: 10px; border-radius: 4px;
+    resize: vertical; word-break: break-all;
+  }
+  .sheet-textarea.import-area { color: var(--text); }
+  .sheet-textarea:focus { outline: none; border-color: var(--border-strong); }
+
+  .sheet-btn {
+    width: 100%; margin-top: 10px; border: none; font-family: inherit; font-weight: bold;
+    font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 11px; border-radius: 4px;
+    cursor: pointer; transition: all .15s ease;
+  }
+  .sheet-btn.export-btn { background: var(--amber); color: #000; }
+  .sheet-btn.export-btn:hover { filter: brightness(1.15); }
+  .sheet-btn.export-btn.copied { background: var(--green); }
+  .sheet-btn.import-btn { background: transparent; border: 1px solid var(--border-strong); color: var(--text); }
+  .sheet-btn.import-btn:hover { background: var(--text); color: #000; }
+
+  .sheet-divider { border: none; border-top: 1px solid var(--border); margin: 22px 0; }
+  .sheet-feedback { font-size: 10px; margin-top: 8px; min-height: 14px; }
+  .sheet-feedback.ok { color: var(--green); }
+  .sheet-feedback.error { color: var(--red); }
 
   /* ---- Tooltip flottant ---- */
   #tooltip {
@@ -314,11 +321,32 @@
   }
   #tooltip.visible { opacity: 1; }
   #tooltip .tt-name { color: var(--amber); font-size: 11px; margin-bottom: 4px; }
+  #tooltip .tt-name.atout-color { color: var(--purple); }
   #tooltip .tt-loc { color: var(--text-dim); font-size: 9px; margin-bottom: 6px; }
   #tooltip .tt-effets { color: var(--text); }
 </style>
 </head>
 <body>
+
+  <button class="sheet-toggle-btn" id="sheetToggleBtn">📋 Fiche partageable</button>
+
+  <div id="sheetBackdrop"></div>
+  <div id="sheetDrawer">
+    <button class="drawer-close" id="sheetClose">✕</button>
+
+    <div class="sheet-section-title">Exporter cette fiche</div>
+    <div class="sheet-hint">Copie ce code et envoie-le à quelqu'un pour qu'il puisse charger cette fiche exacte de son côté.</div>
+    <textarea class="sheet-textarea" id="exportArea" readonly></textarea>
+    <button class="sheet-btn export-btn" id="copyCodeBtn">Copier le code</button>
+
+    <hr class="sheet-divider">
+
+    <div class="sheet-section-title">Charger une fiche</div>
+    <div class="sheet-hint">Colle ici le code reçu de quelqu'un d'autre pour afficher sa fiche.</div>
+    <textarea class="sheet-textarea import-area" id="importArea" placeholder="Colle le code ici..."></textarea>
+    <button class="sheet-btn import-btn" id="loadCodeBtn">Charger cette fiche</button>
+    <div class="sheet-feedback" id="importFeedback"></div>
+  </div>
 
   <h1>// Fiche de personnage</h1>
 
@@ -348,21 +376,13 @@
         <div class="panel-title"><span>État du personnage</span></div>
 
         <div class="bar-block">
-          <div class="bar-label">
-            <span class="name humanite">Humanité</span>
-            <span class="value" id="humaniteValue">100 / 100</span>
-          </div>
-          <div class="bar-track">
-            <div class="bar-fill humanite" id="humaniteFill" style="width:100%"></div>
-          </div>
+          <div class="bar-label"><span class="name humanite">Humanité</span><span class="value" id="humaniteValue">100 / 100</span></div>
+          <div class="bar-track"><div class="bar-fill humanite" id="humaniteFill" style="width:100%"></div></div>
           <div class="bar-note">100 par défaut, décroît selon les implants installés.</div>
         </div>
 
         <div class="bar-block">
-          <div class="bar-label">
-            <span class="name cybercap">Cybercapacité</span>
-            <span class="value" id="cybercapValue">0 utilisé / 0 max</span>
-          </div>
+          <div class="bar-label"><span class="name cybercap">Cybercapacité</span><span class="value" id="cybercapValue">0 utilisé / 0 max</span></div>
           <div class="bar-track draggable" id="cybercapTrack">
             <div class="bar-fill cybercap-max" id="cybercapMaxFill" style="width:0%"></div>
             <div class="bar-fill cybercap-used" id="cybercapUsedFill" style="width:0%"></div>
@@ -372,24 +392,14 @@
         </div>
 
         <div class="bar-block">
-          <div class="bar-label">
-            <span class="name ram">RAM</span>
-            <span class="value" id="ramValue">0 / 30</span>
-          </div>
-          <div class="bar-track">
-            <div class="bar-fill ram" id="ramFill" style="width:0%"></div>
-          </div>
+          <div class="bar-label"><span class="name ram">RAM</span><span class="value" id="ramValue">0 / 30</span></div>
+          <div class="bar-track"><div class="bar-fill ram" id="ramFill" style="width:0%"></div></div>
           <div class="bar-note">Uniquement augmentée par certains implants — pas de réglage manuel.</div>
         </div>
 
         <div class="bar-block">
-          <div class="bar-label">
-            <span class="name glace">Glace</span>
-            <span class="value" id="glaceValue">0 / 100</span>
-          </div>
-          <div class="bar-track">
-            <div class="bar-fill glace" id="glaceFill" style="width:0%"></div>
-          </div>
+          <div class="bar-label"><span class="name glace">Glace</span><span class="value" id="glaceValue">0 / 100</span></div>
+          <div class="bar-track"><div class="bar-fill glace" id="glaceFill" style="width:0%"></div></div>
           <div class="bar-note">Uniquement augmentée par certains implants — pas de réglage manuel.</div>
         </div>
 
@@ -413,13 +423,13 @@
 
   </div>
 
-  <!-- ÉQUIPEMENT INSTALLÉ : bande compacte -->
-  <div class="equipped-strip-wrap">
+  <!-- ÉQUIPEMENT INSTALLÉ -->
+  <div class="strip-wrap">
     <div class="catalogue-title">// Équipement installé</div>
     <div id="equippedStrip"></div>
   </div>
 
-  <!-- CATALOGUE : onglets + cartes -->
+  <!-- CATALOGUE CYBERWARES -->
   <div class="catalogue">
     <div class="catalogue-title">// Cyberwares disponibles</div>
     <div class="legend-row">
@@ -432,6 +442,18 @@
     </div>
     <div class="zone-tabs" id="zoneTabs"></div>
     <div class="card-grid" id="cardGrid"></div>
+  </div>
+
+  <!-- ATOUTS SÉLECTIONNÉS -->
+  <div class="strip-wrap">
+    <div class="catalogue-title">// Atouts sélectionnés</div>
+    <div id="atoutsStrip"></div>
+  </div>
+
+  <!-- CATALOGUE ATOUTS -->
+  <div class="catalogue">
+    <div class="catalogue-title">// Atouts disponibles</div>
+    <div class="card-grid" id="atoutGrid"></div>
   </div>
 
   <!-- DRAWER DÉTAIL -->
@@ -533,15 +555,34 @@
   ];
 
   // =====================================================
+  // CATALOGUE D'ATOUTS — ajoute tes objets ici
+  // Structure simple : id, nom, description, effets
+  // =====================================================
+  const ATOUTS = [
+    { id:"sang_froid", nom:"Sang-Froid", effets:"Ignore les malus de panique en situation critique",
+      description:"Ce personnage garde la tête froide même quand tout part en vrille. Formé sur le terrain ou juste né comme ça." },
+    { id:"contacts_underground", nom:"Contacts Underground", effets:"Accès facilité aux marchés noirs et fixers",
+      description:"Un carnet d'adresses bien rempli dans les bas-fonds de Night City. Utile pour dénicher ce qui ne se vend pas en vitrine." },
+    { id:"instinct_survie", nom:"Instinct de Survie", effets:"Meilleure anticipation des embuscades et dangers",
+      description:"Des années à esquiver les emmerdes ont aiguisé un sixième sens pour le danger imminent." },
+    { id:"charisme_ne", nom:"Charisme Né", effets:"Avantage dans les négociations et interactions sociales",
+      description:"Une présence naturelle qui met les gens à l'aise — ou juste assez mal à l'aise pour obtenir ce qu'il veut." },
+    { id:"expert_technique", nom:"Expert Technique", effets:"Bonus sur les réparations et le bricolage improvisé",
+      description:"Capable de réparer à peu près n'importe quoi avec du gaffer et de la volonté." },
+  ];
+
+  // =====================================================
   // ÉTAT DU PERSONNAGE
   // =====================================================
   let character = {
     baseStats: Object.fromEntries(STAT_NAMES.map(n => [n, 1])),
     cybercapMax: 0,
-    equipped: [],
+    equipped: [],   // cyberwares
+    atouts: [],     // atouts sélectionnés
   };
 
   let selectedItemId = null;
+  let selectedItemType = null; // 'cyber' | 'atout'
   let activeZone = "tete";
 
   let computed = {
@@ -553,6 +594,7 @@
   };
 
   function getItem(id) { return CATALOGUE.find(i => i.id === id); }
+  function getAtout(id) { return ATOUTS.find(a => a.id === id); }
 
   function recompute() {
     const bonus = Object.fromEntries(STAT_NAMES.map(n => [n, 0]));
@@ -712,15 +754,15 @@
   function renderEquippedStrip() {
     const container = document.getElementById('equippedStrip');
     if (character.equipped.length === 0) {
-      container.innerHTML = '<div class="equipped-empty">Aucun cyberware installé pour le moment.</div>';
+      container.innerHTML = '<div class="strip-empty">Aucun cyberware installé pour le moment.</div>';
       return;
     }
-    container.innerHTML = `<div class="equipped-strip">
+    container.innerHTML = `<div class="item-strip">
       ${character.equipped.map(id => {
         const item = getItem(id);
         if (!item) return '';
         return `
-          <div class="equip-chip" data-open="${item.id}">
+          <div class="strip-chip" data-open="${item.id}">
             <div class="chip-text">
               <span class="chip-name">${item.nom}</span>
               <span class="chip-zone">${ZONES[item.categorie]}</span>
@@ -734,7 +776,7 @@
     container.querySelectorAll('[data-open]').forEach(chip => {
       chip.addEventListener('click', (e) => {
         if (e.target.closest('[data-remove]')) return;
-        openDrawer(chip.dataset.open);
+        openDrawer(chip.dataset.open, 'cyber');
       });
     });
     container.querySelectorAll('[data-remove]').forEach(btn => {
@@ -747,7 +789,47 @@
   }
 
   // =====================================================
-  // ONGLETS DE ZONE + GRILLE DE CARTES
+  // ATOUTS SÉLECTIONNÉS — bande compacte
+  // =====================================================
+  function renderAtoutsStrip() {
+    const container = document.getElementById('atoutsStrip');
+    if (character.atouts.length === 0) {
+      container.innerHTML = '<div class="strip-empty">Aucun atout sélectionné pour le moment.</div>';
+      return;
+    }
+    container.innerHTML = `<div class="item-strip">
+      ${character.atouts.map(id => {
+        const atout = getAtout(id);
+        if (!atout) return '';
+        return `
+          <div class="strip-chip atout-chip" data-open="${atout.id}">
+            <div class="chip-text">
+              <span class="chip-name">${atout.nom}</span>
+              <span class="chip-zone">Atout</span>
+            </div>
+            <button class="chip-remove" data-remove="${atout.id}" title="Retirer">✕</button>
+          </div>
+        `;
+      }).join('')}
+    </div>`;
+
+    container.querySelectorAll('[data-open]').forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        if (e.target.closest('[data-remove]')) return;
+        openDrawer(chip.dataset.open, 'atout');
+      });
+    });
+    container.querySelectorAll('[data-remove]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        character.atouts = character.atouts.filter(id => id !== btn.dataset.remove);
+        refreshAll();
+      });
+    });
+  }
+
+  // =====================================================
+  // ONGLETS DE ZONE + GRILLE DE CARTES (CYBERWARES)
   // =====================================================
   function canEquip(item) {
     if (character.equipped.includes(item.id)) return { ok: true };
@@ -782,7 +864,7 @@
     container.innerHTML = items.map(item => {
       const isEquipped = character.equipped.includes(item.id);
       return `
-        <div class="item-card ${isEquipped ? 'item-equipped' : ''} ${item.id === selectedItemId ? 'selected' : ''}" data-item="${item.id}">
+        <div class="item-card ${isEquipped ? 'item-equipped' : ''}" data-item="${item.id}">
           <div class="item-card-top">
             <span class="dot ${item.nature}"></span>
             <span class="item-card-name">${item.nom}</span>
@@ -800,21 +882,49 @@
 
     container.querySelectorAll('.item-card').forEach(card => {
       const item = getItem(card.dataset.item);
-      card.addEventListener('click', () => openDrawer(item.id));
-      card.addEventListener('mouseenter', (e) => showTooltip(e, item));
+      card.addEventListener('click', () => openDrawer(item.id, 'cyber'));
+      card.addEventListener('mouseenter', (e) => showTooltip(e, item, 'cyber'));
       card.addEventListener('mousemove', (e) => moveTooltip(e));
       card.addEventListener('mouseleave', hideTooltip);
     });
   }
 
   // =====================================================
-  // DRAWER DE DÉTAIL
+  // GRILLE DE CARTES (ATOUTS)
+  // =====================================================
+  function renderAtoutGrid() {
+    const container = document.getElementById('atoutGrid');
+    container.innerHTML = ATOUTS.map(atout => {
+      const isSelected = character.atouts.includes(atout.id);
+      return `
+        <div class="item-card atout-card ${isSelected ? 'item-equipped' : ''}" data-atout="${atout.id}">
+          <div class="item-card-top">
+            <span class="item-card-name">${atout.nom}</span>
+          </div>
+          <div class="item-card-desc">${atout.effets}</div>
+          ${isSelected ? '<div class="item-card-badges"><span class="badge atout-tag">Sélectionné</span></div>' : ''}
+        </div>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.item-card').forEach(card => {
+      const atout = getAtout(card.dataset.atout);
+      card.addEventListener('click', () => openDrawer(atout.id, 'atout'));
+      card.addEventListener('mouseenter', (e) => showTooltip(e, atout, 'atout'));
+      card.addEventListener('mousemove', (e) => moveTooltip(e));
+      card.addEventListener('mouseleave', hideTooltip);
+    });
+  }
+
+  // =====================================================
+  // DRAWER DE DÉTAIL (commun cyberwares + atouts)
   // =====================================================
   const drawer = document.getElementById('detailDrawer');
   const backdrop = document.getElementById('drawerBackdrop');
 
-  function openDrawer(itemId) {
-    selectedItemId = itemId;
+  function openDrawer(id, type) {
+    selectedItemId = id;
+    selectedItemType = type;
     renderDrawerContent();
     drawer.classList.add('open');
     backdrop.classList.add('open');
@@ -827,6 +937,14 @@
   backdrop.addEventListener('click', closeDrawer);
 
   function renderDrawerContent() {
+    if (selectedItemType === 'cyber') {
+      renderCyberDrawer();
+    } else if (selectedItemType === 'atout') {
+      renderAtoutDrawer();
+    }
+  }
+
+  function renderCyberDrawer() {
     const item = getItem(selectedItemId);
     if (!item) return;
     const isEquipped = character.equipped.includes(item.id);
@@ -865,16 +983,52 @@
     });
   }
 
+  function renderAtoutDrawer() {
+    const atout = getAtout(selectedItemId);
+    if (!atout) return;
+    const isSelected = character.atouts.includes(atout.id);
+
+    document.getElementById('drawerContent').innerHTML = `
+      <div class="detail-header">
+        <div class="detail-name atout-color">${atout.nom}</div>
+      </div>
+      <div class="detail-field"><div class="field-label">Effets</div><div class="field-value">${atout.effets}</div></div>
+      <div class="detail-field"><div class="field-label">Description</div><div class="field-value">${atout.description}</div></div>
+      <div class="detail-actions">
+        <button class="equip-btn atout-btn ${isSelected ? 'remove' : ''}" id="atoutBtn">
+          ${isSelected ? 'Retirer' : 'Ajouter à la fiche'}
+        </button>
+      </div>
+    `;
+
+    document.getElementById('atoutBtn').addEventListener('click', () => {
+      if (isSelected) {
+        character.atouts = character.atouts.filter(id => id !== atout.id);
+      } else {
+        character.atouts.push(atout.id);
+      }
+      refreshAll();
+      renderDrawerContent();
+    });
+  }
+
   // =====================================================
   // TOOLTIP
   // =====================================================
   const tooltipEl = document.getElementById('tooltip');
-  function showTooltip(e, item) {
-    tooltipEl.innerHTML = `
-      <div class="tt-name">${item.nom}</div>
-      <div class="tt-loc">${ZONES[item.categorie]} — ${item.emplacementDetaille}</div>
-      <div class="tt-effets">${item.effets}</div>
-    `;
+  function showTooltip(e, entity, type) {
+    if (type === 'cyber') {
+      tooltipEl.innerHTML = `
+        <div class="tt-name">${entity.nom}</div>
+        <div class="tt-loc">${ZONES[entity.categorie]} — ${entity.emplacementDetaille}</div>
+        <div class="tt-effets">${entity.effets}</div>
+      `;
+    } else {
+      tooltipEl.innerHTML = `
+        <div class="tt-name atout-color">${entity.nom}</div>
+        <div class="tt-effets">${entity.effets}</div>
+      `;
+    }
     tooltipEl.classList.add('visible');
     moveTooltip(e);
   }
@@ -889,6 +1043,78 @@
   function hideTooltip() { tooltipEl.classList.remove('visible'); }
 
   // =====================================================
+  // FICHE PARTAGEABLE — export / import via code
+  // =====================================================
+  const sheetDrawer = document.getElementById('sheetDrawer');
+  const sheetBackdrop = document.getElementById('sheetBackdrop');
+
+  function generateCharacterCode() {
+    const payload = {
+      baseStats: character.baseStats,
+      cybercapMax: character.cybercapMax,
+      equipped: character.equipped,
+      atouts: character.atouts,
+    };
+    try {
+      return btoa(encodeURIComponent(JSON.stringify(payload)));
+    } catch (err) {
+      return '';
+    }
+  }
+
+  function openSheetDrawer() {
+    document.getElementById('exportArea').value = generateCharacterCode();
+    document.getElementById('importFeedback').textContent = '';
+    document.getElementById('importFeedback').className = 'sheet-feedback';
+    sheetDrawer.classList.add('open');
+    sheetBackdrop.classList.add('open');
+  }
+  function closeSheetDrawer() {
+    sheetDrawer.classList.remove('open');
+    sheetBackdrop.classList.remove('open');
+  }
+
+  document.getElementById('sheetToggleBtn').addEventListener('click', openSheetDrawer);
+  document.getElementById('sheetClose').addEventListener('click', closeSheetDrawer);
+  sheetBackdrop.addEventListener('click', closeSheetDrawer);
+
+  document.getElementById('copyCodeBtn').addEventListener('click', () => {
+    const area = document.getElementById('exportArea');
+    area.select();
+    navigator.clipboard.writeText(area.value).then(() => {
+      const btn = document.getElementById('copyCodeBtn');
+      btn.textContent = 'Copié ✓';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copier le code'; btn.classList.remove('copied'); }, 1800);
+    });
+  });
+
+  document.getElementById('loadCodeBtn').addEventListener('click', () => {
+    const raw = document.getElementById('importArea').value.trim();
+    const feedback = document.getElementById('importFeedback');
+    if (!raw) {
+      feedback.textContent = 'Colle un code avant de charger.';
+      feedback.className = 'sheet-feedback error';
+      return;
+    }
+    try {
+      const payload = JSON.parse(decodeURIComponent(atob(raw)));
+      character.baseStats = { ...Object.fromEntries(STAT_NAMES.map(n => [n, 1])), ...(payload.baseStats || {}) };
+      character.cybercapMax = payload.cybercapMax || 0;
+      character.equipped = Array.isArray(payload.equipped) ? payload.equipped : [];
+      character.atouts = Array.isArray(payload.atouts) ? payload.atouts : [];
+      refreshAll();
+      document.getElementById('exportArea').value = generateCharacterCode();
+      feedback.textContent = 'Fiche chargée avec succès !';
+      feedback.className = 'sheet-feedback ok';
+      document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('active'));
+    } catch (err) {
+      feedback.textContent = 'Code invalide — vérifie que tu l\'as copié en entier.';
+      feedback.className = 'sheet-feedback error';
+    }
+  });
+
+  // =====================================================
   // REFRESH GLOBAL
   // =====================================================
   function refreshAll() {
@@ -897,8 +1123,10 @@
     renderBars();
     renderZones();
     renderEquippedStrip();
+    renderAtoutsStrip();
     renderTabs();
     renderCardGrid();
+    renderAtoutGrid();
   }
 
   refreshAll();
