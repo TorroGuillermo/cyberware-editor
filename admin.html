@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Admin — Générateur de contenu</title>
+<style>
+  :root {
+    --bg: #0a0e14;
+    --bg-panel: #10151d;
+    --bg-row: #161c26;
+    --border: #ff3b3b44;
+    --border-strong: #ff3b3b99;
+    --red: #ff3b3b;
+    --red-dim: #b5333a;
+    --amber: #e0a940;
+    --amber-dim: #b5872f;
+    --purple: #a978d9;
+    --green: #4caf7d;
+    --text: #d8dce2;
+    --text-dim: #7d8590;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Courier New', monospace;
+    margin: 0;
+    padding: 36px;
+    min-height: 100vh;
+  }
+  h1 {
+    font-size: 16px; letter-spacing: 4px; text-transform: uppercase; color: var(--red);
+    margin: 0 0 8px 0; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+  .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 26px; }
+
+  .layout { display: flex; gap: 24px; max-width: 1300px; flex-wrap: wrap; align-items: flex-start; }
+  .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 4px; padding: 22px; }
+  .form-panel { flex: 1; min-width: 380px; }
+  .output-panel { flex: 1; min-width: 380px; position: sticky; top: 20px; }
+
+  .mode-switch { display: flex; gap: 6px; margin-bottom: 22px; }
+  .mode-btn {
+    flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-dim);
+    font-family: inherit; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
+    padding: 10px; border-radius: 4px; cursor: pointer; transition: all .15s ease;
+  }
+  .mode-btn:hover { border-color: var(--red); color: var(--red); }
+  .mode-btn.active { background: var(--red); border-color: var(--red); color: #000; font-weight: bold; }
+
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block; font-size: 9.5px; color: var(--text-dim); text-transform: uppercase;
+    letter-spacing: 1px; margin-bottom: 6px;
+  }
+  .field input[type="text"], .field input[type="number"], .field select, .field textarea {
+    width: 100%; background: var(--bg-row); border: 1px solid var(--border); color: var(--text);
+    font-family: inherit; font-size: 12px; padding: 9px 10px; border-radius: 3px;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--border-strong); }
+  .field textarea { resize: vertical; min-height: 60px; }
+  .field .hint { font-size: 9px; color: #545c66; margin-top: 4px; font-style: italic; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 6px; }
+  .stat-input { display: flex; align-items: center; gap: 8px; }
+  .stat-input label { flex: 1; margin: 0; font-size: 10px; text-transform: none; letter-spacing: 0; color: var(--text); }
+  .stat-input input { width: 60px; }
+
+  .radio-row { display: flex; gap: 16px; }
+  .radio-row label { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text); text-transform: none; letter-spacing: 0; }
+
+  .generate-btn {
+    width: 100%; background: var(--amber); color: #000; border: none; font-family: inherit; font-weight: bold;
+    font-size: 12px; letter-spacing: 1px; text-transform: uppercase; padding: 13px; border-radius: 4px;
+    cursor: pointer; margin-top: 8px; transition: all .15s ease;
+  }
+  .generate-btn:hover { filter: brightness(1.15); }
+
+  .output-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+  .output-box {
+    background: #05070a; border: 1px solid var(--border); border-radius: 4px; padding: 16px;
+    font-size: 11px; line-height: 1.6; color: var(--green); white-space: pre-wrap; word-break: break-word;
+    max-height: 420px; overflow-y: auto; min-height: 160px;
+  }
+  .copy-btn {
+    width: 100%; background: transparent; border: 1px solid var(--border-strong); color: var(--text);
+    font-family: inherit; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 11px;
+    border-radius: 4px; cursor: pointer; margin-top: 10px; transition: all .15s ease;
+  }
+  .copy-btn:hover { background: var(--text); color: #000; }
+  .copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+  .instructions {
+    margin-top: 20px; font-size: 10.5px; color: var(--text-dim); line-height: 1.7;
+    background: var(--bg-row); border-left: 2px solid var(--amber); padding: 12px 14px; border-radius: 3px;
+  }
+  .instructions b { color: var(--amber); }
+</style>
+</head>
+<body>
+
+  <h1>// Panneau Admin</h1>
+  <div class="subtitle">Génère le code d'un cyberware ou d'un atout, à copier-coller dans index.html</div>
+
+  <div class="layout">
+
+    <div class="panel form-panel">
+      <div class="mode-switch">
+        <button class="mode-btn active" data-mode="cyber">Cyberware</button>
+        <button class="mode-btn" data-mode="atout">Atout</button>
+      </div>
+
+      <!-- FORMULAIRE CYBERWARE -->
+      <div id="formCyber">
+        <div class="field">
+          <label>Nom</label>
+          <input type="text" id="c_nom" placeholder="Kiroshi Optics Mk.2">
+        </div>
+        <div class="field">
+          <label>Identifiant (généré automatiquement, modifiable)</label>
+          <input type="text" id="c_id" placeholder="kiroshi_optics">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Catégorie (zone)</label>
+            <select id="c_categorie">
+              <option value="tete">Tête</option>
+              <option value="tronc">Tronc</option>
+              <option value="bras_g">Bras gauche</option>
+              <option value="bras_d">Bras droit</option>
+              <option value="jambe_g">Jambe gauche</option>
+              <option value="jambe_d">Jambe droite</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Nature</label>
+            <div class="radio-row" style="padding-top:9px;">
+              <label><input type="radio" name="c_nature" value="legal" checked> Légal</label>
+              <label><input type="radio" name="c_nature" value="illegal"> Illégal</label>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Emplacement détaillé</label>
+          <input type="text" id="c_emplacement" placeholder="Yeux">
+        </div>
+        <div class="field">
+          <label>Effets (résumé court)</label>
+          <input type="text" id="c_effets" placeholder="Vision nocturne, zoom x4">
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea id="c_description" placeholder="Description complète de l'implant..."></textarea>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Coût Cybercapacité</label>
+            <input type="number" id="c_cybercap" value="0" min="0">
+          </div>
+          <div class="field">
+            <label>Coût Humanité</label>
+            <input type="number" id="c_humanite" value="0" min="0">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Bonus RAM</label>
+            <input type="number" id="c_ram" value="0" min="0">
+          </div>
+          <div class="field">
+            <label>Bonus Glace</label>
+            <input type="number" id="c_glace" value="0" min="0">
+          </div>
+        </div>
+        <div class="field">
+          <label>Modificateurs de statistiques</label>
+          <div class="stats-grid">
+            <div class="stat-input"><label>Force</label><input type="number" id="c_stat_Force" value="0"></div>
+            <div class="stat-input"><label>Réflexes</label><input type="number" id="c_stat_Réflexes" value="0"></div>
+            <div class="stat-input"><label>Vitesse</label><input type="number" id="c_stat_Vitesse" value="0"></div>
+            <div class="stat-input"><label>Endurance</label><input type="number" id="c_stat_Endurance" value="0"></div>
+            <div class="stat-input"><label>Résistance</label><input type="number" id="c_stat_Résistance" value="0"></div>
+            <div class="stat-input"><label>Esprit</label><input type="number" id="c_stat_Esprit" value="0"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Incompatible avec (identifiants, séparés par des virgules)</label>
+          <input type="text" id="c_incompatible" placeholder="militech_optics, autre_id">
+          <div class="hint">Laisse vide si aucune incompatibilité.</div>
+        </div>
+
+        <button class="generate-btn" id="genCyberBtn">Générer le code</button>
+      </div>
+
+      <!-- FORMULAIRE ATOUT -->
+      <div id="formAtout" style="display:none;">
+        <div class="field">
+          <label>Nom</label>
+          <input type="text" id="a_nom" placeholder="Sang-Froid">
+        </div>
+        <div class="field">
+          <label>Identifiant (généré automatiquement, modifiable)</label>
+          <input type="text" id="a_id" placeholder="sang_froid">
+        </div>
+        <div class="field">
+          <label>Effets (résumé court)</label>
+          <input type="text" id="a_effets" placeholder="Ignore les malus de panique">
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea id="a_description" placeholder="Description complète de l'atout..."></textarea>
+        </div>
+
+        <button class="generate-btn" id="genAtoutBtn">Générer le code</button>
+      </div>
+
+    </div>
+
+    <div class="panel output-panel">
+      <div class="output-title">// Code généré</div>
+      <div class="output-box" id="output">En attente de génération...</div>
+      <button class="copy-btn" id="copyBtn">Copier le code</button>
+
+      <div class="instructions">
+        <b>Comment l'utiliser :</b><br>
+        1. Copie le code ci-dessus.<br>
+        2. Va dans ton fichier <b>index.html</b> sur GitHub, clique sur ✏️ pour éditer.<br>
+        3. Cherche <b>const CATALOGUE = [</b> (pour un cyberware) ou <b>const ATOUTS = [</b> (pour un atout).<br>
+        4. Colle le code juste avant le <b>];</b> qui ferme le tableau (juste après le dernier objet existant, précédé d'une virgule).<br>
+        5. Commit. Vercel redéploie automatiquement en ~30s.
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  function slugify(str) {
+    return str
+      .toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // enlève les accents
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '');
+  }
+
+  // Auto-génération de l'id à partir du nom
+  document.getElementById('c_nom').addEventListener('input', (e) => {
+    document.getElementById('c_id').value = slugify(e.target.value);
+  });
+  document.getElementById('a_nom').addEventListener('input', (e) => {
+    document.getElementById('a_id').value = slugify(e.target.value);
+  });
+
+  // Switch de mode
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode = btn.dataset.mode;
+      document.getElementById('formCyber').style.display = mode === 'cyber' ? 'block' : 'none';
+      document.getElementById('formAtout').style.display = mode === 'atout' ? 'block' : 'none';
+      document.getElementById('output').textContent = 'En attente de génération...';
+    });
+  });
+
+  const STAT_KEYS = ["Force", "Réflexes", "Vitesse", "Endurance", "Résistance", "Esprit"];
+
+  function esc(str) {
+    return (str || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  }
+
+  document.getElementById('genCyberBtn').addEventListener('click', () => {
+    const id = document.getElementById('c_id').value.trim() || 'nouveau_cyberware';
+    const nom = document.getElementById('c_nom').value.trim();
+    const categorie = document.getElementById('c_categorie').value;
+    const nature = document.querySelector('input[name="c_nature"]:checked').value;
+    const emplacement = document.getElementById('c_emplacement').value.trim();
+    const effets = document.getElementById('c_effets').value.trim();
+    const description = document.getElementById('c_description').value.trim();
+    const cybercap = parseInt(document.getElementById('c_cybercap').value) || 0;
+    const humanite = parseInt(document.getElementById('c_humanite').value) || 0;
+    const ram = parseInt(document.getElementById('c_ram').value) || 0;
+    const glace = parseInt(document.getElementById('c_glace').value) || 0;
+
+    const statsEntries = STAT_KEYS
+      .map(key => [key, parseInt(document.getElementById('c_stat_' + key).value) || 0])
+      .filter(([, val]) => val !== 0)
+      .map(([key, val]) => `${key}: ${val}`)
+      .join(', ');
+
+    const incompatibleRaw = document.getElementById('c_incompatible').value.trim();
+    const incompatibleList = incompatibleRaw
+      ? incompatibleRaw.split(',').map(s => `"${esc(s.trim())}"`).join(', ')
+      : '';
+
+    const code =
+`  { id:"${esc(id)}", nom:"${esc(nom)}", categorie:"${categorie}", emplacementDetaille:"${esc(emplacement)}",
+    effets:"${esc(effets)}",
+    description:"${esc(description)}",
+    cybercapacite:${cybercap}, humanite:${humanite}, nature:"${nature}", statistiques:{${statsEntries}}, ram:${ram}, glace:${glace},
+    incompatibleWith:[${incompatibleList}] },`;
+
+    document.getElementById('output').textContent = code;
+    document.getElementById('copyBtn').classList.remove('copied');
+    document.getElementById('copyBtn').textContent = 'Copier le code';
+  });
+
+  document.getElementById('genAtoutBtn').addEventListener('click', () => {
+    const id = document.getElementById('a_id').value.trim() || 'nouvel_atout';
+    const nom = document.getElementById('a_nom').value.trim();
+    const effets = document.getElementById('a_effets').value.trim();
+    const description = document.getElementById('a_description').value.trim();
+
+    const code =
+`  { id:"${esc(id)}", nom:"${esc(nom)}", effets:"${esc(effets)}",
+    description:"${esc(description)}" },`;
+
+    document.getElementById('output').textContent = code;
+    document.getElementById('copyBtn').classList.remove('copied');
+    document.getElementById('copyBtn').textContent = 'Copier le code';
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    const text = document.getElementById('output').textContent;
+    if (!text || text === 'En attente de génération...') return;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copié ✓';
+      btn.classList.add('copied');
+    });
+  });
+</script>
+
+</body>
+</html>
