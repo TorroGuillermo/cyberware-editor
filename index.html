@@ -49,6 +49,11 @@
     border-bottom: 1px solid var(--border);
   }
 
+  .load-error {
+    background: #2a1215; border: 1px solid var(--red); color: var(--red);
+    padding: 12px 16px; border-radius: 4px; font-size: 11px; margin-bottom: 20px; line-height: 1.5;
+  }
+
   .top-layout { display: flex; gap: 24px; align-items: flex-start; max-width: 1600px; flex-wrap: wrap; }
 
   .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; }
@@ -100,7 +105,7 @@
   .bar-label .value { color: var(--text-dim); }
 
   .bar-track { position: relative; height: 20px; background: #05070a; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
-  .bar-track.draggable { cursor: pointer; }
+  .bar-track.draggable { cursor: pointer; touch-action: none; }
   .bar-track.draggable:hover { border-color: var(--border-strong); }
   .bar-track.draggable::after {
     content: '⇔'; position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
@@ -350,6 +355,8 @@
 
   <h1>// Fiche de personnage</h1>
 
+  <div id="loadError"></div>
+
   <div class="top-layout">
 
     <!-- COLONNE GAUCHE : Profils + Stats + Barres -->
@@ -467,6 +474,16 @@
 
 <script>
   // =====================================================
+  // UTILITAIRE — échappement HTML (évite qu'un < ou un " dans une
+  // description casse l'affichage)
+  // =====================================================
+  function h(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+  }
+
+  // =====================================================
   // DONNÉES DE BASE — STATS
   // =====================================================
   const STAT_NAMES = ["Force", "Réflexes", "Vitesse", "Endurance", "Résistance", "Esprit"];
@@ -490,7 +507,8 @@
   };
 
   // =====================================================
-  // CATALOGUE DE CYBERWARES — ajoute tes objets ici
+  // ZONES + CATALOGUES (chargés depuis data/*.json)
+  // Pour ajouter un implant ou un atout : utilise admin.html
   // =====================================================
   const ZONES = {
     tete:    "Tête",
@@ -501,75 +519,8 @@
     jambe_d: "Jambe droite",
   };
 
-  const CATALOGUE = [
-    { id:"kiroshi_optics", nom:"Kiroshi Optics Mk.2", categorie:"tete", emplacementDetaille:"Yeux",
-      effets:"Vision nocturne, zoom x4, détection de menace",
-      description:"Remplacement oculaire complet, standard chez Kiroshi. Fiable et discret.",
-      cybercapacite:40, humanite:5, nature:"legal", statistiques:{Esprit:1}, ram:0, glace:0,
-      incompatibleWith:["militech_optics"] },
-    { id:"militech_optics", nom:"Militech Reaper HUD", categorie:"tete", emplacementDetaille:"Yeux",
-      effets:"Tracking de cible, marquage ennemi automatique",
-      description:"Optique militaire agressive. Mal vue en dehors des zones de guerre.",
-      cybercapacite:55, humanite:10, nature:"illegal", statistiques:{"Réflexes":1}, ram:0, glace:0,
-      incompatibleWith:["kiroshi_optics"] },
-    { id:"cortex_deck", nom:"Cortex Deck Cortical", categorie:"tete", emplacementDetaille:"Crâne",
-      effets:"Interface réseau directe, accès rapide au Net",
-      description:"Puce d'interfaçage neuronal utilisée par les netrunners.",
-      cybercapacite:60, humanite:8, nature:"legal", statistiques:{Esprit:2}, ram:8, glace:0,
-      incompatibleWith:[] },
-    { id:"subdermal_armor", nom:"Armure Subdermale", categorie:"tronc", emplacementDetaille:"Torse",
-      effets:"Réduction des dégâts physiques",
-      description:"Plaques de kevlar tissées directement sous la peau.",
-      cybercapacite:70, humanite:12, nature:"legal", statistiques:{"Résistance":1}, ram:0, glace:0,
-      incompatibleWith:[] },
-    { id:"ice_shield", nom:"Bouclier ICE Spinal", categorie:"tronc", emplacementDetaille:"Colonne vertébrale",
-      effets:"Renforce les défenses contre les intrusions numériques",
-      description:"Module de contre-intrusion greffé directement à la moelle épinière.",
-      cybercapacite:65, humanite:10, nature:"legal", statistiques:{}, ram:0, glace:15,
-      incompatibleWith:[] },
-    { id:"mono_blade_g", nom:"Lame Mono (gauche)", categorie:"bras_g", emplacementDetaille:"Avant-bras gauche",
-      effets:"Arme de mêlée rétractable",
-      description:"Lame monomoléculaire dissimulée dans l'avant-bras.",
-      cybercapacite:45, humanite:8, nature:"illegal", statistiques:{Force:1}, ram:0, glace:0,
-      incompatibleWith:[] },
-    { id:"mono_blade_d", nom:"Lame Mono (droite)", categorie:"bras_d", emplacementDetaille:"Avant-bras droit",
-      effets:"Arme de mêlée rétractable",
-      description:"Lame monomoléculaire dissimulée dans l'avant-bras.",
-      cybercapacite:45, humanite:8, nature:"illegal", statistiques:{Force:1}, ram:0, glace:0,
-      incompatibleWith:["reinforced_arm_d"] },
-    { id:"reinforced_arm_d", nom:"Bras Renforcé", categorie:"bras_d", emplacementDetaille:"Bras droit complet",
-      effets:"Force de préhension augmentée",
-      description:"Remplacement complet du bras par une structure en alliage léger.",
-      cybercapacite:80, humanite:15, nature:"legal", statistiques:{Force:2, Endurance:1}, ram:0, glace:0,
-      incompatibleWith:["mono_blade_d"] },
-    { id:"reinforced_leg_g", nom:"Jambe Renforcée (gauche)", categorie:"jambe_g", emplacementDetaille:"Jambe gauche",
-      effets:"Saut amélioré, meilleure absorption des chocs",
-      description:"Structure interne renforcée par fibre de carbone.",
-      cybercapacite:50, humanite:9, nature:"legal", statistiques:{Vitesse:1}, ram:0, glace:0,
-      incompatibleWith:[] },
-    { id:"reinforced_leg_d", nom:"Jambe Renforcée (droite)", categorie:"jambe_d", emplacementDetaille:"Jambe droite",
-      effets:"Saut amélioré, meilleure absorption des chocs",
-      description:"Structure interne renforcée par fibre de carbone.",
-      cybercapacite:50, humanite:9, nature:"legal", statistiques:{Vitesse:1}, ram:0, glace:0,
-      incompatibleWith:[] },
-  ];
-
-  // =====================================================
-  // CATALOGUE D'ATOUTS — ajoute tes objets ici
-  // Structure simple : id, nom, description, effets
-  // =====================================================
-  const ATOUTS = [
-    { id:"sang_froid", nom:"Sang-Froid", effets:"Ignore les malus de panique en situation critique",
-      description:"Ce personnage garde la tête froide même quand tout part en vrille. Formé sur le terrain ou juste né comme ça." },
-    { id:"contacts_underground", nom:"Contacts Underground", effets:"Accès facilité aux marchés noirs et fixers",
-      description:"Un carnet d'adresses bien rempli dans les bas-fonds de Night City. Utile pour dénicher ce qui ne se vend pas en vitrine." },
-    { id:"instinct_survie", nom:"Instinct de Survie", effets:"Meilleure anticipation des embuscades et dangers",
-      description:"Des années à esquiver les emmerdes ont aiguisé un sixième sens pour le danger imminent." },
-    { id:"charisme_ne", nom:"Charisme Né", effets:"Avantage dans les négociations et interactions sociales",
-      description:"Une présence naturelle qui met les gens à l'aise — ou juste assez mal à l'aise pour obtenir ce qu'il veut." },
-    { id:"expert_technique", nom:"Expert Technique", effets:"Bonus sur les réparations et le bricolage improvisé",
-      description:"Capable de réparer à peu près n'importe quoi avec du gaffer et de la volonté." },
-  ];
+  let CATALOGUE = [];
+  let ATOUTS = [];
 
   // =====================================================
   // ÉTAT DU PERSONNAGE
@@ -651,7 +602,7 @@
         <span class="stat-name">${name}</span>
         <div class="stat-controls">
           <button class="stat-btn" data-stat="${name}" data-dir="-1" ${canDecrease ? '' : 'disabled'}>−</button>
-          <span class="stat-value ${isBoosted ? 'locked-boost' : ''}">${ROMAN[total]}</span>
+          <span class="stat-value ${isBoosted ? 'locked-boost' : ''}">${ROMAN[Math.max(0, total)] || total}</span>
           <button class="stat-btn" data-stat="${name}" data-dir="1" ${canIncrease ? '' : 'disabled'}>+</button>
           <span class="stat-lock">${base >= BASE_CAP ? '🔒' : ''}</span>
         </div>
@@ -688,8 +639,9 @@
 
   // =====================================================
   // BARRE CYBERCAPACITÉ — seule barre réglable manuellement
+  // Le plafond ne peut pas descendre sous la capacité déjà utilisée.
   // =====================================================
-  function setupDraggableBar(trackId, key, cfg, onChange) {
+  function setupDraggableBar(trackId, key, cfg, onChange, getMin) {
     const track = document.getElementById(trackId);
     function setFromClientX(clientX) {
       const rect = track.getBoundingClientRect();
@@ -697,6 +649,10 @@
       ratio = Math.max(0, Math.min(1, ratio));
       let raw = ratio * cfg.max;
       let stepped = Math.round(raw / cfg.step) * cfg.step;
+      if (getMin) {
+        const min = Math.ceil(getMin() / cfg.step) * cfg.step;
+        stepped = Math.max(stepped, min);
+      }
       stepped = Math.max(0, Math.min(cfg.max, stepped));
       character[key] = stepped;
       onChange();
@@ -707,7 +663,7 @@
     track.addEventListener('pointerup', () => { dragging = false; });
     track.addEventListener('pointercancel', () => { dragging = false; });
   }
-  setupDraggableBar('cybercapTrack', 'cybercapMax', RESOURCE_CONFIG.cybercap, renderBars);
+  setupDraggableBar('cybercapTrack', 'cybercapMax', RESOURCE_CONFIG.cybercap, renderBars, () => computed.cybercapUsed);
 
   function renderBars() {
     document.getElementById('humaniteFill').style.width = computed.humanite + '%';
@@ -753,21 +709,21 @@
   // =====================================================
   function renderEquippedStrip() {
     const container = document.getElementById('equippedStrip');
-    if (character.equipped.length === 0) {
+    const valid = character.equipped.filter(id => getItem(id));
+    if (valid.length === 0) {
       container.innerHTML = '<div class="strip-empty">Aucun cyberware installé pour le moment.</div>';
       return;
     }
     container.innerHTML = `<div class="item-strip">
-      ${character.equipped.map(id => {
+      ${valid.map(id => {
         const item = getItem(id);
-        if (!item) return '';
         return `
-          <div class="strip-chip" data-open="${item.id}">
+          <div class="strip-chip" data-open="${h(item.id)}">
             <div class="chip-text">
-              <span class="chip-name">${item.nom}</span>
-              <span class="chip-zone">${ZONES[item.categorie]}</span>
+              <span class="chip-name">${h(item.nom)}</span>
+              <span class="chip-zone">${h(ZONES[item.categorie] || item.categorie)}</span>
             </div>
-            <button class="chip-remove" data-remove="${item.id}" title="Retirer">✕</button>
+            <button class="chip-remove" data-remove="${h(item.id)}" title="Retirer">✕</button>
           </div>
         `;
       }).join('')}
@@ -793,21 +749,21 @@
   // =====================================================
   function renderAtoutsStrip() {
     const container = document.getElementById('atoutsStrip');
-    if (character.atouts.length === 0) {
+    const valid = character.atouts.filter(id => getAtout(id));
+    if (valid.length === 0) {
       container.innerHTML = '<div class="strip-empty">Aucun atout sélectionné pour le moment.</div>';
       return;
     }
     container.innerHTML = `<div class="item-strip">
-      ${character.atouts.map(id => {
+      ${valid.map(id => {
         const atout = getAtout(id);
-        if (!atout) return '';
         return `
-          <div class="strip-chip atout-chip" data-open="${atout.id}">
+          <div class="strip-chip atout-chip" data-open="${h(atout.id)}">
             <div class="chip-text">
-              <span class="chip-name">${atout.nom}</span>
+              <span class="chip-name">${h(atout.nom)}</span>
               <span class="chip-zone">Atout</span>
             </div>
-            <button class="chip-remove" data-remove="${atout.id}" title="Retirer">✕</button>
+            <button class="chip-remove" data-remove="${h(atout.id)}" title="Retirer">✕</button>
           </div>
         `;
       }).join('')}
@@ -861,20 +817,24 @@
   function renderCardGrid() {
     const container = document.getElementById('cardGrid');
     const items = CATALOGUE.filter(i => i.categorie === activeZone);
+    if (items.length === 0) {
+      container.innerHTML = '<div class="strip-empty">Aucun cyberware dans cette zone.</div>';
+      return;
+    }
     container.innerHTML = items.map(item => {
       const isEquipped = character.equipped.includes(item.id);
       return `
-        <div class="item-card ${isEquipped ? 'item-equipped' : ''}" data-item="${item.id}">
+        <div class="item-card ${isEquipped ? 'item-equipped' : ''}" data-item="${h(item.id)}">
           <div class="item-card-top">
-            <span class="dot ${item.nature}"></span>
-            <span class="item-card-name">${item.nom}</span>
+            <span class="dot ${item.nature === 'illegal' ? 'illegal' : 'legal'}"></span>
+            <span class="item-card-name">${h(item.nom)}</span>
           </div>
           <div class="item-card-badges">
             ${isEquipped ? '<span class="badge equipped-tag">Équipé</span>' : ''}
-            <span class="badge cc">${item.cybercapacite} CC</span>
-            <span class="badge hu">-${item.humanite} HU</span>
-            ${item.ram ? `<span class="badge ram">+${item.ram} RAM</span>` : ''}
-            ${item.glace ? `<span class="badge glace">+${item.glace} GLC</span>` : ''}
+            <span class="badge cc">${h(item.cybercapacite)} CC</span>
+            <span class="badge hu">-${h(item.humanite)} HU</span>
+            ${item.ram ? `<span class="badge ram">+${h(item.ram)} RAM</span>` : ''}
+            ${item.glace ? `<span class="badge glace">+${h(item.glace)} GLC</span>` : ''}
           </div>
         </div>
       `;
@@ -894,14 +854,18 @@
   // =====================================================
   function renderAtoutGrid() {
     const container = document.getElementById('atoutGrid');
+    if (ATOUTS.length === 0) {
+      container.innerHTML = '<div class="strip-empty">Aucun atout disponible.</div>';
+      return;
+    }
     container.innerHTML = ATOUTS.map(atout => {
       const isSelected = character.atouts.includes(atout.id);
       return `
-        <div class="item-card atout-card ${isSelected ? 'item-equipped' : ''}" data-atout="${atout.id}">
+        <div class="item-card atout-card ${isSelected ? 'item-equipped' : ''}" data-atout="${h(atout.id)}">
           <div class="item-card-top">
-            <span class="item-card-name">${atout.nom}</span>
+            <span class="item-card-name">${h(atout.nom)}</span>
           </div>
-          <div class="item-card-desc">${atout.effets}</div>
+          <div class="item-card-desc">${h(atout.effets)}</div>
           ${isSelected ? '<div class="item-card-badges"><span class="badge atout-tag">Sélectionné</span></div>' : ''}
         </div>
       `;
@@ -949,24 +913,25 @@
     if (!item) return;
     const isEquipped = character.equipped.includes(item.id);
     const check = canEquip(item);
-    const statsText = Object.entries(item.statistiques || {}).map(([k, v]) => `${k} +${v}`).join(', ') || 'Aucun';
+    const statsText = Object.entries(item.statistiques || {}).map(([k, v]) => `${k} ${v > 0 ? '+' : ''}${v}`).join(', ') || 'Aucun';
+    const nature = item.nature === 'illegal' ? 'illegal' : 'legal';
 
     document.getElementById('drawerContent').innerHTML = `
       <div class="detail-header">
-        <div class="detail-name">${item.nom}</div>
-        <div class="detail-nature ${item.nature}">${item.nature === 'legal' ? 'Légal' : 'Illégal'}</div>
+        <div class="detail-name">${h(item.nom)}</div>
+        <div class="detail-nature ${nature}">${nature === 'legal' ? 'Légal' : 'Illégal'}</div>
       </div>
-      <div class="detail-field"><div class="field-label">Emplacement détaillé</div><div class="field-value">${ZONES[item.categorie]} — ${item.emplacementDetaille}</div></div>
-      <div class="detail-field"><div class="field-label">Effets</div><div class="field-value">${item.effets}</div></div>
-      <div class="detail-field"><div class="field-label">Description</div><div class="field-value">${item.description}</div></div>
-      <div class="detail-field"><div class="field-label">Cybercapacité</div><div class="field-value">${item.cybercapacite}</div></div>
-      <div class="detail-field"><div class="field-label">Coût en Humanité</div><div class="field-value">-${item.humanite}</div></div>
-      <div class="detail-field"><div class="field-label">Statistiques</div><div class="field-value">${statsText}</div></div>
+      <div class="detail-field"><div class="field-label">Emplacement détaillé</div><div class="field-value">${h(ZONES[item.categorie] || item.categorie)} — ${h(item.emplacementDetaille)}</div></div>
+      <div class="detail-field"><div class="field-label">Effets</div><div class="field-value">${h(item.effets)}</div></div>
+      <div class="detail-field"><div class="field-label">Description</div><div class="field-value">${h(item.description)}</div></div>
+      <div class="detail-field"><div class="field-label">Cybercapacité</div><div class="field-value">${h(item.cybercapacite)}</div></div>
+      <div class="detail-field"><div class="field-label">Coût en Humanité</div><div class="field-value">-${h(item.humanite)}</div></div>
+      <div class="detail-field"><div class="field-label">Statistiques</div><div class="field-value">${h(statsText)}</div></div>
       <div class="detail-actions">
         <button class="equip-btn ${isEquipped ? 'remove' : ''}" id="equipBtn" ${(!isEquipped && !check.ok) ? 'disabled' : ''}>
           ${isEquipped ? 'Retirer' : 'Équiper'}
         </button>
-        ${(!isEquipped && !check.ok) ? `<span class="equip-error">${check.reason}</span>` : ''}
+        ${(!isEquipped && !check.ok) ? `<span class="equip-error">${h(check.reason)}</span>` : ''}
       </div>
     `;
 
@@ -990,10 +955,10 @@
 
     document.getElementById('drawerContent').innerHTML = `
       <div class="detail-header">
-        <div class="detail-name atout-color">${atout.nom}</div>
+        <div class="detail-name atout-color">${h(atout.nom)}</div>
       </div>
-      <div class="detail-field"><div class="field-label">Effets</div><div class="field-value">${atout.effets}</div></div>
-      <div class="detail-field"><div class="field-label">Description</div><div class="field-value">${atout.description}</div></div>
+      <div class="detail-field"><div class="field-label">Effets</div><div class="field-value">${h(atout.effets)}</div></div>
+      <div class="detail-field"><div class="field-label">Description</div><div class="field-value">${h(atout.description)}</div></div>
       <div class="detail-actions">
         <button class="equip-btn atout-btn ${isSelected ? 'remove' : ''}" id="atoutBtn">
           ${isSelected ? 'Retirer' : 'Ajouter à la fiche'}
@@ -1019,14 +984,14 @@
   function showTooltip(e, entity, type) {
     if (type === 'cyber') {
       tooltipEl.innerHTML = `
-        <div class="tt-name">${entity.nom}</div>
-        <div class="tt-loc">${ZONES[entity.categorie]} — ${entity.emplacementDetaille}</div>
-        <div class="tt-effets">${entity.effets}</div>
+        <div class="tt-name">${h(entity.nom)}</div>
+        <div class="tt-loc">${h(ZONES[entity.categorie] || entity.categorie)} — ${h(entity.emplacementDetaille)}</div>
+        <div class="tt-effets">${h(entity.effets)}</div>
       `;
     } else {
       tooltipEl.innerHTML = `
-        <div class="tt-name atout-color">${entity.nom}</div>
-        <div class="tt-effets">${entity.effets}</div>
+        <div class="tt-name atout-color">${h(entity.nom)}</div>
+        <div class="tt-effets">${h(entity.effets)}</div>
       `;
     }
     tooltipEl.classList.add('visible');
@@ -1129,7 +1094,33 @@
     renderAtoutGrid();
   }
 
-  refreshAll();
+  // =====================================================
+  // CHARGEMENT DES DONNÉES (data/catalogue.json + data/atouts.json)
+  // =====================================================
+  async function loadJson(path) {
+    const res = await fetch(path, { cache: 'no-store' });
+    if (!res.ok) throw new Error(path + ' : HTTP ' + res.status);
+    const json = await res.json();
+    if (!Array.isArray(json)) throw new Error(path + ' : le fichier doit contenir une liste [ ... ]');
+    return json;
+  }
+
+  async function init() {
+    const errors = [];
+    try { CATALOGUE = await loadJson('data/catalogue.json'); }
+    catch (err) { console.error(err); errors.push('Impossible de charger les cyberwares (' + err.message + ').'); }
+    try { ATOUTS = await loadJson('data/atouts.json'); }
+    catch (err) { console.error(err); errors.push('Impossible de charger les atouts (' + err.message + ').'); }
+
+    if (errors.length) {
+      document.getElementById('loadError').innerHTML =
+        '<div class="load-error">' + errors.map(h).join('<br>') +
+        '<br>Vérifie que les fichiers existent dans le dossier data/ et que le JSON est valide (virgules, guillemets).</div>';
+    }
+    refreshAll();
+  }
+
+  init();
 </script>
 
 </body>
