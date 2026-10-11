@@ -34,7 +34,7 @@
     margin: 0 0 8px 0; padding-bottom: 12px; border-bottom: 1px solid var(--border);
   }
   .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }
-  .status { font-size: 10.5px; margin-bottom: 22px; min-height: 15px; }
+  .status { font-size: 10.5px; margin-bottom: 22px; min-height: 15px; line-height: 1.5; }
   .status.ok { color: var(--green); }
   .status.error { color: var(--red); }
 
@@ -61,7 +61,7 @@
     width: 100%; background: var(--bg-row); border: 1px solid var(--border); color: var(--text);
     font-family: inherit; font-size: 12px; padding: 9px 10px; border-radius: 3px; margin-bottom: 10px;
   }
-  .search:focus, .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--border-strong); }
+  .search:focus, .field input:focus, .field select:focus, .field textarea:focus, .token-input:focus { outline: none; border-color: var(--border-strong); }
   .list { max-height: 560px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
   .list-row {
     background: var(--bg-row); border: 1px solid var(--border); border-left: 3px solid var(--amber);
@@ -115,7 +115,9 @@
     text-transform: uppercase; padding: 12px; border-radius: 4px; cursor: pointer; transition: all .15s ease;
   }
   .btn:hover { filter: brightness(1.15); }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; filter: none; }
   .btn.primary { background: var(--amber); color: #000; }
+  .btn.publish { background: var(--green); color: #000; width: 100%; padding: 14px; font-size: 12.5px; }
   .btn.ghost { background: transparent; border: 1px solid var(--border-strong); color: var(--text); font-weight: normal; }
   .btn.ghost:hover { background: var(--text); color: #000; filter: none; }
   .btn.copied { background: var(--green); color: #000; border-color: var(--green); }
@@ -123,6 +125,7 @@
   .form-feedback { font-size: 10.5px; margin-top: 10px; line-height: 1.6; min-height: 14px; }
   .form-feedback.error { color: var(--red); }
   .form-feedback.ok { color: var(--green); }
+  .form-feedback a { color: var(--green); }
   .editing-banner { font-size: 10px; color: var(--amber); background: #e0a9400f; border-left: 2px solid var(--amber); padding: 8px 10px; margin-bottom: 14px; border-radius: 3px; display: none; }
 
   /* ---- Sortie ---- */
@@ -131,33 +134,43 @@
   .output-box {
     width: 100%; background: #05070a; border: 1px solid var(--border); border-radius: 4px; padding: 14px;
     font-family: inherit; font-size: 10.5px; line-height: 1.55; color: var(--green);
-    min-height: 280px; max-height: 420px; resize: vertical; white-space: pre; overflow: auto;
+    min-height: 220px; max-height: 340px; resize: vertical; white-space: pre; overflow: auto;
   }
   .output-box:focus { outline: none; border-color: var(--border-strong); }
   .warn-box { margin-top: 10px; font-size: 10px; line-height: 1.6; color: var(--amber); display: none; border-left: 2px solid var(--amber); padding: 8px 10px; background: #e0a9400f; border-radius: 3px; }
   .warn-box.on { display: block; }
-  .out-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-  .out-actions .btn { padding: 11px 8px; font-size: 10.5px; }
-  .out-actions a.btn { text-align: center; text-decoration: none; display: block; grid-column: 1 / -1; }
 
-  .instructions {
-    margin-top: 16px; font-size: 10.5px; color: var(--text-dim); line-height: 1.7;
-    background: var(--bg-row); border-left: 2px solid var(--amber); padding: 12px 14px; border-radius: 3px;
+  .publish-zone { margin-top: 14px; }
+  .commit-preview { font-size: 9.5px; color: var(--text-dim); margin-top: 8px; line-height: 1.5; word-break: break-word; }
+  .link-row { display: flex; gap: 16px; margin-top: 10px; }
+  .link-btn { background: none; border: none; color: var(--text-dim); font-family: inherit; font-size: 10px; text-decoration: underline; cursor: pointer; padding: 0; }
+  .link-btn:hover { color: var(--red); }
+
+  .auth-box { background: var(--bg-row); border-left: 2px solid var(--amber); border-radius: 3px; padding: 14px; }
+  .auth-title { font-size: 11px; color: var(--amber); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .auth-text { font-size: 10px; color: var(--text-dim); line-height: 1.6; margin-bottom: 10px; }
+  .token-input {
+    width: 100%; background: #05070a; border: 1px solid var(--border); color: var(--text);
+    font-family: inherit; font-size: 11px; padding: 9px 10px; border-radius: 3px; margin-bottom: 8px;
   }
-  .instructions b { color: var(--amber); }
 
-  details.import { margin-top: 16px; font-size: 10.5px; color: var(--text-dim); }
-  details.import summary { cursor: pointer; letter-spacing: 1px; text-transform: uppercase; font-size: 9.5px; }
-  details.import textarea {
+  details.more { margin-top: 14px; font-size: 10.5px; color: var(--text-dim); line-height: 1.7; }
+  details.more summary { cursor: pointer; letter-spacing: 1px; text-transform: uppercase; font-size: 9.5px; }
+  details.more .inner { margin-top: 8px; }
+  details.more b { color: var(--amber); }
+  details.more textarea {
     width: 100%; margin-top: 8px; min-height: 90px; background: #05070a; border: 1px solid var(--border);
     color: var(--text); font-family: inherit; font-size: 10px; padding: 8px; border-radius: 3px;
   }
+  .out-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .out-actions .btn { padding: 11px 8px; font-size: 10.5px; }
+  .out-actions a.btn { text-align: center; text-decoration: none; display: block; grid-column: 1 / -1; }
 </style>
 </head>
 <body>
 
   <h1>// Panneau Admin</h1>
-  <div class="subtitle">Modifie le catalogue ici, puis exporte le fichier JSON complet vers GitHub.</div>
+  <div class="subtitle">Modifie le catalogue ici, puis publie-le sur GitHub en un clic.</div>
   <div class="status" id="status">Chargement des données…</div>
 
   <div class="mode-switch">
@@ -269,32 +282,66 @@
       <div class="form-feedback" id="formFeedback"></div>
     </div>
 
-    <!-- SORTIE -->
+    <!-- SORTIE / PUBLICATION -->
     <div class="panel col-out">
-      <div class="panel-title"><span id="outTitle">data/catalogue.json</span><span class="dirty-flag" id="dirtyFlag">● non exporté</span></div>
+      <div class="panel-title"><span id="outTitle">data/catalogue.json</span><span class="dirty-flag" id="dirtyFlag">● non publié</span></div>
       <textarea class="output-box" id="output" readonly spellcheck="false"></textarea>
       <div class="warn-box" id="warnBox"></div>
-      <div class="out-actions">
-        <button class="btn primary" id="copyBtn">Copier le JSON</button>
-        <button class="btn ghost" id="downloadBtn">Télécharger</button>
-        <a class="btn ghost" id="githubLink" href="#" target="_blank" rel="noopener">Ouvrir ce fichier sur GitHub</a>
-      </div>
 
-      <div class="instructions">
-        <b>Pour publier :</b><br>
-        1. Fais tes ajouts / modifications / suppressions à gauche.<br>
-        2. Clique sur <b>Copier le JSON</b>.<br>
-        3. Clique sur <b>Ouvrir ce fichier sur GitHub</b>, sélectionne tout (Ctrl+A) dans l'éditeur, colle (Ctrl+V).<br>
-        4. <b>Commit changes</b>. Vercel redéploie en ~30 s.<br>
-        Le fichier est remplacé en entier : plus de virgule à gérer.
-      </div>
+      <div class="publish-zone">
 
-      <details class="import">
-        <summary>Importer un JSON à la main</summary>
-        <textarea id="importArea" placeholder="Colle ici le contenu complet d'un fichier JSON (une liste [ … ])"></textarea>
-        <div class="btn-row"><button class="btn ghost" id="importBtn">Remplacer cet onglet</button></div>
-        <div class="form-feedback" id="importFeedback"></div>
-      </details>
+        <!-- Connecté -->
+        <div id="authConnected" style="display:none;">
+          <button class="btn publish" id="publishBtn">Publier sur GitHub</button>
+          <div class="commit-preview" id="commitPreview"></div>
+          <div class="form-feedback" id="publishFeedback"></div>
+          <div class="link-row">
+            <button class="link-btn" id="reloadBtn">Recharger depuis GitHub</button>
+            <button class="link-btn" id="logoutBtn">Déconnecter</button>
+          </div>
+        </div>
+
+        <!-- Non connecté -->
+        <div id="authDisconnected">
+          <div class="auth-box">
+            <div class="auth-title">Publier depuis cette page</div>
+            <div class="auth-text">Colle un token GitHub limité à ce dépôt. Il reste stocké dans ce navigateur uniquement, jamais dans le code du site.</div>
+            <input type="password" class="token-input" id="tokenInput" placeholder="github_pat_…" autocomplete="off" spellcheck="false">
+            <button class="btn primary" id="connectBtn" style="width:100%;">Se connecter</button>
+            <div class="form-feedback" id="authFeedback"></div>
+          </div>
+          <details class="more">
+            <summary>Comment créer le token</summary>
+            <div class="inner">
+              1. Sur GitHub : photo de profil, <b>Settings</b>, tout en bas à gauche <b>Developer settings</b>.<br>
+              2. <b>Personal access tokens</b>, <b>Fine-grained tokens</b>, <b>Generate new token</b>.<br>
+              3. Nom libre, expiration au choix (par ex. 90 jours).<br>
+              4. <b>Repository access</b> : <b>Only select repositories</b>, puis choisis <b>cyberware-editor</b>.<br>
+              5. <b>Permissions</b>, <b>Repository permissions</b>, <b>Contents</b> : <b>Read and write</b>.<br>
+              6. <b>Generate token</b>, copie-le tout de suite (il ne s'affiche qu'une fois) et colle-le ci-dessus.
+            </div>
+          </details>
+        </div>
+
+        <!-- Méthode manuelle -->
+        <details class="more">
+          <summary>Publier à la main (copier-coller)</summary>
+          <div class="out-actions">
+            <button class="btn primary" id="copyBtn">Copier le JSON</button>
+            <button class="btn ghost" id="downloadBtn">Télécharger</button>
+            <a class="btn ghost" id="githubLink" href="#" target="_blank" rel="noopener">Ouvrir ce fichier sur GitHub</a>
+          </div>
+          <div class="inner">Copie le JSON, ouvre le fichier sur GitHub, Ctrl+A, Ctrl+V, puis Commit changes.</div>
+        </details>
+
+        <details class="more">
+          <summary>Importer un JSON à la main</summary>
+          <textarea id="importArea" placeholder="Colle ici le contenu complet d'un fichier JSON (une liste [ … ])"></textarea>
+          <div class="btn-row"><button class="btn ghost" id="importBtn">Remplacer cet onglet</button></div>
+          <div class="form-feedback" id="importFeedback"></div>
+        </details>
+
+      </div>
     </div>
 
   </div>
@@ -306,6 +353,8 @@
   const GITHUB_REPO = "TorroGuillermo/cyberware-editor";
   const GITHUB_BRANCH = "main";
   const FILES = { cyber: "data/catalogue.json", atout: "data/atouts.json" };
+  const GH_API = "https://api.github.com";
+  const TOKEN_KEY = "cyberware_admin_gh_token";
 
   const ZONES = { tete:"Tête", tronc:"Tronc", bras_g:"Bras gauche", bras_d:"Bras droit", jambe_g:"Jambe gauche", jambe_d:"Jambe droite" };
   const STAT_KEYS = ["Force", "Réflexes", "Vitesse", "Endurance", "Résistance", "Esprit"];
@@ -315,9 +364,13 @@
   // =====================================================
   let data = { cyber: [], atout: [] };
   let mode = 'cyber';
-  let editingId = null;           // id d'origine de l'élément en cours de modification
-  let idTouched = false;          // true si l'utilisateur a modifié l'id à la main
-  let dirty = { cyber: false, atout: false };
+  let editingId = null;
+  let idTouched = false;
+  let dirty = { cyber: false, atout: false };       // modifications non publiées
+  let changes = { cyber: [], atout: [] };           // journal pour le message de commit
+  let remoteSha = { cyber: null, atout: null };     // version GitHub sur laquelle on travaille
+  let token = '';
+  let publishing = false;
 
   const $ = (id) => document.getElementById(id);
 
@@ -337,26 +390,124 @@
   function toInt(value) { const n = parseInt(value, 10); return Number.isFinite(n) ? n : 0; }
 
   // =====================================================
+  // TOKEN (stocké dans ce navigateur uniquement)
+  // =====================================================
+  function readToken() { try { return localStorage.getItem(TOKEN_KEY) || ''; } catch (e) { return ''; } }
+  function saveToken(t) { try { localStorage.setItem(TOKEN_KEY, t); } catch (e) {} }
+  function clearToken() { try { localStorage.removeItem(TOKEN_KEY); } catch (e) {} }
+
+  // =====================================================
+  // API GITHUB
+  // =====================================================
+  function ghHeaders(extra) {
+    return Object.assign({
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    }, extra || {});
+  }
+
+  async function ghError(res) {
+    let detail = '';
+    try { const j = await res.json(); detail = j.message || ''; } catch (e) {}
+    const map = {
+      401: 'Token invalide ou expiré.',
+      403: 'Accès refusé : le token doit avoir la permission « Contents : Read and write » sur ce dépôt (ou limite de requêtes atteinte).',
+      404: 'Dépôt ou fichier introuvable, ou token sans accès à ce dépôt.',
+      409: 'Conflit : le fichier a été modifié sur GitHub depuis ton chargement.',
+      422: 'Conflit : le fichier a été modifié sur GitHub depuis ton chargement.',
+    };
+    const err = new Error((map[res.status] || ('Erreur GitHub ' + res.status)) + (detail && !map[res.status] ? ' (' + detail + ')' : ''));
+    err.status = res.status;
+    return err;
+  }
+
+  function toBase64(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    bytes.forEach(b => { bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  function fromBase64(b64) {
+    const bin = atob(b64.replace(/\s/g, ''));
+    const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  }
+
+  async function ghGetRepo() {
+    const res = await fetch(`${GH_API}/repos/${GITHUB_REPO}`, { headers: ghHeaders(), cache: 'no-store' });
+    if (!res.ok) throw await ghError(res);
+    return res.json();
+  }
+
+  async function ghGetFile(path) {
+    const res = await fetch(`${GH_API}/repos/${GITHUB_REPO}/contents/${path}?ref=${encodeURIComponent(GITHUB_BRANCH)}`, { headers: ghHeaders(), cache: 'no-store' });
+    if (!res.ok) throw await ghError(res);
+    const j = await res.json();
+    return { sha: j.sha, text: fromBase64(j.content) };
+  }
+
+  async function ghPutFile(path, text, sha, message) {
+    const res = await fetch(`${GH_API}/repos/${GITHUB_REPO}/contents/${path}`, {
+      method: 'PUT',
+      headers: ghHeaders({ 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ message, content: toBase64(text), sha, branch: GITHUB_BRANCH }),
+    });
+    if (!res.ok) throw await ghError(res);
+    return res.json();
+  }
+
+  function parseList(text, label) {
+    const json = JSON.parse(text);
+    if (!Array.isArray(json)) throw new Error(label + ' : le fichier doit contenir une liste');
+    return json;
+  }
+
+  // =====================================================
   // CHARGEMENT
   // =====================================================
-  async function loadJson(path) {
-    const res = await fetch(path, { cache: 'no-store' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const json = await res.json();
-    if (!Array.isArray(json)) throw new Error('le fichier doit contenir une liste');
-    return json;
+  async function loadFromSite() {
+    async function one(path) {
+      const res = await fetch(path, { cache: 'no-store' });
+      if (!res.ok) throw new Error(path + ' (HTTP ' + res.status + ')');
+      return parseList(await res.text(), path);
+    }
+    data.cyber = await one(FILES.cyber);
+    data.atout = await one(FILES.atout);
+    remoteSha = { cyber: null, atout: null };
+  }
+
+  async function loadFromGithub() {
+    const [c, a] = await Promise.all([ghGetFile(FILES.cyber), ghGetFile(FILES.atout)]);
+    data.cyber = parseList(c.text, FILES.cyber);
+    data.atout = parseList(a.text, FILES.atout);
+    remoteSha = { cyber: c.sha, atout: a.sha };
+  }
+
+  function resetLocalState() {
+    dirty = { cyber: false, atout: false };
+    changes = { cyber: [], atout: [] };
   }
 
   async function init() {
     buildStatsGrid();
-    const errors = [];
-    try { data.cyber = await loadJson(FILES.cyber); } catch (e) { errors.push(FILES.cyber + ' (' + e.message + ')'); }
-    try { data.atout = await loadJson(FILES.atout); } catch (e) { errors.push(FILES.atout + ' (' + e.message + ')'); }
+    token = readToken();
 
-    if (errors.length) {
-      setStatus('Chargement impossible : ' + errors.join(' ; ') + '. Utilise « Importer un JSON à la main » pour partir de ton fichier.', 'error');
+    if (token) {
+      try {
+        await loadFromGithub();
+        setStatus(`Connecté à GitHub (${GITHUB_REPO}). Données à jour : ${data.cyber.length} cyberware(s), ${data.atout.length} atout(s).`, 'ok');
+      } catch (e) {
+        setStatus('Connexion GitHub impossible : ' + e.message + ' Chargement depuis le site à la place (publication désactivée).', 'error');
+        try { await loadFromSite(); } catch (e2) { setStatus('Chargement impossible : ' + e2.message, 'error'); }
+      }
     } else {
-      setStatus(`Données chargées : ${data.cyber.length} cyberware(s), ${data.atout.length} atout(s).`, 'ok');
+      try {
+        await loadFromSite();
+        setStatus(`Données chargées depuis le site : ${data.cyber.length} cyberware(s), ${data.atout.length} atout(s). Connecte-toi à GitHub pour publier d'ici.`, 'ok');
+      } catch (e) {
+        setStatus('Chargement impossible : ' + e.message + '. Utilise « Importer un JSON à la main » pour partir de ton fichier.', 'error');
+      }
     }
     renderAll();
   }
@@ -368,6 +519,57 @@
   }
 
   // =====================================================
+  // CONNEXION / DÉCONNEXION
+  // =====================================================
+  $('connectBtn').addEventListener('click', async () => {
+    const fb = $('authFeedback');
+    const t = $('tokenInput').value.trim();
+    if (!t) { fb.className = 'form-feedback error'; fb.textContent = 'Colle ton token avant de te connecter.'; return; }
+    if ((dirty.cyber || dirty.atout) && !confirm('Se connecter recharge les données depuis GitHub et efface tes modifications non publiées. Continuer ?')) return;
+
+    token = t;
+    fb.className = 'form-feedback'; fb.textContent = 'Vérification…';
+    try {
+      await ghGetRepo();
+      await loadFromGithub();
+    } catch (e) {
+      token = '';
+      fb.className = 'form-feedback error';
+      fb.textContent = e.message;
+      return;
+    }
+    saveToken(t);
+    $('tokenInput').value = '';
+    fb.textContent = '';
+    resetLocalState();
+    setStatus(`Connecté à GitHub (${GITHUB_REPO}). Données à jour : ${data.cyber.length} cyberware(s), ${data.atout.length} atout(s).`, 'ok');
+    renderAll();
+  });
+
+  $('logoutBtn').addEventListener('click', () => {
+    if ((dirty.cyber || dirty.atout) && !confirm('Tu as des modifications non publiées. Te déconnecter quand même ?')) return;
+    clearToken();
+    token = '';
+    remoteSha = { cyber: null, atout: null };
+    setStatus('Déconnecté de GitHub.', '');
+    renderOutput();
+  });
+
+  $('reloadBtn').addEventListener('click', async () => {
+    if ((dirty.cyber || dirty.atout) && !confirm('Recharger depuis GitHub efface tes modifications non publiées. Continuer ?')) return;
+    try {
+      await loadFromGithub();
+      resetLocalState();
+      $('publishFeedback').textContent = '';
+      setStatus(`Données rechargées depuis GitHub : ${data.cyber.length} cyberware(s), ${data.atout.length} atout(s).`, 'ok');
+      renderAll();
+    } catch (e) {
+      $('publishFeedback').className = 'form-feedback error';
+      $('publishFeedback').textContent = e.message;
+    }
+  });
+
+  // =====================================================
   // MODE (cyberware / atout)
   // =====================================================
   document.querySelectorAll('.mode-btn').forEach(btn => {
@@ -375,7 +577,7 @@
       mode = btn.dataset.mode;
       document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b === btn));
       $('search').value = '';
-      resetForm();
+      $('publishFeedback').textContent = '';
       renderAll();
     });
   });
@@ -429,8 +631,7 @@
 
   function renderIncompatible(selected) {
     const sel = selected || [];
-    const ownId = editingId;
-    const others = data.cyber.filter(i => i.id !== ownId);
+    const others = data.cyber.filter(i => i.id !== editingId);
     const known = new Set(data.cyber.map(i => i.id));
     const missing = sel.filter(id => !known.has(id));
     const items = others.map(i => `
@@ -505,7 +706,6 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Auto-génération de l'id tant qu'il n'a pas été modifié à la main (et seulement pour un nouvel élément)
   $('c_nom').addEventListener('input', (e) => { if (!idTouched && !editingId) $('c_id').value = slugify(e.target.value); });
   $('a_nom').addEventListener('input', (e) => { if (!idTouched && !editingId) $('a_id').value = slugify(e.target.value); });
   $('c_id').addEventListener('input', () => { idTouched = true; });
@@ -559,7 +759,10 @@
   // =====================================================
   // ACTIONS : ajouter / modifier / supprimer
   // =====================================================
-  function markDirty() { dirty[mode] = true; }
+  function markChanged(text) {
+    dirty[mode] = true;
+    changes[mode].push(text);
+  }
 
   $('saveBtn').addEventListener('click', () => {
     const item = readForm();
@@ -577,7 +780,6 @@
       if (idx === -1) { fb.className = 'form-feedback error'; fb.textContent = 'Élément introuvable, recharge la page.'; return; }
       const oldId = editingId;
       data[mode][idx] = item;
-      // Si l'id a changé, met à jour les références d'incompatibilité
       if (mode === 'cyber' && oldId !== item.id) {
         data.cyber.forEach(c => {
           if (Array.isArray(c.incompatibleWith)) c.incompatibleWith = c.incompatibleWith.map(x => x === oldId ? item.id : x);
@@ -587,25 +789,25 @@
       data[mode].push(item);
     }
 
-    markDirty();
+    markChanged((wasEditing ? 'modification' : 'ajout') + ' « ' + item.nom + ' »');
     const label = item.nom;
     resetForm();
     renderOutput();
     $('formFeedback').className = 'form-feedback ok';
-    $('formFeedback').textContent = wasEditing ? `« ${label} » modifié. Pense à exporter le JSON.` : `« ${label} » ajouté. Pense à exporter le JSON.`;
+    $('formFeedback').textContent = wasEditing ? `« ${label} » modifié. Clique sur Publier pour l'envoyer.` : `« ${label} » ajouté. Clique sur Publier pour l'envoyer.`;
   });
 
   function deleteItem(id) {
     const item = data[mode].find(i => i.id === id);
     if (!item) return;
-    if (!confirm(`Supprimer « ${item.nom} » ? Il disparaîtra du catalogue une fois le JSON publié.`)) return;
+    if (!confirm(`Supprimer « ${item.nom} » ? Il disparaîtra du catalogue une fois publié.`)) return;
     data[mode] = data[mode].filter(i => i.id !== id);
     if (mode === 'cyber') {
       data.cyber.forEach(c => {
         if (Array.isArray(c.incompatibleWith)) c.incompatibleWith = c.incompatibleWith.filter(x => x !== id);
       });
     }
-    markDirty();
+    markChanged('suppression « ' + item.nom + ' »');
     if (editingId === id) resetForm();
     else { renderIncompatible(currentChecked()); renderList(); }
     renderOutput();
@@ -634,9 +836,17 @@
     return warnings;
   }
 
+  function commitMessage() {
+    const list = Array.from(new Set(changes[mode]));
+    let msg = list.length ? 'Admin : ' + list.join(', ') : 'Admin : mise à jour de ' + FILES[mode];
+    if (msg.length > 200) msg = msg.slice(0, 197) + '…';
+    return msg;
+  }
+
   function renderOutput() {
     $('outTitle').textContent = FILES[mode];
     $('output').value = JSON.stringify(data[mode], null, 2);
+    $('dirtyFlag').textContent = token ? '● non publié' : '● non exporté';
     $('dirtyFlag').classList.toggle('on', dirty[mode]);
     $('githubLink').href = `https://github.com/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/${FILES[mode]}`;
 
@@ -644,14 +854,71 @@
     const box = $('warnBox');
     box.classList.toggle('on', w.length > 0);
     box.innerHTML = w.length ? '<b>À vérifier avant de publier :</b><br>' + w.map(h).join('<br>') : '';
+
+    // Zone de publication
+    $('authConnected').style.display = token ? 'block' : 'none';
+    $('authDisconnected').style.display = token ? 'none' : 'block';
+    if (token) {
+      const canPublish = dirty[mode] && !!remoteSha[mode] && !publishing;
+      $('publishBtn').disabled = !canPublish;
+      if (publishing) $('publishBtn').textContent = 'Publication…';
+      else if (!remoteSha[mode]) $('publishBtn').textContent = 'Recharge depuis GitHub pour publier';
+      else $('publishBtn').textContent = dirty[mode] ? 'Publier sur GitHub' : 'Rien à publier';
+      $('commitPreview').textContent = dirty[mode] ? 'Message du commit : ' + commitMessage() : '';
+    }
   }
 
   function renderAll() {
     setMode(mode === 'cyber');
-    resetForm();      // appelle renderList
+    resetForm();
     renderOutput();
   }
 
+  // =====================================================
+  // PUBLICATION SUR GITHUB
+  // =====================================================
+  $('publishBtn').addEventListener('click', async () => {
+    if (!token || publishing || !dirty[mode]) return;
+    const fb = $('publishFeedback');
+
+    if (!remoteSha[mode]) {
+      fb.className = 'form-feedback error';
+      fb.textContent = 'Version GitHub inconnue : clique sur « Recharger depuis GitHub » d\'abord.';
+      return;
+    }
+    const w = globalWarnings();
+    if (w.length && !confirm('Des points sont à vérifier :\n\n' + w.join('\n') + '\n\nPublier quand même ?')) return;
+
+    publishing = true;
+    fb.className = 'form-feedback'; fb.textContent = '';
+    renderOutput();
+
+    try {
+      const text = JSON.stringify(data[mode], null, 2) + '\n';
+      const res = await ghPutFile(FILES[mode], text, remoteSha[mode], commitMessage());
+      remoteSha[mode] = res.content.sha;
+      dirty[mode] = false;
+      changes[mode] = [];
+      const url = res.commit && res.commit.html_url ? res.commit.html_url : '';
+      fb.className = 'form-feedback ok';
+      fb.innerHTML = 'Publié sur GitHub. Vercel redéploie en ~30 s.' + (url ? ` <a href="${h(url)}" target="_blank" rel="noopener">Voir le commit</a>` : '');
+      const other = mode === 'cyber' ? 'atout' : 'cyber';
+      if (dirty[other]) fb.innerHTML += `<br>L'autre onglet (${other === 'cyber' ? 'cyberwares' : 'atouts'}) a aussi des modifications non publiées.`;
+    } catch (e) {
+      fb.className = 'form-feedback error';
+      fb.textContent = e.message;
+      if (e.status === 409 || e.status === 422) {
+        fb.textContent += ' Copie ton JSON (méthode manuelle) pour ne rien perdre, puis clique sur « Recharger depuis GitHub » et refais tes changements.';
+      }
+    } finally {
+      publishing = false;
+      renderOutput();
+    }
+  });
+
+  // =====================================================
+  // MÉTHODE MANUELLE
+  // =====================================================
   function flashButton(btn, text) {
     const old = btn.textContent;
     btn.textContent = text;
@@ -661,7 +928,7 @@
 
   $('copyBtn').addEventListener('click', () => {
     const text = $('output').value;
-    const done = () => { dirty[mode] = false; renderOutput(); flashButton($('copyBtn'), 'Copié ✓'); };
+    const done = () => { if (!token) { dirty[mode] = false; changes[mode] = []; } renderOutput(); flashButton($('copyBtn'), 'Copié ✓'); };
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(done).catch(() => { $('output').select(); document.execCommand('copy'); done(); });
     } else {
@@ -678,7 +945,7 @@
     a.click();
     a.remove();
     URL.revokeObjectURL(a.href);
-    dirty[mode] = false;
+    if (!token) { dirty[mode] = false; changes[mode] = []; }
     renderOutput();
   });
 
@@ -693,7 +960,7 @@
       if (parsed.some(i => !i || typeof i.id !== 'string' || typeof i.nom !== 'string')) throw new Error('Chaque élément doit avoir un « id » et un « nom ».');
       if (!confirm(`Remplacer les ${data[mode].length} élément(s) actuels par ${parsed.length} élément(s) importé(s) ?`)) return;
       data[mode] = parsed;
-      dirty[mode] = true;
+      markChanged('import JSON');
       $('importArea').value = '';
       fb.className = 'form-feedback ok';
       fb.textContent = `${parsed.length} élément(s) importé(s).`;
@@ -705,7 +972,6 @@
     }
   });
 
-  // Avertit si des modifications n'ont pas été exportées
   window.addEventListener('beforeunload', (e) => {
     if (dirty.cyber || dirty.atout) { e.preventDefault(); e.returnValue = ''; }
   });
