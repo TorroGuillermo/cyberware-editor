@@ -1,0 +1,32 @@
+[
+  {
+    "id": "sang_froid",
+    "nom": "Sang-Froid",
+    "effets": "Ignore les malus de panique en situation critique",
+    "description": "Ce personnage garde la tête froide même quand tout part en vrille. Formé sur le terrain ou juste né comme ça."
+  },
+  {
+    "id": "contacts_underground",
+    "nom": "Contacts Underground",
+    "effets": "Accès facilité aux marchés noirs et fixers",
+    "description": "Un carnet d'adresses bien rempli dans les bas-fonds de Night City. Utile pour dénicher ce qui ne se vend pas en vitrine."
+  },
+  {
+    "id": "instinct_survie",
+    "nom": "Instinct de Survie",
+    "effets": "Meilleure anticipation des embuscades et dangers",
+    "description": "Des années à esquiver les emmerdes ont aiguisé un sixième sens pour le danger imminent."
+  },
+  {
+    "id": "charisme_ne",
+    "nom": "Charisme Né",
+    "effets": "Avantage dans les négociations et interactions sociales",
+    "description": "Une présence naturelle qui met les gens à l'aise — ou juste assez mal à l'aise pour obtenir ce qu'il veut."
+  },
+  {
+    "id": "expert_technique",
+    "nom": "Expert Technique",
+    "effets": "Bonus sur les réparations et le bricolage improvisé",
+    "description": "Capable de réparer à peu près n'importe quoi avec du gaffer et de la volonté."
+  }
+]
