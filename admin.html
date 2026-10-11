@@ -2,18 +2,19 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Admin — Générateur de contenu</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Cyberware Editor</title>
 <style>
   :root {
     --bg: #0a0e14;
     --bg-panel: #10151d;
     --bg-row: #161c26;
+    --bg-row-hover: #1c2330;
     --border: #ff3b3b44;
     --border-strong: #ff3b3b99;
     --red: #ff3b3b;
     --red-dim: #b5333a;
     --amber: #e0a940;
-    --amber-dim: #b5872f;
     --purple: #a978d9;
     --green: #4caf7d;
     --text: #d8dce2;
@@ -32,14 +33,21 @@
     font-size: 16px; letter-spacing: 4px; text-transform: uppercase; color: var(--red);
     margin: 0 0 8px 0; padding-bottom: 12px; border-bottom: 1px solid var(--border);
   }
-  .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 26px; }
+  .subtitle { font-size: 11px; color: var(--text-dim); margin-bottom: 8px; }
+  .status { font-size: 10.5px; margin-bottom: 22px; min-height: 15px; }
+  .status.ok { color: var(--green); }
+  .status.error { color: var(--red); }
 
-  .layout { display: flex; gap: 24px; max-width: 1300px; flex-wrap: wrap; align-items: flex-start; }
-  .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 4px; padding: 22px; }
-  .form-panel { flex: 1; min-width: 380px; }
-  .output-panel { flex: 1; min-width: 380px; position: sticky; top: 20px; }
+  .layout { display: flex; gap: 22px; max-width: 1600px; flex-wrap: wrap; align-items: flex-start; }
+  .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 4px; padding: 20px; }
+  .col-list { flex: 1 1 340px; min-width: 300px; }
+  .col-form { flex: 1.3 1 420px; min-width: 340px; }
+  .col-out  { flex: 1.2 1 380px; min-width: 320px; position: sticky; top: 20px; }
 
-  .mode-switch { display: flex; gap: 6px; margin-bottom: 22px; }
+  .panel-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .panel-title .count { color: var(--amber); letter-spacing: 0; }
+
+  .mode-switch { display: flex; gap: 6px; margin-bottom: 20px; max-width: 520px; }
   .mode-btn {
     flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-dim);
     font-family: inherit; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
@@ -48,83 +56,143 @@
   .mode-btn:hover { border-color: var(--red); color: var(--red); }
   .mode-btn.active { background: var(--red); border-color: var(--red); color: #000; font-weight: bold; }
 
-  .field { margin-bottom: 16px; }
-  .field label {
-    display: block; font-size: 9.5px; color: var(--text-dim); text-transform: uppercase;
-    letter-spacing: 1px; margin-bottom: 6px;
+  /* ---- Liste ---- */
+  .search {
+    width: 100%; background: var(--bg-row); border: 1px solid var(--border); color: var(--text);
+    font-family: inherit; font-size: 12px; padding: 9px 10px; border-radius: 3px; margin-bottom: 10px;
   }
+  .search:focus, .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--border-strong); }
+  .list { max-height: 560px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+  .list-row {
+    background: var(--bg-row); border: 1px solid var(--border); border-left: 3px solid var(--amber);
+    border-radius: 4px; padding: 9px 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .list-row.is-atout { border-left-color: var(--purple); }
+  .list-row.editing { background: var(--bg-row-hover); border-color: var(--amber); }
+  .list-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .list-name { font-size: 11.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+  .list-sub { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .list-actions { display: flex; gap: 5px; flex-shrink: 0; }
+  .mini-btn {
+    background: transparent; border: 1px solid var(--border-strong); color: var(--text); font-family: inherit;
+    font-size: 9px; letter-spacing: 0.5px; text-transform: uppercase; padding: 5px 8px; border-radius: 3px; cursor: pointer; transition: all .15s ease;
+  }
+  .mini-btn:hover { background: var(--text); color: #000; }
+  .mini-btn.danger { color: var(--red); border-color: var(--red-dim); }
+  .mini-btn.danger:hover { background: var(--red); color: #000; }
+  .empty { font-size: 11px; color: var(--text-dim); padding: 12px 4px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .dot.legal { background: var(--green); }
+  .dot.illegal { background: var(--red); }
+
+  /* ---- Formulaire ---- */
+  .field { margin-bottom: 14px; }
+  .field > label { display: block; font-size: 9.5px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
   .field input[type="text"], .field input[type="number"], .field select, .field textarea {
     width: 100%; background: var(--bg-row); border: 1px solid var(--border); color: var(--text);
     font-family: inherit; font-size: 12px; padding: 9px 10px; border-radius: 3px;
   }
-  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--border-strong); }
-  .field textarea { resize: vertical; min-height: 60px; }
-  .field .hint { font-size: 9px; color: #545c66; margin-top: 4px; font-style: italic; }
-
+  .field textarea { resize: vertical; min-height: 64px; }
+  .field .hint { font-size: 9px; color: #545c66; margin-top: 4px; font-style: italic; line-height: 1.4; }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-  .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 6px; }
+  .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px 14px; }
   .stat-input { display: flex; align-items: center; gap: 8px; }
-  .stat-input label { flex: 1; margin: 0; font-size: 10px; text-transform: none; letter-spacing: 0; color: var(--text); }
-  .stat-input input { width: 60px; }
+  .stat-input label { flex: 1; margin: 0; font-size: 10.5px; text-transform: none; letter-spacing: 0; color: var(--text); }
+  .stat-input input { width: 64px !important; }
+  .radio-row { display: flex; gap: 16px; padding-top: 9px; }
+  .radio-row label { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text); text-transform: none; letter-spacing: 0; margin: 0; }
 
-  .radio-row { display: flex; gap: 16px; }
-  .radio-row label { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text); text-transform: none; letter-spacing: 0; }
-
-  .generate-btn {
-    width: 100%; background: var(--amber); color: #000; border: none; font-family: inherit; font-weight: bold;
-    font-size: 12px; letter-spacing: 1px; text-transform: uppercase; padding: 13px; border-radius: 4px;
-    cursor: pointer; margin-top: 8px; transition: all .15s ease;
+  .check-list {
+    background: var(--bg-row); border: 1px solid var(--border); border-radius: 3px; padding: 8px 10px;
+    max-height: 130px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px;
   }
-  .generate-btn:hover { filter: brightness(1.15); }
+  .check-list label { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--text); text-transform: none; letter-spacing: 0; margin: 0; cursor: pointer; }
+  .check-list .missing { color: var(--red); }
 
-  .output-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 12px; }
+  .btn-row { display: flex; gap: 8px; margin-top: 6px; }
+  .btn {
+    flex: 1; border: none; font-family: inherit; font-weight: bold; font-size: 11.5px; letter-spacing: 1px;
+    text-transform: uppercase; padding: 12px; border-radius: 4px; cursor: pointer; transition: all .15s ease;
+  }
+  .btn:hover { filter: brightness(1.15); }
+  .btn.primary { background: var(--amber); color: #000; }
+  .btn.ghost { background: transparent; border: 1px solid var(--border-strong); color: var(--text); font-weight: normal; }
+  .btn.ghost:hover { background: var(--text); color: #000; filter: none; }
+  .btn.copied { background: var(--green); color: #000; border-color: var(--green); }
+
+  .form-feedback { font-size: 10.5px; margin-top: 10px; line-height: 1.6; min-height: 14px; }
+  .form-feedback.error { color: var(--red); }
+  .form-feedback.ok { color: var(--green); }
+  .editing-banner { font-size: 10px; color: var(--amber); background: #e0a9400f; border-left: 2px solid var(--amber); padding: 8px 10px; margin-bottom: 14px; border-radius: 3px; display: none; }
+
+  /* ---- Sortie ---- */
+  .dirty-flag { font-size: 9px; color: var(--amber); letter-spacing: 0; display: none; }
+  .dirty-flag.on { display: inline; }
   .output-box {
-    background: #05070a; border: 1px solid var(--border); border-radius: 4px; padding: 16px;
-    font-size: 11px; line-height: 1.6; color: var(--green); white-space: pre-wrap; word-break: break-word;
-    max-height: 420px; overflow-y: auto; min-height: 160px;
+    width: 100%; background: #05070a; border: 1px solid var(--border); border-radius: 4px; padding: 14px;
+    font-family: inherit; font-size: 10.5px; line-height: 1.55; color: var(--green);
+    min-height: 280px; max-height: 420px; resize: vertical; white-space: pre; overflow: auto;
   }
-  .copy-btn {
-    width: 100%; background: transparent; border: 1px solid var(--border-strong); color: var(--text);
-    font-family: inherit; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 11px;
-    border-radius: 4px; cursor: pointer; margin-top: 10px; transition: all .15s ease;
-  }
-  .copy-btn:hover { background: var(--text); color: #000; }
-  .copy-btn.copied { border-color: var(--green); color: var(--green); }
+  .output-box:focus { outline: none; border-color: var(--border-strong); }
+  .warn-box { margin-top: 10px; font-size: 10px; line-height: 1.6; color: var(--amber); display: none; border-left: 2px solid var(--amber); padding: 8px 10px; background: #e0a9400f; border-radius: 3px; }
+  .warn-box.on { display: block; }
+  .out-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .out-actions .btn { padding: 11px 8px; font-size: 10.5px; }
+  .out-actions a.btn { text-align: center; text-decoration: none; display: block; grid-column: 1 / -1; }
 
   .instructions {
-    margin-top: 20px; font-size: 10.5px; color: var(--text-dim); line-height: 1.7;
+    margin-top: 16px; font-size: 10.5px; color: var(--text-dim); line-height: 1.7;
     background: var(--bg-row); border-left: 2px solid var(--amber); padding: 12px 14px; border-radius: 3px;
   }
   .instructions b { color: var(--amber); }
+
+  details.import { margin-top: 16px; font-size: 10.5px; color: var(--text-dim); }
+  details.import summary { cursor: pointer; letter-spacing: 1px; text-transform: uppercase; font-size: 9.5px; }
+  details.import textarea {
+    width: 100%; margin-top: 8px; min-height: 90px; background: #05070a; border: 1px solid var(--border);
+    color: var(--text); font-family: inherit; font-size: 10px; padding: 8px; border-radius: 3px;
+  }
 </style>
 </head>
 <body>
 
   <h1>// Panneau Admin</h1>
-  <div class="subtitle">Génère le code d'un cyberware ou d'un atout, à copier-coller dans index.html</div>
+  <div class="subtitle">Modifie le catalogue ici, puis exporte le fichier JSON complet vers GitHub.</div>
+  <div class="status" id="status">Chargement des données…</div>
+
+  <div class="mode-switch">
+    <button class="mode-btn active" data-mode="cyber">Cyberwares</button>
+    <button class="mode-btn" data-mode="atout">Atouts</button>
+  </div>
 
   <div class="layout">
 
-    <div class="panel form-panel">
-      <div class="mode-switch">
-        <button class="mode-btn active" data-mode="cyber">Cyberware</button>
-        <button class="mode-btn" data-mode="atout">Atout</button>
-      </div>
+    <!-- LISTE -->
+    <div class="panel col-list">
+      <div class="panel-title"><span id="listTitle">Cyberwares existants</span><span class="count" id="listCount"></span></div>
+      <input type="text" class="search" id="search" placeholder="Rechercher par nom ou identifiant…">
+      <div class="list" id="list"></div>
+    </div>
 
-      <!-- FORMULAIRE CYBERWARE -->
+    <!-- FORMULAIRE -->
+    <div class="panel col-form">
+      <div class="panel-title"><span id="formTitle">Nouveau cyberware</span></div>
+      <div class="editing-banner" id="editingBanner"></div>
+
+      <!-- Formulaire cyberware -->
       <div id="formCyber">
         <div class="field">
           <label>Nom</label>
           <input type="text" id="c_nom" placeholder="Kiroshi Optics Mk.2">
         </div>
         <div class="field">
-          <label>Identifiant (généré automatiquement, modifiable)</label>
+          <label>Identifiant (généré depuis le nom, modifiable)</label>
           <input type="text" id="c_id" placeholder="kiroshi_optics">
+          <div class="hint" id="c_id_hint">Lettres minuscules, chiffres et _ uniquement.</div>
         </div>
         <div class="field-row">
           <div class="field">
-            <label>Catégorie (zone)</label>
+            <label>Zone</label>
             <select id="c_categorie">
               <option value="tete">Tête</option>
               <option value="tronc">Tronc</option>
@@ -136,7 +204,7 @@
           </div>
           <div class="field">
             <label>Nature</label>
-            <div class="radio-row" style="padding-top:9px;">
+            <div class="radio-row">
               <label><input type="radio" name="c_nature" value="legal" checked> Légal</label>
               <label><input type="radio" name="c_nature" value="illegal"> Illégal</label>
             </div>
@@ -152,57 +220,37 @@
         </div>
         <div class="field">
           <label>Description</label>
-          <textarea id="c_description" placeholder="Description complète de l'implant..."></textarea>
+          <textarea id="c_description" placeholder="Description complète de l'implant…"></textarea>
         </div>
         <div class="field-row">
-          <div class="field">
-            <label>Coût Cybercapacité</label>
-            <input type="number" id="c_cybercap" value="0" min="0">
-          </div>
-          <div class="field">
-            <label>Coût Humanité</label>
-            <input type="number" id="c_humanite" value="0" min="0">
-          </div>
+          <div class="field"><label>Coût Cybercapacité</label><input type="number" id="c_cybercap" value="0" min="0"></div>
+          <div class="field"><label>Coût Humanité</label><input type="number" id="c_humanite" value="0" min="0"></div>
         </div>
         <div class="field-row">
-          <div class="field">
-            <label>Bonus RAM</label>
-            <input type="number" id="c_ram" value="0" min="0">
-          </div>
-          <div class="field">
-            <label>Bonus Glace</label>
-            <input type="number" id="c_glace" value="0" min="0">
-          </div>
+          <div class="field"><label>Bonus RAM</label><input type="number" id="c_ram" value="0" min="0"></div>
+          <div class="field"><label>Bonus Glace</label><input type="number" id="c_glace" value="0" min="0"></div>
         </div>
         <div class="field">
           <label>Modificateurs de statistiques</label>
-          <div class="stats-grid">
-            <div class="stat-input"><label>Force</label><input type="number" id="c_stat_Force" value="0"></div>
-            <div class="stat-input"><label>Réflexes</label><input type="number" id="c_stat_Réflexes" value="0"></div>
-            <div class="stat-input"><label>Vitesse</label><input type="number" id="c_stat_Vitesse" value="0"></div>
-            <div class="stat-input"><label>Endurance</label><input type="number" id="c_stat_Endurance" value="0"></div>
-            <div class="stat-input"><label>Résistance</label><input type="number" id="c_stat_Résistance" value="0"></div>
-            <div class="stat-input"><label>Esprit</label><input type="number" id="c_stat_Esprit" value="0"></div>
-          </div>
+          <div class="stats-grid" id="statsGrid"></div>
         </div>
         <div class="field">
-          <label>Incompatible avec (identifiants, séparés par des virgules)</label>
-          <input type="text" id="c_incompatible" placeholder="militech_optics, autre_id">
-          <div class="hint">Laisse vide si aucune incompatibilité.</div>
+          <label>Incompatible avec</label>
+          <div class="check-list" id="c_incompatible"></div>
+          <div class="hint">Coche les cyberwares qui ne peuvent pas être installés en même temps que celui-ci.</div>
         </div>
-
-        <button class="generate-btn" id="genCyberBtn">Générer le code</button>
       </div>
 
-      <!-- FORMULAIRE ATOUT -->
+      <!-- Formulaire atout -->
       <div id="formAtout" style="display:none;">
         <div class="field">
           <label>Nom</label>
           <input type="text" id="a_nom" placeholder="Sang-Froid">
         </div>
         <div class="field">
-          <label>Identifiant (généré automatiquement, modifiable)</label>
+          <label>Identifiant (généré depuis le nom, modifiable)</label>
           <input type="text" id="a_id" placeholder="sang_froid">
+          <div class="hint" id="a_id_hint">Lettres minuscules, chiffres et _ uniquement.</div>
         </div>
         <div class="field">
           <label>Effets (résumé court)</label>
@@ -210,126 +258,459 @@
         </div>
         <div class="field">
           <label>Description</label>
-          <textarea id="a_description" placeholder="Description complète de l'atout..."></textarea>
+          <textarea id="a_description" placeholder="Description complète de l'atout…"></textarea>
         </div>
-
-        <button class="generate-btn" id="genAtoutBtn">Générer le code</button>
       </div>
 
+      <div class="btn-row">
+        <button class="btn primary" id="saveBtn">Ajouter</button>
+        <button class="btn ghost" id="resetBtn">Vider le formulaire</button>
+      </div>
+      <div class="form-feedback" id="formFeedback"></div>
     </div>
 
-    <div class="panel output-panel">
-      <div class="output-title">// Code généré</div>
-      <div class="output-box" id="output">En attente de génération...</div>
-      <button class="copy-btn" id="copyBtn">Copier le code</button>
+    <!-- SORTIE -->
+    <div class="panel col-out">
+      <div class="panel-title"><span id="outTitle">data/catalogue.json</span><span class="dirty-flag" id="dirtyFlag">● non exporté</span></div>
+      <textarea class="output-box" id="output" readonly spellcheck="false"></textarea>
+      <div class="warn-box" id="warnBox"></div>
+      <div class="out-actions">
+        <button class="btn primary" id="copyBtn">Copier le JSON</button>
+        <button class="btn ghost" id="downloadBtn">Télécharger</button>
+        <a class="btn ghost" id="githubLink" href="#" target="_blank" rel="noopener">Ouvrir ce fichier sur GitHub</a>
+      </div>
 
       <div class="instructions">
-        <b>Comment l'utiliser :</b><br>
-        1. Copie le code ci-dessus.<br>
-        2. Va dans ton fichier <b>index.html</b> sur GitHub, clique sur ✏️ pour éditer.<br>
-        3. Cherche <b>const CATALOGUE = [</b> (pour un cyberware) ou <b>const ATOUTS = [</b> (pour un atout).<br>
-        4. Colle le code juste avant le <b>];</b> qui ferme le tableau (juste après le dernier objet existant, précédé d'une virgule).<br>
-        5. Commit. Vercel redéploie automatiquement en ~30s.
+        <b>Pour publier :</b><br>
+        1. Fais tes ajouts / modifications / suppressions à gauche.<br>
+        2. Clique sur <b>Copier le JSON</b>.<br>
+        3. Clique sur <b>Ouvrir ce fichier sur GitHub</b>, sélectionne tout (Ctrl+A) dans l'éditeur, colle (Ctrl+V).<br>
+        4. <b>Commit changes</b>. Vercel redéploie en ~30 s.<br>
+        Le fichier est remplacé en entier : plus de virgule à gérer.
       </div>
+
+      <details class="import">
+        <summary>Importer un JSON à la main</summary>
+        <textarea id="importArea" placeholder="Colle ici le contenu complet d'un fichier JSON (une liste [ … ])"></textarea>
+        <div class="btn-row"><button class="btn ghost" id="importBtn">Remplacer cet onglet</button></div>
+        <div class="form-feedback" id="importFeedback"></div>
+      </details>
     </div>
 
   </div>
 
 <script>
+  // =====================================================
+  // CONFIG — adapte si ton repo change
+  // =====================================================
+  const GITHUB_REPO = "TorroGuillermo/cyberware-editor";
+  const GITHUB_BRANCH = "main";
+  const FILES = { cyber: "data/catalogue.json", atout: "data/atouts.json" };
+
+  const ZONES = { tete:"Tête", tronc:"Tronc", bras_g:"Bras gauche", bras_d:"Bras droit", jambe_g:"Jambe gauche", jambe_d:"Jambe droite" };
+  const STAT_KEYS = ["Force", "Réflexes", "Vitesse", "Endurance", "Résistance", "Esprit"];
+
+  // =====================================================
+  // ÉTAT
+  // =====================================================
+  let data = { cyber: [], atout: [] };
+  let mode = 'cyber';
+  let editingId = null;           // id d'origine de l'élément en cours de modification
+  let idTouched = false;          // true si l'utilisateur a modifié l'id à la main
+  let dirty = { cyber: false, atout: false };
+
+  const $ = (id) => document.getElementById(id);
+
+  function h(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, c => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+    ));
+  }
+
   function slugify(str) {
-    return str
-      .toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // enlève les accents
+    return str.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9]+/g, '_')
       .replace(/^_+|_+$/g, '');
   }
 
-  // Auto-génération de l'id à partir du nom
-  document.getElementById('c_nom').addEventListener('input', (e) => {
-    document.getElementById('c_id').value = slugify(e.target.value);
-  });
-  document.getElementById('a_nom').addEventListener('input', (e) => {
-    document.getElementById('a_id').value = slugify(e.target.value);
-  });
+  function toInt(value) { const n = parseInt(value, 10); return Number.isFinite(n) ? n : 0; }
 
-  // Switch de mode
-  document.querySelectorAll('.mode-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const mode = btn.dataset.mode;
-      document.getElementById('formCyber').style.display = mode === 'cyber' ? 'block' : 'none';
-      document.getElementById('formAtout').style.display = mode === 'atout' ? 'block' : 'none';
-      document.getElementById('output').textContent = 'En attente de génération...';
-    });
-  });
-
-  const STAT_KEYS = ["Force", "Réflexes", "Vitesse", "Endurance", "Résistance", "Esprit"];
-
-  function esc(str) {
-    return (str || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  // =====================================================
+  // CHARGEMENT
+  // =====================================================
+  async function loadJson(path) {
+    const res = await fetch(path, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if (!Array.isArray(json)) throw new Error('le fichier doit contenir une liste');
+    return json;
   }
 
-  document.getElementById('genCyberBtn').addEventListener('click', () => {
-    const id = document.getElementById('c_id').value.trim() || 'nouveau_cyberware';
-    const nom = document.getElementById('c_nom').value.trim();
-    const categorie = document.getElementById('c_categorie').value;
-    const nature = document.querySelector('input[name="c_nature"]:checked').value;
-    const emplacement = document.getElementById('c_emplacement').value.trim();
-    const effets = document.getElementById('c_effets').value.trim();
-    const description = document.getElementById('c_description').value.trim();
-    const cybercap = parseInt(document.getElementById('c_cybercap').value) || 0;
-    const humanite = parseInt(document.getElementById('c_humanite').value) || 0;
-    const ram = parseInt(document.getElementById('c_ram').value) || 0;
-    const glace = parseInt(document.getElementById('c_glace').value) || 0;
+  async function init() {
+    buildStatsGrid();
+    const errors = [];
+    try { data.cyber = await loadJson(FILES.cyber); } catch (e) { errors.push(FILES.cyber + ' (' + e.message + ')'); }
+    try { data.atout = await loadJson(FILES.atout); } catch (e) { errors.push(FILES.atout + ' (' + e.message + ')'); }
 
-    const statsEntries = STAT_KEYS
-      .map(key => [key, parseInt(document.getElementById('c_stat_' + key).value) || 0])
-      .filter(([, val]) => val !== 0)
-      .map(([key, val]) => `${key}: ${val}`)
-      .join(', ');
+    if (errors.length) {
+      setStatus('Chargement impossible : ' + errors.join(' ; ') + '. Utilise « Importer un JSON à la main » pour partir de ton fichier.', 'error');
+    } else {
+      setStatus(`Données chargées : ${data.cyber.length} cyberware(s), ${data.atout.length} atout(s).`, 'ok');
+    }
+    renderAll();
+  }
 
-    const incompatibleRaw = document.getElementById('c_incompatible').value.trim();
-    const incompatibleList = incompatibleRaw
-      ? incompatibleRaw.split(',').map(s => `"${esc(s.trim())}"`).join(', ')
-      : '';
+  function setStatus(msg, kind) {
+    const el = $('status');
+    el.textContent = msg;
+    el.className = 'status ' + (kind || '');
+  }
 
-    const code =
-`  { id:"${esc(id)}", nom:"${esc(nom)}", categorie:"${categorie}", emplacementDetaille:"${esc(emplacement)}",
-    effets:"${esc(effets)}",
-    description:"${esc(description)}",
-    cybercapacite:${cybercap}, humanite:${humanite}, nature:"${nature}", statistiques:{${statsEntries}}, ram:${ram}, glace:${glace},
-    incompatibleWith:[${incompatibleList}] },`;
-
-    document.getElementById('output').textContent = code;
-    document.getElementById('copyBtn').classList.remove('copied');
-    document.getElementById('copyBtn').textContent = 'Copier le code';
-  });
-
-  document.getElementById('genAtoutBtn').addEventListener('click', () => {
-    const id = document.getElementById('a_id').value.trim() || 'nouvel_atout';
-    const nom = document.getElementById('a_nom').value.trim();
-    const effets = document.getElementById('a_effets').value.trim();
-    const description = document.getElementById('a_description').value.trim();
-
-    const code =
-`  { id:"${esc(id)}", nom:"${esc(nom)}", effets:"${esc(effets)}",
-    description:"${esc(description)}" },`;
-
-    document.getElementById('output').textContent = code;
-    document.getElementById('copyBtn').classList.remove('copied');
-    document.getElementById('copyBtn').textContent = 'Copier le code';
-  });
-
-  document.getElementById('copyBtn').addEventListener('click', () => {
-    const text = document.getElementById('output').textContent;
-    if (!text || text === 'En attente de génération...') return;
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.getElementById('copyBtn');
-      btn.textContent = 'Copié ✓';
-      btn.classList.add('copied');
+  // =====================================================
+  // MODE (cyberware / atout)
+  // =====================================================
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      mode = btn.dataset.mode;
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b === btn));
+      $('search').value = '';
+      resetForm();
+      renderAll();
     });
   });
+
+  // =====================================================
+  // LISTE
+  // =====================================================
+  function renderList() {
+    const q = $('search').value.trim().toLowerCase();
+    const all = data[mode];
+    const arr = all.filter(i => !q || String(i.nom || '').toLowerCase().includes(q) || String(i.id || '').toLowerCase().includes(q));
+    $('listTitle').textContent = mode === 'cyber' ? 'Cyberwares existants' : 'Atouts existants';
+    $('listCount').textContent = all.length;
+
+    if (arr.length === 0) {
+      $('list').innerHTML = '<div class="empty">' + (all.length ? 'Aucun résultat.' : 'Rien pour l\'instant. Ajoute le premier élément avec le formulaire.') + '</div>';
+      return;
+    }
+
+    $('list').innerHTML = arr.map(i => `
+      <div class="list-row ${mode === 'atout' ? 'is-atout' : ''} ${i.id === editingId ? 'editing' : ''}">
+        <div class="list-main">
+          <span class="list-name">${mode === 'cyber' ? `<span class="dot ${i.nature === 'illegal' ? 'illegal' : 'legal'}"></span>` : ''}${h(i.nom)}</span>
+          <span class="list-sub">${mode === 'cyber' ? h(ZONES[i.categorie] || i.categorie) + ' — ' : ''}${h(i.id)}</span>
+        </div>
+        <div class="list-actions">
+          <button class="mini-btn" data-edit="${h(i.id)}">Modifier</button>
+          <button class="mini-btn danger" data-del="${h(i.id)}">Supprimer</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  $('search').addEventListener('input', renderList);
+
+  $('list').addEventListener('click', (e) => {
+    const editBtn = e.target.closest('[data-edit]');
+    const delBtn = e.target.closest('[data-del]');
+    if (editBtn) startEdit(editBtn.dataset.edit);
+    if (delBtn) deleteItem(delBtn.dataset.del);
+  });
+
+  // =====================================================
+  // FORMULAIRE
+  // =====================================================
+  function buildStatsGrid() {
+    $('statsGrid').innerHTML = STAT_KEYS.map(k =>
+      `<div class="stat-input"><label>${k}</label><input type="number" id="c_stat_${k}" value="0"></div>`
+    ).join('');
+  }
+
+  function renderIncompatible(selected) {
+    const sel = selected || [];
+    const ownId = editingId;
+    const others = data.cyber.filter(i => i.id !== ownId);
+    const known = new Set(data.cyber.map(i => i.id));
+    const missing = sel.filter(id => !known.has(id));
+    const items = others.map(i => `
+      <label><input type="checkbox" value="${h(i.id)}" ${sel.includes(i.id) ? 'checked' : ''}> ${h(i.nom)} <span style="color:var(--text-dim)">(${h(i.id)})</span></label>
+    `).concat(missing.map(id => `
+      <label class="missing"><input type="checkbox" value="${h(id)}" checked> ${h(id)} (introuvable — décoche pour retirer)</label>
+    `));
+    $('c_incompatible').innerHTML = items.length ? items.join('') : '<span style="color:var(--text-dim);font-size:10px;">Aucun autre cyberware pour le moment.</span>';
+  }
+
+  function setMode(isCyber) {
+    $('formCyber').style.display = isCyber ? 'block' : 'none';
+    $('formAtout').style.display = isCyber ? 'none' : 'block';
+  }
+
+  function resetForm() {
+    editingId = null;
+    idTouched = false;
+    setMode(mode === 'cyber');
+    ['c_nom','c_id','c_emplacement','c_effets','c_description','a_nom','a_id','a_effets','a_description'].forEach(id => $(id).value = '');
+    ['c_cybercap','c_humanite','c_ram','c_glace'].forEach(id => $(id).value = 0);
+    STAT_KEYS.forEach(k => $('c_stat_' + k).value = 0);
+    $('c_categorie').value = 'tete';
+    document.querySelector('input[name="c_nature"][value="legal"]').checked = true;
+    renderIncompatible([]);
+    $('formTitle').textContent = mode === 'cyber' ? 'Nouveau cyberware' : 'Nouvel atout';
+    $('saveBtn').textContent = 'Ajouter';
+    $('editingBanner').style.display = 'none';
+    $('c_id_hint').textContent = $('a_id_hint').textContent = 'Lettres minuscules, chiffres et _ uniquement.';
+    $('formFeedback').textContent = '';
+    $('formFeedback').className = 'form-feedback';
+    renderList();
+  }
+
+  $('resetBtn').addEventListener('click', resetForm);
+
+  function startEdit(id) {
+    const item = data[mode].find(i => i.id === id);
+    if (!item) return;
+    editingId = id;
+    idTouched = true;
+    setMode(mode === 'cyber');
+
+    if (mode === 'cyber') {
+      $('c_nom').value = item.nom || '';
+      $('c_id').value = item.id || '';
+      $('c_categorie').value = item.categorie || 'tete';
+      const nature = item.nature === 'illegal' ? 'illegal' : 'legal';
+      document.querySelector(`input[name="c_nature"][value="${nature}"]`).checked = true;
+      $('c_emplacement').value = item.emplacementDetaille || '';
+      $('c_effets').value = item.effets || '';
+      $('c_description').value = item.description || '';
+      $('c_cybercap').value = item.cybercapacite || 0;
+      $('c_humanite').value = item.humanite || 0;
+      $('c_ram').value = item.ram || 0;
+      $('c_glace').value = item.glace || 0;
+      STAT_KEYS.forEach(k => $('c_stat_' + k).value = (item.statistiques || {})[k] || 0);
+      renderIncompatible(item.incompatibleWith || []);
+    } else {
+      $('a_nom').value = item.nom || '';
+      $('a_id').value = item.id || '';
+      $('a_effets').value = item.effets || '';
+      $('a_description').value = item.description || '';
+    }
+
+    $('formTitle').textContent = 'Modifier : ' + item.nom;
+    $('saveBtn').textContent = 'Enregistrer les modifications';
+    $('editingBanner').style.display = 'block';
+    $('editingBanner').textContent = 'Modification en cours. Changer l\'identifiant casse les fiches déjà partagées qui contiennent cet objet : à éviter si des joueurs l\'utilisent.';
+    $('formFeedback').textContent = '';
+    renderList();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Auto-génération de l'id tant qu'il n'a pas été modifié à la main (et seulement pour un nouvel élément)
+  $('c_nom').addEventListener('input', (e) => { if (!idTouched && !editingId) $('c_id').value = slugify(e.target.value); });
+  $('a_nom').addEventListener('input', (e) => { if (!idTouched && !editingId) $('a_id').value = slugify(e.target.value); });
+  $('c_id').addEventListener('input', () => { idTouched = true; });
+  $('a_id').addEventListener('input', () => { idTouched = true; });
+
+  // =====================================================
+  // LECTURE + VALIDATION
+  // =====================================================
+  function readForm() {
+    if (mode === 'cyber') {
+      const statistiques = {};
+      STAT_KEYS.forEach(k => { const v = toInt($('c_stat_' + k).value); if (v !== 0) statistiques[k] = v; });
+      return {
+        id: $('c_id').value.trim(),
+        nom: $('c_nom').value.trim(),
+        categorie: $('c_categorie').value,
+        emplacementDetaille: $('c_emplacement').value.trim(),
+        effets: $('c_effets').value.trim(),
+        description: $('c_description').value.trim(),
+        cybercapacite: toInt($('c_cybercap').value),
+        humanite: toInt($('c_humanite').value),
+        nature: document.querySelector('input[name="c_nature"]:checked').value,
+        statistiques,
+        ram: toInt($('c_ram').value),
+        glace: toInt($('c_glace').value),
+        incompatibleWith: Array.from($('c_incompatible').querySelectorAll('input:checked')).map(i => i.value),
+      };
+    }
+    return {
+      id: $('a_id').value.trim(),
+      nom: $('a_nom').value.trim(),
+      effets: $('a_effets').value.trim(),
+      description: $('a_description').value.trim(),
+    };
+  }
+
+  function validateItem(item) {
+    const errors = [];
+    if (!item.nom) errors.push('Le nom est obligatoire.');
+    if (!item.id) errors.push('L\'identifiant est obligatoire.');
+    else if (!/^[a-z0-9_]+$/.test(item.id)) errors.push('L\'identifiant ne doit contenir que des minuscules, chiffres et _ (pas d\'espace ni d\'accent).');
+    else if (data[mode].some(i => i.id === item.id && i.id !== editingId)) errors.push(`L'identifiant « ${item.id} » existe déjà.`);
+    if (mode === 'cyber') {
+      if (!item.emplacementDetaille) errors.push('L\'emplacement détaillé est obligatoire.');
+      ['cybercapacite', 'humanite', 'ram', 'glace'].forEach(k => { if (item[k] < 0) errors.push('Les coûts et bonus ne peuvent pas être négatifs.'); });
+      if (item.incompatibleWith.includes(item.id)) errors.push('Un cyberware ne peut pas être incompatible avec lui-même.');
+    }
+    return Array.from(new Set(errors));
+  }
+
+  // =====================================================
+  // ACTIONS : ajouter / modifier / supprimer
+  // =====================================================
+  function markDirty() { dirty[mode] = true; }
+
+  $('saveBtn').addEventListener('click', () => {
+    const item = readForm();
+    const errors = validateItem(item);
+    const fb = $('formFeedback');
+    if (errors.length) {
+      fb.className = 'form-feedback error';
+      fb.innerHTML = errors.map(h).join('<br>');
+      return;
+    }
+
+    const wasEditing = editingId !== null;
+    if (wasEditing) {
+      const idx = data[mode].findIndex(i => i.id === editingId);
+      if (idx === -1) { fb.className = 'form-feedback error'; fb.textContent = 'Élément introuvable, recharge la page.'; return; }
+      const oldId = editingId;
+      data[mode][idx] = item;
+      // Si l'id a changé, met à jour les références d'incompatibilité
+      if (mode === 'cyber' && oldId !== item.id) {
+        data.cyber.forEach(c => {
+          if (Array.isArray(c.incompatibleWith)) c.incompatibleWith = c.incompatibleWith.map(x => x === oldId ? item.id : x);
+        });
+      }
+    } else {
+      data[mode].push(item);
+    }
+
+    markDirty();
+    const label = item.nom;
+    resetForm();
+    renderOutput();
+    $('formFeedback').className = 'form-feedback ok';
+    $('formFeedback').textContent = wasEditing ? `« ${label} » modifié. Pense à exporter le JSON.` : `« ${label} » ajouté. Pense à exporter le JSON.`;
+  });
+
+  function deleteItem(id) {
+    const item = data[mode].find(i => i.id === id);
+    if (!item) return;
+    if (!confirm(`Supprimer « ${item.nom} » ? Il disparaîtra du catalogue une fois le JSON publié.`)) return;
+    data[mode] = data[mode].filter(i => i.id !== id);
+    if (mode === 'cyber') {
+      data.cyber.forEach(c => {
+        if (Array.isArray(c.incompatibleWith)) c.incompatibleWith = c.incompatibleWith.filter(x => x !== id);
+      });
+    }
+    markDirty();
+    if (editingId === id) resetForm();
+    else { renderIncompatible(currentChecked()); renderList(); }
+    renderOutput();
+  }
+
+  function currentChecked() {
+    return Array.from($('c_incompatible').querySelectorAll('input:checked')).map(i => i.value);
+  }
+
+  // =====================================================
+  // SORTIE + VÉRIFICATIONS GLOBALES
+  // =====================================================
+  function globalWarnings() {
+    const warnings = [];
+    const arr = data[mode];
+    const ids = arr.map(i => i.id);
+    const dup = ids.filter((id, i) => ids.indexOf(id) !== i);
+    Array.from(new Set(dup)).forEach(id => warnings.push(`Identifiant en double : ${id}`));
+    if (mode === 'cyber') {
+      const known = new Set(ids);
+      arr.forEach(c => {
+        (c.incompatibleWith || []).forEach(x => { if (!known.has(x)) warnings.push(`${c.nom} : incompatibilité avec « ${x} » qui n'existe pas.`); });
+        if (!ZONES[c.categorie]) warnings.push(`${c.nom} : zone inconnue « ${c.categorie} ».`);
+      });
+    }
+    return warnings;
+  }
+
+  function renderOutput() {
+    $('outTitle').textContent = FILES[mode];
+    $('output').value = JSON.stringify(data[mode], null, 2);
+    $('dirtyFlag').classList.toggle('on', dirty[mode]);
+    $('githubLink').href = `https://github.com/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/${FILES[mode]}`;
+
+    const w = globalWarnings();
+    const box = $('warnBox');
+    box.classList.toggle('on', w.length > 0);
+    box.innerHTML = w.length ? '<b>À vérifier avant de publier :</b><br>' + w.map(h).join('<br>') : '';
+  }
+
+  function renderAll() {
+    setMode(mode === 'cyber');
+    resetForm();      // appelle renderList
+    renderOutput();
+  }
+
+  function flashButton(btn, text) {
+    const old = btn.textContent;
+    btn.textContent = text;
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = old; btn.classList.remove('copied'); }, 1800);
+  }
+
+  $('copyBtn').addEventListener('click', () => {
+    const text = $('output').value;
+    const done = () => { dirty[mode] = false; renderOutput(); flashButton($('copyBtn'), 'Copié ✓'); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(() => { $('output').select(); document.execCommand('copy'); done(); });
+    } else {
+      $('output').select(); document.execCommand('copy'); done();
+    }
+  });
+
+  $('downloadBtn').addEventListener('click', () => {
+    const blob = new Blob([$('output').value + '\n'], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = FILES[mode].split('/').pop();
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(a.href);
+    dirty[mode] = false;
+    renderOutput();
+  });
+
+  // =====================================================
+  // IMPORT MANUEL
+  // =====================================================
+  $('importBtn').addEventListener('click', () => {
+    const fb = $('importFeedback');
+    try {
+      const parsed = JSON.parse($('importArea').value);
+      if (!Array.isArray(parsed)) throw new Error('Le JSON doit être une liste [ … ].');
+      if (parsed.some(i => !i || typeof i.id !== 'string' || typeof i.nom !== 'string')) throw new Error('Chaque élément doit avoir un « id » et un « nom ».');
+      if (!confirm(`Remplacer les ${data[mode].length} élément(s) actuels par ${parsed.length} élément(s) importé(s) ?`)) return;
+      data[mode] = parsed;
+      dirty[mode] = true;
+      $('importArea').value = '';
+      fb.className = 'form-feedback ok';
+      fb.textContent = `${parsed.length} élément(s) importé(s).`;
+      resetForm();
+      renderOutput();
+    } catch (err) {
+      fb.className = 'form-feedback error';
+      fb.textContent = 'JSON invalide : ' + err.message;
+    }
+  });
+
+  // Avertit si des modifications n'ont pas été exportées
+  window.addEventListener('beforeunload', (e) => {
+    if (dirty.cyber || dirty.atout) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  init();
 </script>
 
 </body>
