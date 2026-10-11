@@ -175,29 +175,5 @@
     "ram": 0,
     "glace": 0,
     "incompatibleWith": []
-  },
-  {
-    "id": "implant_bidon",
-    "nom": "implant bidon",
-    "categorie": "tete",
-    "emplacementDetaille": "Yeux",
-    "effets": "Vision nocturne",
-    "description": "test",
-    "cybercapacite": 2,
-    "humanite": 2,
-    "nature": "legal",
-    "statistiques": {
-      "Force": 1,
-      "Réflexes": 2,
-      "Vitesse": 2,
-      "Endurance": 2,
-      "Résistance": 2,
-      "Esprit": 2
-    },
-    "ram": 2,
-    "glace": 4,
-    "incompatibleWith": [
-      "kiroshi_optics"
-    ]
   }
 ]
