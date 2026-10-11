@@ -9,10 +9,14 @@
     "cybercapacite": 40,
     "humanite": 5,
     "nature": "legal",
-    "statistiques": { "Esprit": 1 },
+    "statistiques": {
+      "Esprit": 1
+    },
     "ram": 0,
     "glace": 0,
-    "incompatibleWith": ["militech_optics"]
+    "incompatibleWith": [
+      "militech_optics"
+    ]
   },
   {
     "id": "militech_optics",
@@ -24,10 +28,14 @@
     "cybercapacite": 55,
     "humanite": 10,
     "nature": "illegal",
-    "statistiques": { "Réflexes": 1 },
+    "statistiques": {
+      "Réflexes": 1
+    },
     "ram": 0,
     "glace": 0,
-    "incompatibleWith": ["kiroshi_optics"]
+    "incompatibleWith": [
+      "kiroshi_optics"
+    ]
   },
   {
     "id": "cortex_deck",
@@ -39,7 +47,9 @@
     "cybercapacite": 60,
     "humanite": 8,
     "nature": "legal",
-    "statistiques": { "Esprit": 2 },
+    "statistiques": {
+      "Esprit": 2
+    },
     "ram": 8,
     "glace": 0,
     "incompatibleWith": []
@@ -54,7 +64,9 @@
     "cybercapacite": 70,
     "humanite": 12,
     "nature": "legal",
-    "statistiques": { "Résistance": 1 },
+    "statistiques": {
+      "Résistance": 1
+    },
     "ram": 0,
     "glace": 0,
     "incompatibleWith": []
@@ -84,7 +96,9 @@
     "cybercapacite": 45,
     "humanite": 8,
     "nature": "illegal",
-    "statistiques": { "Force": 1 },
+    "statistiques": {
+      "Force": 1
+    },
     "ram": 0,
     "glace": 0,
     "incompatibleWith": []
@@ -99,10 +113,14 @@
     "cybercapacite": 45,
     "humanite": 8,
     "nature": "illegal",
-    "statistiques": { "Force": 1 },
+    "statistiques": {
+      "Force": 1
+    },
     "ram": 0,
     "glace": 0,
-    "incompatibleWith": ["reinforced_arm_d"]
+    "incompatibleWith": [
+      "reinforced_arm_d"
+    ]
   },
   {
     "id": "reinforced_arm_d",
@@ -114,10 +132,15 @@
     "cybercapacite": 80,
     "humanite": 15,
     "nature": "legal",
-    "statistiques": { "Force": 2, "Endurance": 1 },
+    "statistiques": {
+      "Force": 2,
+      "Endurance": 1
+    },
     "ram": 0,
     "glace": 0,
-    "incompatibleWith": ["mono_blade_d"]
+    "incompatibleWith": [
+      "mono_blade_d"
+    ]
   },
   {
     "id": "reinforced_leg_g",
@@ -129,7 +152,9 @@
     "cybercapacite": 50,
     "humanite": 9,
     "nature": "legal",
-    "statistiques": { "Vitesse": 1 },
+    "statistiques": {
+      "Vitesse": 1
+    },
     "ram": 0,
     "glace": 0,
     "incompatibleWith": []
@@ -144,9 +169,35 @@
     "cybercapacite": 50,
     "humanite": 9,
     "nature": "legal",
-    "statistiques": { "Vitesse": 1 },
+    "statistiques": {
+      "Vitesse": 1
+    },
     "ram": 0,
     "glace": 0,
     "incompatibleWith": []
+  },
+  {
+    "id": "implant_bidon",
+    "nom": "implant bidon",
+    "categorie": "tete",
+    "emplacementDetaille": "Yeux",
+    "effets": "Vision nocturne",
+    "description": "test",
+    "cybercapacite": 2,
+    "humanite": 2,
+    "nature": "legal",
+    "statistiques": {
+      "Force": 1,
+      "Réflexes": 2,
+      "Vitesse": 2,
+      "Endurance": 2,
+      "Résistance": 2,
+      "Esprit": 2
+    },
+    "ram": 2,
+    "glace": 4,
+    "incompatibleWith": [
+      "kiroshi_optics"
+    ]
   }
 ]
