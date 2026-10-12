@@ -38,16 +38,17 @@
     font-size: 13px;
     line-height: 1.4;
     margin: 0;
-    padding: 28px 36px 40px;
+    padding: 28px 36px 60px;
     min-height: 100vh;
   }
 
   button { font-family: inherit; }
+  [hidden] { display: none !important; }
 
-  /* ---- En-tête ---- */
+  /* ---- En-tête + onglets ---- */
   .page-head {
     display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-    max-width: 1700px; padding-bottom: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border);
+    max-width: 1700px; margin-bottom: 18px;
   }
   h1 { font-size: 17px; letter-spacing: 4px; text-transform: uppercase; color: var(--red); margin: 0; }
   .head-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
@@ -60,6 +61,15 @@
     border-radius: 4px; cursor: pointer; transition: all .15s ease;
   }
   .head-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .tabs { display: flex; gap: 6px; max-width: 1700px; margin-bottom: 24px; border-bottom: 1px solid var(--border-strong); }
+  .tab-btn {
+    background: transparent; border: 1px solid var(--border); border-bottom: none; color: var(--text-dim);
+    font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; padding: 12px 24px;
+    border-radius: 5px 5px 0 0; cursor: pointer; position: relative; top: 1px; transition: all .15s ease;
+  }
+  .tab-btn:hover { color: var(--red); border-color: var(--red); }
+  .tab-btn.active { background: var(--red); border-color: var(--red); color: #000; font-weight: bold; }
 
   .notice, .load-error {
     max-width: 1700px; padding: 12px 16px; border-radius: 4px; font-size: 12.5px; margin-bottom: 18px; line-height: 1.5;
@@ -80,6 +90,13 @@
 
   /* ---- Colonne gauche : stats + barres ---- */
   .left-column { width: 360px; display: flex; flex-direction: column; gap: 18px; flex-shrink: 0; }
+
+  .name-input {
+    width: 100%; background: #05070a; border: 1px solid var(--border-strong); color: var(--text);
+    font-family: inherit; font-size: 14px; padding: 10px 12px; border-radius: 3px; margin-bottom: 16px;
+  }
+  .name-input:focus { outline: none; border-color: var(--red); }
+  .name-input::placeholder { color: var(--text-faint); }
 
   .profiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 18px; }
   .profile-btn {
@@ -146,14 +163,19 @@
   .bar-hint.on { display: block; }
   .bar-hint.error { color: var(--red); }
 
+  .money-line { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); }
+  .money-line b { color: var(--amber); font-size: 15px; letter-spacing: 0; }
+
   /* ---- Squelette central ---- */
   .skeleton-panel { flex: 1; min-width: 320px; display: flex; flex-direction: column; align-items: center; }
   .skeleton-wrap { position: relative; height: 640px; max-width: 100%; }
+  .skeleton-wrap.small { height: 430px; }
   .skeleton-wrap img { height: 100%; width: auto; display: block; border-radius: 6px; margin: 0 auto; }
   .zone-marker {
     position: absolute; border: 1px dashed #ff3b3b77; background: #ff3b3b0c; border-radius: 6px;
     cursor: pointer; transition: all .2s ease;
   }
+  .readonly .zone-marker { cursor: default; }
   .zone-marker:hover { border-color: var(--red); background: #ff3b3b1c; }
   .zone-marker.active { border-style: solid; border-color: var(--red); background: #ff3b3b1c; }
   .zone-marker.equipped { border-color: var(--amber); background: #e0a94022; box-shadow: 0 0 14px #e0a94066 inset; }
@@ -216,8 +238,16 @@
   .badge.atout-tag { color: #000; background: var(--purple); border-color: var(--purple); font-weight: bold; }
 
   /* ---- Détail d'un cyberware (dans le panneau) ---- */
-  .back-btn { background: none; border: none; color: var(--text-dim); font-size: 12px; cursor: pointer; padding: 0; margin-bottom: 14px; letter-spacing: 0.5px; }
-  .back-btn:hover { color: var(--red); }
+  .back-btn {
+    position: sticky; top: 0; z-index: 6;
+    display: flex; align-items: center; gap: 10px; width: calc(100% + 40px);
+    margin: -18px -20px 18px; padding: 13px 20px;
+    background: #1a0f13; border: none; border-bottom: 2px solid var(--red); color: var(--red);
+    font-size: 13.5px; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase;
+    cursor: pointer; text-align: left; transition: all .15s ease;
+  }
+  .back-btn:hover { background: var(--red); color: #000; }
+  .back-btn .back-arrow { font-size: 18px; line-height: 1; }
   .detail-header { margin: 0 0 16px 0; }
   .detail-name { font-size: 17px; color: var(--amber); letter-spacing: 1px; margin-bottom: 8px; }
   .detail-name.atout-color { color: var(--purple); }
@@ -292,12 +322,113 @@
   .item-card-badges { display: flex; gap: 5px; flex-wrap: wrap; }
   .item-card-desc { font-size: 12px; color: var(--text-dim); line-height: 1.45; }
 
-  /* ---- Tiroir (atouts) ---- */
+  /* ---- Inventaire ---- */
+  .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 10px; }
+  .inv-row {
+    display: flex; align-items: center; gap: 12px; background: var(--bg-panel); border: 1px solid var(--border);
+    border-left: 3px solid var(--green); border-radius: 4px; padding: 10px 12px;
+  }
+  .inv-thumb { width: 58px; height: 58px; flex-shrink: 0; border-radius: 4px; overflow: hidden; background: #05070a; }
+  .inv-thumb img, .inv-thumb svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .inv-main { flex: 1; min-width: 0; }
+  .inv-name { font-size: 13.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .inv-sub { font-size: 11.5px; color: var(--text-dim); margin-top: 2px; }
+  .inv-qty { color: var(--amber); font-weight: bold; }
+  .inv-actions { display: flex; flex-direction: column; gap: 5px; }
+  .mini-btn {
+    background: transparent; border: 1px solid var(--border-strong); color: var(--text); font-size: 10.5px;
+    letter-spacing: 0.5px; text-transform: uppercase; padding: 5px 9px; border-radius: 3px; cursor: pointer; transition: all .15s ease; white-space: nowrap;
+  }
+  .mini-btn:hover { background: var(--text); color: #000; }
+  .mini-btn.danger { color: var(--red); border-color: var(--red-dim); }
+  .mini-btn.danger:hover { background: var(--red); color: #000; }
+
+  /* ---- Boutique ---- */
+  .shop-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; max-width: 1700px; margin-bottom: 18px; }
+  .shop-title { font-size: 15px; letter-spacing: 3px; text-transform: uppercase; color: var(--amber); }
+  .wallet { display: flex; align-items: center; gap: 10px; }
+  .wallet label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+  .wallet input {
+    width: 140px; background: #05070a; border: 1px solid var(--border-strong); color: var(--amber);
+    font-family: inherit; font-size: 17px; font-weight: bold; padding: 8px 10px; border-radius: 3px; text-align: right;
+  }
+  .wallet input:focus { outline: none; border-color: var(--amber); }
+  .wallet .currency { color: var(--amber); font-weight: bold; font-size: 15px; }
+
+  .shop-toolbar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; max-width: 1700px; }
+  .search-input, .select-input {
+    background: var(--bg-panel); border: 1px solid var(--border); color: var(--text);
+    font-family: inherit; font-size: 13px; padding: 10px 12px; border-radius: 3px;
+  }
+  .search-input { flex: 1; min-width: 240px; max-width: 460px; }
+  .search-input:focus, .select-input:focus { outline: none; border-color: var(--border-strong); }
+  .shop-cats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; max-width: 1700px; }
+
+  .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; max-width: 1700px; }
+  .shop-card {
+    background: var(--bg-panel); border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    cursor: pointer; display: flex; flex-direction: column; transition: all .15s ease;
+  }
+  .shop-card:hover { border-color: var(--border-strong); transform: translateY(-2px); box-shadow: 0 6px 20px #00000066; }
+  .shop-img { position: relative; aspect-ratio: 4 / 3; background: #05070a; overflow: hidden; }
+  .shop-img img, .shop-img svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .owned-badge { position: absolute; top: 8px; right: 8px; background: var(--amber); color: #000; font-weight: bold; font-size: 12px; padding: 2px 9px; border-radius: 10px; }
+  .shop-body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .shop-cat { font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 1px; }
+  .shop-name { font-size: 14.5px; color: var(--text); }
+  .shop-desc { font-size: 12px; color: var(--text-dim); line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .shop-foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-top: 10px; }
+  .price { color: var(--amber); font-weight: bold; font-size: 15px; }
+  .buy-btn {
+    background: var(--amber); color: #000; border: none; font-weight: bold; font-size: 11.5px; letter-spacing: 1px;
+    text-transform: uppercase; padding: 9px 14px; border-radius: 3px; cursor: pointer; transition: all .15s ease;
+  }
+  .buy-btn:hover { filter: brightness(1.15); }
+  .buy-btn:disabled { opacity: 0.35; cursor: not-allowed; filter: none; }
+  .drawer-img { aspect-ratio: 4 / 3; border-radius: 6px; overflow: hidden; margin: 28px 0 16px; background: #05070a; }
+  .drawer-img img, .drawer-img svg { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  /* ---- Fiches des autres ---- */
+  .others-layout { display: flex; gap: 22px; align-items: flex-start; max-width: 1700px; }
+  .others-side { width: 340px; flex-shrink: 0; }
+  .others-main { flex: 1; min-width: 0; }
+  .saved-row {
+    display: flex; align-items: center; background: var(--bg-row); border: 1px solid var(--border);
+    border-left: 3px solid var(--purple); border-radius: 4px; margin-bottom: 6px;
+  }
+  .saved-row.active { border-color: var(--purple); background: var(--bg-row-hover); }
+  .saved-pick { flex: 1; background: none; border: none; color: var(--text); text-align: left; padding: 11px 12px; cursor: pointer; font-size: 13.5px; min-width: 0; }
+  .saved-pick small { display: block; color: var(--text-faint); font-size: 11px; margin-top: 2px; }
+  .saved-del { background: none; border: none; color: var(--red); cursor: pointer; font-size: 14px; padding: 8px 12px; }
+  .saved-del:hover { color: #fff; }
+  .side-divider { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+  .empty-panel { color: var(--text-dim); font-size: 13px; line-height: 1.6; }
+
+  .view-title { font-size: 20px; color: var(--amber); letter-spacing: 2px; margin: 0 0 4px; }
+  .view-sub { font-size: 12px; color: var(--text-dim); margin-bottom: 18px; }
+  .view-grid { display: grid; grid-template-columns: 360px 1fr; gap: 18px; align-items: start; }
+  .view-right { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+  .view-implants { display: flex; gap: 22px; align-items: flex-start; }
+  .view-implants .skel { flex-shrink: 0; }
+  .view-list { flex: 1; min-width: 0; }
+  .view-two { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .v-zone { margin-bottom: 14px; }
+  .v-zone-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid var(--border); }
+  .v-item { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; padding: 7px 0; }
+  .v-item-main { display: flex; gap: 8px; min-width: 0; }
+  .v-item-main .dot { margin-top: 5px; }
+  .v-item-name { font-size: 13px; color: var(--text); }
+  .v-item-sub { font-size: 11.5px; color: var(--text-dim); margin-top: 2px; line-height: 1.4; }
+  .v-atout { padding: 7px 0; border-bottom: 1px solid #ffffff10; }
+  .v-atout:last-child { border-bottom: none; }
+  .v-atout-name { color: var(--purple); font-size: 13px; }
+
+  /* ---- Tiroir (atouts / objets boutique) ---- */
   #drawerBackdrop { position: fixed; inset: 0; background: #000000aa; z-index: 100; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
   #drawerBackdrop.open { opacity: 1; pointer-events: auto; }
 
   #detailDrawer {
-    position: fixed; top: 0; right: 0; height: 100vh; width: 400px; max-width: 90vw;
+    position: fixed; top: 0; right: 0; height: 100vh; width: 420px; max-width: 90vw;
     background: var(--bg-panel); border-left: 1px solid var(--border-strong);
     z-index: 101; transform: translateX(100%); transition: transform .28s ease;
     padding: 24px 22px; overflow-y: auto; box-shadow: -10px 0 30px #000000aa;
@@ -307,7 +438,7 @@
   .drawer-close {
     position: absolute; top: 18px; right: 18px; background: transparent; border: 1px solid var(--border-strong);
     color: var(--text-dim); width: 28px; height: 28px; border-radius: 3px; cursor: pointer; font-size: 14px;
-    display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: center; justify-content: center; z-index: 2;
   }
   .drawer-close:hover { color: var(--red); border-color: var(--red); }
   #detailDrawer .detail-header { margin-right: 36px; }
@@ -352,7 +483,7 @@
   .sheet-feedback.ok { color: var(--green); }
   .sheet-feedback.error { color: var(--red); }
 
-  /* ---- Tooltip flottant ---- */
+  /* ---- Tooltip + toast ---- */
   #tooltip {
     position: fixed; z-index: 999; background: #0c1017; border: 1px solid var(--border-strong);
     border-radius: 4px; padding: 10px 12px; font-size: 12px; color: var(--text); max-width: 240px;
@@ -361,8 +492,15 @@
   #tooltip.visible { opacity: 1; }
   #tooltip .tt-name { color: var(--amber); font-size: 13px; margin-bottom: 4px; }
   #tooltip .tt-name.atout-color { color: var(--purple); }
-  #tooltip .tt-loc { color: var(--text-dim); font-size: 11px; margin-bottom: 6px; }
   #tooltip .tt-effets { color: var(--text); }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 20px); z-index: 1000;
+    background: #0c1017; border: 1px solid var(--green); color: var(--text); padding: 11px 18px; border-radius: 4px;
+    font-size: 13px; opacity: 0; pointer-events: none; transition: all .2s ease; box-shadow: 0 4px 18px #000000aa;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast.error { border-color: var(--red); color: var(--red); }
 </style>
 </head>
 <body>
@@ -371,22 +509,22 @@
   <div id="sheetDrawer">
     <button class="drawer-close" id="sheetClose">✕</button>
 
-    <div class="sheet-section-title">Exporter cette fiche</div>
-    <div class="sheet-hint">Copie ce code et envoie-le à quelqu'un pour qu'il puisse charger cette fiche exacte de son côté.</div>
+    <div class="sheet-section-title">Exporter ma fiche</div>
+    <div class="sheet-hint">Copie ce code et envoie-le à quelqu'un : il pourra consulter ta fiche dans l'onglet « Fiches des autres ».</div>
     <textarea class="sheet-textarea" id="exportArea" readonly></textarea>
     <button class="sheet-btn export-btn" id="copyCodeBtn">Copier le code</button>
 
     <hr class="sheet-divider">
 
-    <div class="sheet-section-title">Charger une fiche</div>
-    <div class="sheet-hint">Colle ici le code reçu de quelqu'un d'autre. Attention : cela remplace la fiche actuelle (exporte-la d'abord si tu veux la garder).</div>
+    <div class="sheet-section-title">Charger une fiche comme la mienne</div>
+    <div class="sheet-hint">Colle un code pour en faire ta fiche actuelle. Attention : cela remplace ta fiche (exporte-la d'abord si tu veux la garder). Pour simplement consulter celle de quelqu'un, utilise l'onglet « Fiches des autres ».</div>
     <textarea class="sheet-textarea import-area" id="importArea" placeholder="Colle le code ici..."></textarea>
     <button class="sheet-btn import-btn" id="loadCodeBtn">Charger cette fiche</button>
     <div class="sheet-feedback" id="importFeedback"></div>
   </div>
 
   <header class="page-head">
-    <h1>// Fiche de personnage</h1>
+    <h1>// Cyberware</h1>
     <div class="head-actions">
       <span class="save-state" id="saveState">Sauvegarde automatique dans ce navigateur</span>
       <button class="head-btn" id="sheetToggleBtn">📋 Fiche partageable</button>
@@ -394,111 +532,163 @@
     </div>
   </header>
 
+  <nav class="tabs" id="tabs">
+    <button class="tab-btn active" data-tab="sheet">Ma fiche</button>
+    <button class="tab-btn" data-tab="others">Fiches des autres</button>
+    <button class="tab-btn" data-tab="shop">Boutique</button>
+  </nav>
+
   <div id="notice"></div>
   <div id="loadError"></div>
 
-  <div class="top-layout">
+  <!-- ===================== ONGLET : MA FICHE ===================== -->
+  <section id="tab-sheet" class="tab-panel">
 
-    <!-- COLONNE GAUCHE : Profils + Stats + Barres -->
-    <div class="left-column">
+    <div class="top-layout">
 
-      <div class="panel">
-        <div class="panel-title"><span>Profil</span></div>
-        <div class="profiles" id="profiles">
-          <button class="profile-btn" data-profile="ASSAUT">Assaut</button>
-          <button class="profile-btn" data-profile="TANK">Tank</button>
-          <button class="profile-btn" data-profile="NETRUNNER">Netrunner</button>
-          <button class="profile-btn" data-profile="SAMOURAI">Samouraï</button>
-          <button class="profile-btn" data-profile="TIREUR">Tireur</button>
-        </div>
+      <div class="left-column">
 
-        <div class="panel-title">
-          <span>Statistiques</span>
-          <span class="points-remaining" id="pointsRemaining">10 pts restants</span>
-        </div>
-        <div id="statsList"></div>
-      </div>
+        <div class="panel">
+          <input type="text" class="name-input" id="charName" placeholder="Nom du personnage" maxlength="40" autocomplete="off">
 
-      <div class="panel">
-        <div class="panel-title"><span>État du personnage</span></div>
-
-        <div class="bar-block">
-          <div class="bar-label"><span class="name humanite">Humanité</span><span class="value" id="humaniteValue">100 / 100</span></div>
-          <div class="bar-track"><div class="bar-fill humanite" id="humaniteFill" style="width:100%"></div></div>
-          <div class="bar-note">100 par défaut, décroît selon les implants installés.</div>
-        </div>
-
-        <div class="bar-block">
-          <div class="bar-label"><span class="name cybercap">Cybercapacité</span><span class="value" id="cybercapValue">0 utilisé / 0 max</span></div>
-          <div class="bar-ctrl">
-            <button class="stat-btn" id="ccMinus" title="Baisser le plafond de 10">−</button>
-            <div class="bar-track draggable" id="cybercapTrack">
-              <div class="bar-fill cybercap-max" id="cybercapMaxFill" style="width:0%"></div>
-              <div class="bar-fill cybercap-used" id="cybercapUsedFill" style="width:0%"></div>
-              <div class="bar-handle" id="cybercapHandle" style="left:0%"></div>
-            </div>
-            <button class="stat-btn" id="ccPlus" title="Monter le plafond de 10">+</button>
+          <div class="panel-title"><span>Profil</span></div>
+          <div class="profiles" id="profiles">
+            <button class="profile-btn" data-profile="ASSAUT">Assaut</button>
+            <button class="profile-btn" data-profile="TANK">Tank</button>
+            <button class="profile-btn" data-profile="NETRUNNER">Netrunner</button>
+            <button class="profile-btn" data-profile="SAMOURAI">Samouraï</button>
+            <button class="profile-btn" data-profile="TIREUR">Tireur</button>
           </div>
-          <div class="bar-note">Glisse la barre ou utilise − / + (par 10) pour régler ton plafond (0 à 500). Zone vive = consommé par tes implants.</div>
-          <div class="bar-hint" id="cybercapHint"></div>
+
+          <div class="panel-title">
+            <span>Statistiques</span>
+            <span class="points-remaining" id="pointsRemaining">10 pts restants</span>
+          </div>
+          <div id="statsList"></div>
         </div>
 
-        <div class="bar-block">
-          <div class="bar-label"><span class="name ram">RAM</span><span class="value" id="ramValue">0 / 30</span></div>
-          <div class="bar-track"><div class="bar-fill ram" id="ramFill" style="width:0%"></div></div>
-          <div class="bar-note">Augmentée uniquement par certains implants.</div>
-        </div>
+        <div class="panel">
+          <div class="panel-title"><span>État du personnage</span></div>
 
-        <div class="bar-block">
-          <div class="bar-label"><span class="name glace">Glace</span><span class="value" id="glaceValue">0 / 100</span></div>
-          <div class="bar-track"><div class="bar-fill glace" id="glaceFill" style="width:0%"></div></div>
-          <div class="bar-note">Augmentée uniquement par certains implants.</div>
+          <div class="bar-block">
+            <div class="bar-label"><span class="name humanite">Humanité</span><span class="value" id="humaniteValue">100 / 100</span></div>
+            <div class="bar-track"><div class="bar-fill humanite" id="humaniteFill" style="width:100%"></div></div>
+            <div class="bar-note">100 par défaut, décroît selon les implants installés.</div>
+          </div>
+
+          <div class="bar-block">
+            <div class="bar-label"><span class="name cybercap">Cybercapacité</span><span class="value" id="cybercapValue">0 utilisé / 0 max</span></div>
+            <div class="bar-ctrl">
+              <button class="stat-btn" id="ccMinus" title="Baisser le plafond de 10">−</button>
+              <div class="bar-track draggable" id="cybercapTrack">
+                <div class="bar-fill cybercap-max" id="cybercapMaxFill" style="width:0%"></div>
+                <div class="bar-fill cybercap-used" id="cybercapUsedFill" style="width:0%"></div>
+                <div class="bar-handle" id="cybercapHandle" style="left:0%"></div>
+              </div>
+              <button class="stat-btn" id="ccPlus" title="Monter le plafond de 10">+</button>
+            </div>
+            <div class="bar-note">Glisse la barre ou utilise − / + (par 10) pour régler ton plafond (0 à 500). Zone vive = consommé par tes implants.</div>
+            <div class="bar-hint" id="cybercapHint"></div>
+          </div>
+
+          <div class="bar-block">
+            <div class="bar-label"><span class="name ram">RAM</span><span class="value" id="ramValue">0 / 30</span></div>
+            <div class="bar-track"><div class="bar-fill ram" id="ramFill" style="width:0%"></div></div>
+            <div class="bar-note">Augmentée uniquement par certains implants.</div>
+          </div>
+
+          <div class="bar-block">
+            <div class="bar-label"><span class="name glace">Glace</span><span class="value" id="glaceValue">0 / 100</span></div>
+            <div class="bar-track"><div class="bar-fill glace" id="glaceFill" style="width:0%"></div></div>
+            <div class="bar-note">Augmentée uniquement par certains implants.</div>
+          </div>
+
+          <div class="money-line"><span>Argent</span><b id="sheetMoney">0</b></div>
         </div>
 
       </div>
 
-    </div>
-
-    <!-- SQUELETTE CENTRAL -->
-    <div class="panel skeleton-panel">
-      <div class="skeleton-wrap">
-        <img src="skeleton.png" alt="Squelette cyberpunk">
-        <div class="zone-marker" data-zone="tete"    data-label="Tête"          style="top:11.0%; left:39.7%; width:20.6%; height:15.3%;"><span class="zone-badge">0</span></div>
-        <div class="zone-marker" data-zone="tronc"   data-label="Tronc"         style="top:24.6%; left:25.0%; width:50.0%; height:28.8%;"><span class="zone-badge">0</span></div>
-        <div class="zone-marker" data-zone="bras_g"  data-label="Bras gauche"   style="top:26.3%; left:13.2%; width:13.2%; height:33.9%;"><span class="zone-badge">0</span></div>
-        <div class="zone-marker" data-zone="bras_d"  data-label="Bras droit"    style="top:26.3%; left:75.0%; width:13.2%; height:33.9%;"><span class="zone-badge">0</span></div>
-        <div class="zone-marker" data-zone="jambe_g" data-label="Jambe gauche"  style="top:53.4%; left:29.4%; width:13.2%; height:39.0%;"><span class="zone-badge">0</span></div>
-        <div class="zone-marker" data-zone="jambe_d" data-label="Jambe droite"  style="top:53.4%; left:54.4%; width:13.2%; height:39.0%;"><span class="zone-badge">0</span></div>
+      <div class="panel skeleton-panel">
+        <div class="skeleton-wrap">
+          <img src="skeleton.png" alt="Squelette cyberpunk">
+          <div class="zone-marker" data-zone="tete"    data-label="Tête"          style="top:11.0%; left:39.7%; width:20.6%; height:15.3%;"><span class="zone-badge">0</span></div>
+          <div class="zone-marker" data-zone="tronc"   data-label="Tronc"         style="top:24.6%; left:25.0%; width:50.0%; height:28.8%;"><span class="zone-badge">0</span></div>
+          <div class="zone-marker" data-zone="bras_g"  data-label="Bras gauche"   style="top:26.3%; left:13.2%; width:13.2%; height:33.9%;"><span class="zone-badge">0</span></div>
+          <div class="zone-marker" data-zone="bras_d"  data-label="Bras droit"    style="top:26.3%; left:75.0%; width:13.2%; height:33.9%;"><span class="zone-badge">0</span></div>
+          <div class="zone-marker" data-zone="jambe_g" data-label="Jambe gauche"  style="top:53.4%; left:29.4%; width:13.2%; height:39.0%;"><span class="zone-badge">0</span></div>
+          <div class="zone-marker" data-zone="jambe_d" data-label="Jambe droite"  style="top:53.4%; left:54.4%; width:13.2%; height:39.0%;"><span class="zone-badge">0</span></div>
+        </div>
+        <div class="skeleton-legend">Clique une zone du squelette : ses implants s'affichent à droite.</div>
       </div>
-      <div class="skeleton-legend">Clique une zone du squelette : ses implants s'affichent à droite.</div>
+
+      <div class="panel zone-panel">
+        <div class="zone-panel-inner" id="zonePanel"></div>
+      </div>
+
     </div>
 
-    <!-- CATALOGUE DE LA ZONE -->
-    <div class="panel zone-panel">
-      <div class="zone-panel-inner" id="zonePanel"></div>
+    <div class="strip-wrap">
+      <div class="catalogue-title">// Équipement installé</div>
+      <div id="equippedStrip"></div>
     </div>
 
-  </div>
+    <div class="strip-wrap">
+      <div class="catalogue-title">// Atouts sélectionnés</div>
+      <div id="atoutsStrip"></div>
+    </div>
 
-  <!-- ÉQUIPEMENT INSTALLÉ -->
-  <div class="strip-wrap">
-    <div class="catalogue-title">// Équipement installé</div>
-    <div id="equippedStrip"></div>
-  </div>
+    <div class="catalogue">
+      <div class="catalogue-title">// Atouts disponibles</div>
+      <div class="card-grid" id="atoutGrid"></div>
+    </div>
 
-  <!-- ATOUTS SÉLECTIONNÉS -->
-  <div class="strip-wrap">
-    <div class="catalogue-title">// Atouts sélectionnés</div>
-    <div id="atoutsStrip"></div>
-  </div>
+    <div class="catalogue">
+      <div class="catalogue-title">// Inventaire</div>
+      <div id="inventoryGrid"></div>
+    </div>
 
-  <!-- CATALOGUE ATOUTS -->
-  <div class="catalogue">
-    <div class="catalogue-title">// Atouts disponibles</div>
-    <div class="card-grid" id="atoutGrid"></div>
-  </div>
+  </section>
 
-  <!-- TIROIR DÉTAIL (atouts) -->
+  <!-- ===================== ONGLET : FICHES DES AUTRES ===================== -->
+  <section id="tab-others" class="tab-panel" hidden>
+    <div class="others-layout">
+      <div class="panel others-side">
+        <div class="panel-title"><span>Fiches enregistrées</span></div>
+        <div id="othersList"></div>
+        <hr class="side-divider">
+        <div class="sheet-hint">Colle le code d'une fiche (bouton « Fiche partageable » de son propriétaire). Elle reste enregistrée ici ; colle un nouveau code du même personnage pour la mettre à jour.</div>
+        <textarea class="sheet-textarea import-area" id="othersCode" placeholder="Colle le code ici..."></textarea>
+        <button class="sheet-btn export-btn" id="othersAddBtn">Ajouter / mettre à jour</button>
+        <div class="sheet-feedback" id="othersFeedback"></div>
+      </div>
+      <div class="others-main" id="othersView"></div>
+    </div>
+  </section>
+
+  <!-- ===================== ONGLET : BOUTIQUE ===================== -->
+  <section id="tab-shop" class="tab-panel" hidden>
+    <div class="shop-head">
+      <div class="shop-title">// Boutique</div>
+      <div class="wallet">
+        <label for="walletInput">Mon argent</label>
+        <input type="number" id="walletInput" min="0" step="1" value="0">
+        <span class="currency" id="walletCurrency">€$</span>
+      </div>
+    </div>
+    <div class="shop-toolbar">
+      <input type="text" class="search-input" id="shopSearch" placeholder="Rechercher un objet…" autocomplete="off">
+      <select class="select-input" id="shopSort">
+        <option value="default">Ordre de la boutique</option>
+        <option value="price_asc">Prix croissant</option>
+        <option value="price_desc">Prix décroissant</option>
+        <option value="name">Nom (A → Z)</option>
+      </select>
+    </div>
+    <div class="shop-cats" id="shopCats"></div>
+    <div class="shop-grid" id="shopGrid"></div>
+  </section>
+
+  <!-- TIROIR DÉTAIL (atouts / objets boutique) -->
   <div id="drawerBackdrop"></div>
   <div id="detailDrawer">
     <button class="drawer-close" id="drawerClose">✕</button>
@@ -506,6 +696,7 @@
   </div>
 
   <div id="tooltip"></div>
+  <div class="toast" id="toast"></div>
 
 <script>
   const $ = (id) => document.getElementById(id);
@@ -524,8 +715,11 @@
   const TOTAL_POINTS = 10;
   const BASE_CAP = 5;
   const MAX_LEVEL = 15;
-  const DEFAULT_CYBERCAP_MAX = 0;   // plafond de cybercapacité d'une fiche vierge (change-le si besoin)
+  const DEFAULT_CYBERCAP_MAX = 0;   // plafond de cybercapacité d'une fiche vierge
+  const CURRENCY = '€$';            // nom de la monnaie (eurodollars)
+  const MAX_QTY = 99;               // quantité max d'un même objet dans l'inventaire
   const STORAGE_KEY = 'cyberware_character_v1';
+  const OTHERS_KEY = 'cyberware_others_v1';
 
   const RESOURCE_CONFIG = {
     cybercap: { max: 500, step: 10 },
@@ -550,46 +744,67 @@
     jambe_d: "Jambe droite",
   };
 
+  const ZONE_BOXES = {
+    tete:    'top:11.0%; left:39.7%; width:20.6%; height:15.3%;',
+    tronc:   'top:24.6%; left:25.0%; width:50.0%; height:28.8%;',
+    bras_g:  'top:26.3%; left:13.2%; width:13.2%; height:33.9%;',
+    bras_d:  'top:26.3%; left:75.0%; width:13.2%; height:33.9%;',
+    jambe_g: 'top:53.4%; left:29.4%; width:13.2%; height:39.0%;',
+    jambe_d: 'top:53.4%; left:54.4%; width:13.2%; height:39.0%;',
+  };
+
+  const SHOP_CATEGORIES = {
+    armes: 'Armes',
+    armures: 'Armures',
+    consommables: 'Consommables',
+    outils: 'Outils & tech',
+    vehicules: 'Véhicules',
+    divers: 'Divers',
+  };
+
   // Catalogues : chargés depuis data/*.json (édités via admin.html)
   let CATALOGUE = [];
   let ATOUTS = [];
-  const dataOk = { cyber: false, atout: false };
+  let SHOP = [];
+  const dataOk = { cyber: false, atout: false, shop: false };
+
+  function getItem(id) { return CATALOGUE.find(i => i.id === id); }
+  function getAtout(id) { return ATOUTS.find(a => a.id === id); }
+  function getShopItem(id) { return SHOP.find(s => s.id === id); }
+  function catKey(c) { return SHOP_CATEGORIES[c] ? c : 'divers'; }
+  function money(n) { return Number(n || 0).toLocaleString('fr-FR') + ' ' + CURRENCY; }
 
   // =====================================================
   // ÉTAT
   // =====================================================
   function defaultCharacter() {
     return {
+      nom: '',
       baseStats: Object.fromEntries(STAT_NAMES.map(n => [n, 1])),
       cybercapMax: DEFAULT_CYBERCAP_MAX,
       equipped: [],
       atouts: [],
+      argent: 0,
+      inventaire: [],   // [{ id, qty }]
     };
   }
 
   let character = defaultCharacter();
+  let activeTab = 'sheet';
   let activeZone = 'tete';
-  let selectedCyberId = null;   // null = liste de la zone, sinon détail
-  let selectedAtoutId = null;
-  let ready = false;            // true une fois les données et la sauvegarde chargées
+  let selectedCyberId = null;     // null = liste de la zone, sinon détail
+  let drawerState = null;         // { type: 'atout' | 'shop', id }
+  let selectedOtherId = null;
+  let ready = false;
+  const shopFilter = { q: '', cat: 'all', sort: 'default' };
 
-  let computed = {
-    implantBonus: Object.fromEntries(STAT_NAMES.map(n => [n, 0])),
-    humaniteCost: 0,
-    humanite: 100,
-    cybercapUsed: 0,
-    ramBonus: 0,
-    glaceBonus: 0,
-  };
+  let computed = null;
 
-  function getItem(id) { return CATALOGUE.find(i => i.id === id); }
-  function getAtout(id) { return ATOUTS.find(a => a.id === id); }
-
-  function recompute() {
+  // Calcule les valeurs dérivées d'une fiche (la mienne ou celle d'un autre)
+  function computeFor(ch) {
     const bonus = Object.fromEntries(STAT_NAMES.map(n => [n, 0]));
     let humaniteCost = 0, cybercapUsed = 0, ramBonus = 0, glaceBonus = 0;
-
-    character.equipped.forEach(id => {
+    ch.equipped.forEach(id => {
       const item = getItem(id);
       if (!item) return;
       Object.entries(item.statistiques || {}).forEach(([stat, val]) => {
@@ -600,14 +815,17 @@
       ramBonus += item.ram || 0;
       glaceBonus += item.glace || 0;
     });
-
-    computed.implantBonus = bonus;
-    computed.humaniteCost = humaniteCost;
-    computed.humanite = Math.max(0, 100 - humaniteCost);
-    computed.cybercapUsed = cybercapUsed;
-    computed.ramBonus = ramBonus;
-    computed.glaceBonus = glaceBonus;
+    return {
+      implantBonus: bonus,
+      humaniteCost,
+      humanite: Math.max(0, 100 - humaniteCost),
+      cybercapUsed,
+      ramBonus,
+      glaceBonus,
+    };
   }
+  function recompute() { computed = computeFor(character); }
+  recompute();
 
   // =====================================================
   // SAUVEGARDE AUTOMATIQUE (localStorage)
@@ -628,7 +846,7 @@
   function persist() {
     if (!ready) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ v: 1, ...character }));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ v: 2, ...character }));
       setSaveState(true, true);
     } catch (e) {
       setSaveState(false);
@@ -653,6 +871,8 @@
   function sanitizeCharacter(payload) {
     const notes = [];
     const src = payload && typeof payload === 'object' ? payload : {};
+
+    const nom = typeof src.nom === 'string' ? src.nom.trim().slice(0, 40) : '';
 
     const stats = {};
     let points = 0;
@@ -691,12 +911,29 @@
     if (eq.removed) notes.push(`${eq.removed} implant(s) n'existent plus dans le catalogue : retirés de la fiche.`);
     if (at.removed) notes.push(`${at.removed} atout(s) n'existent plus dans le catalogue : retirés de la fiche.`);
 
-    return { character: { baseStats, cybercapMax: cc, equipped: eq.kept, atouts: at.kept }, notes };
+    let argent = parseInt(src.argent, 10);
+    if (!Number.isFinite(argent) || argent < 0) argent = 0;
+    argent = Math.min(argent, 999999999);
+
+    const inv = new Map();
+    let invRemoved = 0;
+    (Array.isArray(src.inventaire) ? src.inventaire : []).forEach(e => {
+      if (!e || typeof e.id !== 'string') return;
+      let q = parseInt(e.qty, 10);
+      if (!Number.isFinite(q) || q < 1) return;
+      if (dataOk.shop && !getShopItem(e.id)) { invRemoved++; return; }
+      inv.set(e.id, Math.min(MAX_QTY, (inv.get(e.id) || 0) + Math.min(MAX_QTY, q)));
+    });
+    if (invRemoved) notes.push(`${invRemoved} objet(s) de l'inventaire n'existent plus dans la boutique : retirés.`);
+    const inventaire = [...inv].map(([id, qty]) => ({ id, qty }));
+
+    return { character: { nom, baseStats, cybercapMax: cc, equipped: eq.kept, atouts: at.kept, argent, inventaire }, notes };
   }
 
   function hasProgress() {
     const pts = STAT_NAMES.reduce((s, n) => s + (character.baseStats[n] - 1), 0);
-    return pts > 0 || character.equipped.length > 0 || character.atouts.length > 0 || character.cybercapMax > DEFAULT_CYBERCAP_MAX;
+    return pts > 0 || character.nom !== '' || character.equipped.length > 0 || character.atouts.length > 0
+      || character.cybercapMax > DEFAULT_CYBERCAP_MAX || character.argent > 0 || character.inventaire.length > 0;
   }
 
   function showNotice(lines) {
@@ -705,6 +942,32 @@
     el.innerHTML = `<div class="notice">${lines.map(h).join('<br>')}<button class="notice-close" id="noticeClose" title="Fermer">✕</button></div>`;
     $('noticeClose').addEventListener('click', () => { el.innerHTML = ''; });
   }
+
+  let toastTimer = null;
+  function toast(msg, kind) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.className = 'toast show' + (kind ? ' ' + kind : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { el.className = 'toast'; }, 2200);
+  }
+
+  // =====================================================
+  // ONGLETS
+  // =====================================================
+  const TABS = ['sheet', 'others', 'shop'];
+
+  function switchTab(name, updateHash) {
+    if (!TABS.includes(name)) name = 'sheet';
+    activeTab = name;
+    TABS.forEach(t => { $('tab-' + t).hidden = (t !== name); });
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
+    hideTooltip();
+    if (updateHash !== false) { try { history.replaceState(null, '', '#' + name); } catch (e) {} }
+    if (name === 'others') renderOthers();
+    if (name === 'shop') renderShop();
+  }
+  document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
 
   // =====================================================
   // STATS
@@ -791,9 +1054,13 @@
     });
   });
 
+  $('charName').addEventListener('input', (e) => {
+    character.nom = e.target.value.slice(0, 40);
+    schedulePersist();
+  });
+
   // =====================================================
   // BARRE CYBERCAPACITÉ (glisser ou boutons − / +)
-  // Le plafond ne peut pas descendre sous la capacité déjà utilisée.
   // =====================================================
   function minCybercap() {
     const cfg = RESOURCE_CONFIG.cybercap;
@@ -867,13 +1134,15 @@
 
     $('glaceFill').style.width = Math.min(100, (computed.glaceBonus / RESOURCE_CONFIG.glace.max) * 100) + '%';
     $('glaceValue').textContent = computed.glaceBonus + ' / ' + RESOURCE_CONFIG.glace.max;
+
+    $('sheetMoney').textContent = money(character.argent);
   }
 
   // =====================================================
   // ZONES DU SQUELETTE
   // =====================================================
   function renderZones() {
-    document.querySelectorAll('.zone-marker').forEach(marker => {
+    document.querySelectorAll('#tab-sheet .zone-marker').forEach(marker => {
       const zone = marker.dataset.zone;
       const count = character.equipped.filter(id => getItem(id)?.categorie === zone).length;
       marker.classList.toggle('equipped', count > 0);
@@ -900,7 +1169,7 @@
     renderZonePanel(true);
   }
 
-  document.querySelectorAll('.zone-marker').forEach(marker => {
+  document.querySelectorAll('#tab-sheet .zone-marker').forEach(marker => {
     marker.addEventListener('click', () => selectZone(marker.dataset.zone));
   });
 
@@ -970,7 +1239,7 @@
     container.querySelectorAll('[data-open]').forEach(chip => {
       chip.addEventListener('click', (e) => {
         if (e.target.closest('[data-remove]')) return;
-        openAtoutDrawer(chip.dataset.open);
+        openDrawer('atout', chip.dataset.open);
       });
     });
     container.querySelectorAll('[data-remove]').forEach(btn => {
@@ -1066,7 +1335,7 @@
     box.querySelectorAll('.cy-row').forEach(row => {
       const item = getItem(row.dataset.item);
       row.addEventListener('click', () => openCyber(item.id));
-      row.addEventListener('mouseenter', (e) => showTooltip(e, item, 'cyber'));
+      row.addEventListener('mouseenter', (e) => showTooltip(e, item));
       row.addEventListener('mousemove', moveTooltip);
       row.addEventListener('mouseleave', hideTooltip);
     });
@@ -1121,7 +1390,7 @@
     const incompat = (item.incompatibleWith || []).map(id => (getItem(id) ? getItem(id).nom : id)).join(', ');
 
     box.innerHTML = `
-      <button class="back-btn" id="backBtn">← Retour à ${h(ZONES[item.categorie] || 'la liste')}</button>
+      <button class="back-btn" id="backBtn"><span class="back-arrow">←</span><span>Retour · ${h(ZONES[item.categorie] || 'liste')}</span></button>
       <div class="detail-header">
         <div class="detail-name">${h(item.nom)}</div>
         <div class="detail-nature ${nature}">${nature === 'legal' ? 'Légal' : 'Illégal'}</div>
@@ -1157,7 +1426,7 @@
   }
 
   // =====================================================
-  // ATOUTS : grille + tiroir
+  // ATOUTS : grille
   // =====================================================
   function renderAtoutGrid() {
     const container = $('atoutGrid');
@@ -1180,33 +1449,243 @@
 
     container.querySelectorAll('.item-card').forEach(card => {
       const atout = getAtout(card.dataset.atout);
-      card.addEventListener('click', () => openAtoutDrawer(atout.id));
-      card.addEventListener('mouseenter', (e) => showTooltip(e, atout, 'atout'));
+      card.addEventListener('click', () => openDrawer('atout', atout.id));
+      card.addEventListener('mouseenter', (e) => showTooltip(e, atout, true));
       card.addEventListener('mousemove', moveTooltip);
       card.addEventListener('mouseleave', hideTooltip);
     });
   }
 
+  // =====================================================
+  // IMAGES D'OBJETS (+ illustration de secours dessinée en code)
+  // =====================================================
+  function safeImg(src) {
+    const s = String(src || '').trim();
+    if (!s) return '';
+    if (/^https?:\/\//i.test(s)) return s;
+    if (/^[\w\-./]+$/.test(s) && !s.includes('..')) return s;
+    return '';
+  }
+
+  const PH_ICONS = {
+    armes: '<circle cx="60" cy="45" r="19"/><path d="M60 18v14M60 58v14M33 45h14M73 45h14"/>',
+    armures: '<path d="M60 20l25 9v19c0 15-12 24-25 29-13-5-25-14-25-29V29z"/><path d="M60 32v34"/>',
+    consommables: '<rect x="50" y="26" width="20" height="44" rx="9"/><path d="M54 20h12M50 46h20"/>',
+    outils: '<circle cx="60" cy="45" r="17" stroke-dasharray="6 5"/><circle cx="60" cy="45" r="7"/>',
+    vehicules: '<circle cx="38" cy="56" r="10"/><circle cx="82" cy="56" r="10"/><path d="M28 56l8-18h30l14 18M48 38l-4 18"/>',
+    divers: '<path d="M60 20l26 13v26L60 72 34 59V33z"/><path d="M34 33l26 13 26-13M60 46v26"/>',
+  };
+
+  function placeholderHtml(cat) {
+    const k = catKey(cat);
+    return `<svg viewBox="0 0 120 90" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" role="img" aria-label="${h(SHOP_CATEGORIES[k])}">
+      <defs><linearGradient id="phg-${k}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#161c26"/><stop offset="1" stop-color="#0a0e14"/></linearGradient></defs>
+      <rect width="120" height="90" fill="url(#phg-${k})"/>
+      <g fill="none" stroke="#ff3b3b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">${PH_ICONS[k]}</g>
+    </svg>`;
+  }
+
+  function imgHtml(it) {
+    const src = safeImg(it.image);
+    const cat = catKey(it.categorie);
+    if (!src) return placeholderHtml(cat);
+    return `<img src="${h(src)}" alt="${h(it.nom)}" loading="lazy" data-cat="${h(cat)}">`;
+  }
+
+  function bindImageFallbacks(root) {
+    root.querySelectorAll('img[data-cat]').forEach(img => {
+      const swap = () => {
+        const tmp = document.createElement('div');
+        tmp.innerHTML = placeholderHtml(img.dataset.cat);
+        if (img.parentNode) img.replaceWith(tmp.firstElementChild);
+      };
+      img.addEventListener('error', swap, { once: true });
+      if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) swap();
+    });
+  }
+
+  // =====================================================
+  // BOUTIQUE
+  // =====================================================
+  function ownedQty(id) {
+    const e = character.inventaire.find(x => x.id === id);
+    return e ? e.qty : 0;
+  }
+
+  function buyItem(id) {
+    const it = getShopItem(id);
+    if (!it) return;
+    const price = it.prix || 0;
+    if (character.argent < price) { toast('Argent insuffisant', 'error'); return; }
+    const entry = character.inventaire.find(e => e.id === id);
+    if (entry && entry.qty >= MAX_QTY) { toast('Quantité maximale atteinte', 'error'); return; }
+    character.argent -= price;
+    if (entry) entry.qty++; else character.inventaire.push({ id, qty: 1 });
+    refreshAll();
+    toast(`${it.nom} acheté (−${money(price)})`);
+  }
+
+  function sellItem(id, refund) {
+    const entry = character.inventaire.find(e => e.id === id);
+    if (!entry) return;
+    const it = getShopItem(id);
+    entry.qty--;
+    if (entry.qty <= 0) character.inventaire = character.inventaire.filter(e => e.id !== id);
+    if (refund && it) character.argent += it.prix || 0;
+    refreshAll();
+    toast(refund && it ? `${it.nom} revendu (+${money(it.prix || 0)})` : 'Objet retiré');
+  }
+
+  function visibleShopItems() {
+    const q = shopFilter.q.trim().toLowerCase();
+    let list = SHOP.filter(it => {
+      if (shopFilter.cat !== 'all' && catKey(it.categorie) !== shopFilter.cat) return false;
+      if (q && !(String(it.nom || '').toLowerCase().includes(q) || String(it.description || '').toLowerCase().includes(q))) return false;
+      return true;
+    });
+    if (shopFilter.sort === 'price_asc') list = list.slice().sort((a, b) => (a.prix || 0) - (b.prix || 0));
+    else if (shopFilter.sort === 'price_desc') list = list.slice().sort((a, b) => (b.prix || 0) - (a.prix || 0));
+    else if (shopFilter.sort === 'name') list = list.slice().sort((a, b) => String(a.nom).localeCompare(String(b.nom), 'fr'));
+    return list;
+  }
+
+  function renderShopCats() {
+    const counts = {};
+    SHOP.forEach(it => { const k = catKey(it.categorie); counts[k] = (counts[k] || 0) + 1; });
+    const chips = [`<button class="zone-tab ${shopFilter.cat === 'all' ? 'active' : ''}" data-cat="all">Tout<span class="tab-count">${SHOP.length}</span></button>`]
+      .concat(Object.entries(SHOP_CATEGORIES).filter(([k]) => counts[k]).map(([k, label]) =>
+        `<button class="zone-tab ${shopFilter.cat === k ? 'active' : ''}" data-cat="${k}">${h(label)}<span class="tab-count">${counts[k]}</span></button>`));
+    const box = $('shopCats');
+    box.innerHTML = chips.join('');
+    box.querySelectorAll('.zone-tab').forEach(b => b.addEventListener('click', () => {
+      shopFilter.cat = b.dataset.cat;
+      renderShopCats();
+      renderShopGrid();
+    }));
+  }
+
+  function renderShopGrid() {
+    const box = $('shopGrid');
+    if (SHOP.length === 0) {
+      box.innerHTML = '<div class="empty-panel">La boutique est vide pour le moment. Les objets s\'ajoutent depuis le panneau admin.</div>';
+      return;
+    }
+    const list = visibleShopItems();
+    if (list.length === 0) { box.innerHTML = '<div class="empty-panel">Aucun objet ne correspond à ta recherche.</div>'; return; }
+
+    box.innerHTML = list.map(it => {
+      const owned = ownedQty(it.id);
+      const price = it.prix || 0;
+      const canBuy = character.argent >= price && owned < MAX_QTY;
+      return `
+        <div class="shop-card" data-shop="${h(it.id)}">
+          <div class="shop-img">${imgHtml(it)}${owned ? `<span class="owned-badge">×${owned}</span>` : ''}</div>
+          <div class="shop-body">
+            <div class="shop-cat">${h(SHOP_CATEGORIES[catKey(it.categorie)])}</div>
+            <div class="shop-name">${h(it.nom)}</div>
+            <div class="shop-desc">${h(it.description)}</div>
+            <div class="shop-foot">
+              <span class="price">${h(money(price))}</span>
+              <button class="buy-btn" data-buy="${h(it.id)}" ${canBuy ? '' : 'disabled'} title="${canBuy ? 'Acheter' : 'Argent insuffisant'}">Acheter</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    bindImageFallbacks(box);
+    box.querySelectorAll('.shop-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('[data-buy]')) return;
+        openDrawer('shop', card.dataset.shop);
+      });
+    });
+    box.querySelectorAll('[data-buy]').forEach(btn => {
+      btn.addEventListener('click', (e) => { e.stopPropagation(); buyItem(btn.dataset.buy); });
+    });
+  }
+
+  function renderShop() {
+    const wi = $('walletInput');
+    if (document.activeElement !== wi) wi.value = character.argent;
+    $('walletCurrency').textContent = CURRENCY;
+    renderShopCats();
+    renderShopGrid();
+  }
+
+  $('walletInput').addEventListener('input', (e) => {
+    let v = parseInt(e.target.value, 10);
+    if (!Number.isFinite(v) || v < 0) v = 0;
+    character.argent = Math.min(v, 999999999);
+    $('sheetMoney').textContent = money(character.argent);
+    renderShopGrid();
+    if (drawerState && drawerState.type === 'shop') renderDrawer();
+    schedulePersist();
+  });
+  $('shopSearch').addEventListener('input', (e) => { shopFilter.q = e.target.value; renderShopGrid(); });
+  $('shopSort').addEventListener('change', (e) => { shopFilter.sort = e.target.value; renderShopGrid(); });
+
+  // =====================================================
+  // INVENTAIRE (onglet Ma fiche)
+  // =====================================================
+  function renderInventory() {
+    const box = $('inventoryGrid');
+    if (character.inventaire.length === 0) {
+      box.innerHTML = '<div class="strip-empty">Inventaire vide. Passe par l\'onglet « Boutique » pour t\'équiper.</div>';
+      return;
+    }
+    box.innerHTML = `<div class="inv-grid">${character.inventaire.map(e => {
+      const it = getShopItem(e.id);
+      const name = it ? it.nom : 'Objet inconnu (' + e.id + ')';
+      const sub = it ? `${h(SHOP_CATEGORIES[catKey(it.categorie)])} · ${h(money(it.prix || 0))} l'unité` : 'Retiré de la boutique';
+      return `
+        <div class="inv-row">
+          <div class="inv-thumb">${it ? imgHtml(it) : placeholderHtml('divers')}</div>
+          <div class="inv-main">
+            <div class="inv-name">${h(name)} <span class="inv-qty">×${e.qty}</span></div>
+            <div class="inv-sub">${sub}</div>
+          </div>
+          <div class="inv-actions">
+            ${it ? `<button class="mini-btn" data-sell="${h(e.id)}" title="Retire 1 exemplaire et te rend son prix">Revendre</button>` : ''}
+            <button class="mini-btn danger" data-drop="${h(e.id)}" title="Retire 1 exemplaire sans remboursement">Retirer</button>
+          </div>
+        </div>`;
+    }).join('')}</div>`;
+
+    bindImageFallbacks(box);
+    box.querySelectorAll('[data-sell]').forEach(b => b.addEventListener('click', () => sellItem(b.dataset.sell, true)));
+    box.querySelectorAll('[data-drop]').forEach(b => b.addEventListener('click', () => sellItem(b.dataset.drop, false)));
+  }
+
+  // =====================================================
+  // TIROIR (atouts + objets de boutique)
+  // =====================================================
   const drawer = $('detailDrawer');
   const backdrop = $('drawerBackdrop');
 
-  function openAtoutDrawer(id) {
-    selectedAtoutId = id;
+  function openDrawer(type, id) {
+    drawerState = { type, id };
     hideTooltip();
-    renderAtoutDrawer();
+    renderDrawer();
     drawer.classList.add('open');
     backdrop.classList.add('open');
   }
   function closeDrawer() {
     drawer.classList.remove('open');
     backdrop.classList.remove('open');
+    drawerState = null;
   }
   $('drawerClose').addEventListener('click', closeDrawer);
   backdrop.addEventListener('click', closeDrawer);
 
+  function renderDrawer() {
+    if (!drawerState) return;
+    if (drawerState.type === 'atout') renderAtoutDrawer();
+    else if (drawerState.type === 'shop') renderShopDrawer();
+  }
+
   function renderAtoutDrawer() {
-    const atout = getAtout(selectedAtoutId);
-    if (!atout) return;
+    const atout = getAtout(drawerState.id);
+    if (!atout) { closeDrawer(); return; }
     const isSelected = character.atouts.includes(atout.id);
 
     $('drawerContent').innerHTML = `
@@ -1226,26 +1705,46 @@
       if (isSelected) character.atouts = character.atouts.filter(id => id !== atout.id);
       else character.atouts.push(atout.id);
       refreshAll();
-      renderAtoutDrawer();
     });
+  }
+
+  function renderShopDrawer() {
+    const it = getShopItem(drawerState.id);
+    if (!it) { closeDrawer(); return; }
+    const owned = ownedQty(it.id);
+    const price = it.prix || 0;
+    const canBuy = character.argent >= price && owned < MAX_QTY;
+
+    $('drawerContent').innerHTML = `
+      <div class="drawer-img">${imgHtml(it)}</div>
+      <div class="detail-header">
+        <div class="detail-name">${h(it.nom)}</div>
+        <div class="shop-cat">${h(SHOP_CATEGORIES[catKey(it.categorie)])}</div>
+      </div>
+      <div class="detail-field"><div class="field-label">Description</div><div class="field-value">${h(it.description) || '—'}</div></div>
+      <div class="detail-grid">
+        <div class="detail-field"><div class="field-label">Prix</div><div class="field-value price">${h(money(price))}</div></div>
+        <div class="detail-field"><div class="field-label">Dans ton inventaire</div><div class="field-value">${owned}</div></div>
+      </div>
+      <div class="detail-field"><div class="field-label">Ton argent</div><div class="field-value">${h(money(character.argent))}</div></div>
+      <div class="detail-actions">
+        <button class="equip-btn" id="buyBtn" ${canBuy ? '' : 'disabled'}>Acheter pour ${h(money(price))}</button>
+        ${canBuy ? '' : `<span class="equip-error">${owned >= MAX_QTY ? 'Quantité maximale atteinte.' : 'Argent insuffisant : il te manque ' + h(money(price - character.argent)) + '.'}</span>`}
+      </div>
+    `;
+    bindImageFallbacks($('drawerContent'));
+    $('buyBtn').addEventListener('click', () => buyItem(it.id));
   }
 
   // =====================================================
   // TOOLTIP
   // =====================================================
   const tooltipEl = $('tooltip');
-  function showTooltip(e, entity, type) {
-    if (type === 'cyber') {
-      tooltipEl.innerHTML = `
-        <div class="tt-name">${h(entity.nom)}</div>
-        <div class="tt-effets">${h(entity.effets)}</div>
-      `;
-    } else {
-      tooltipEl.innerHTML = `
-        <div class="tt-name atout-color">${h(entity.nom)}</div>
-        <div class="tt-effets">${h(entity.effets)}</div>
-      `;
-    }
+  function showTooltip(e, entity, isAtout) {
+    tooltipEl.innerHTML = `
+      <div class="tt-name ${isAtout ? 'atout-color' : ''}">${h(entity.nom)}</div>
+      <div class="tt-effets">${h(entity.effets)}</div>
+    `;
     tooltipEl.classList.add('visible');
     moveTooltip(e);
   }
@@ -1267,15 +1766,27 @@
 
   function generateCharacterCode() {
     const payload = {
+      nom: character.nom,
       baseStats: character.baseStats,
       cybercapMax: character.cybercapMax,
       equipped: character.equipped,
       atouts: character.atouts,
+      argent: character.argent,
+      inventaire: character.inventaire,
     };
     try {
       return btoa(encodeURIComponent(JSON.stringify(payload)));
     } catch (err) {
       return '';
+    }
+  }
+
+  function decodeCode(raw) {
+    try {
+      const payload = JSON.parse(decodeURIComponent(atob(String(raw).trim())));
+      return payload && typeof payload === 'object' ? payload : null;
+    } catch (e) {
+      return null;
     }
   }
 
@@ -1314,10 +1825,8 @@
       feedback.className = 'sheet-feedback error';
       return;
     }
-    let payload;
-    try {
-      payload = JSON.parse(decodeURIComponent(atob(raw)));
-    } catch (err) {
+    const payload = decodeCode(raw);
+    if (!payload) {
       feedback.textContent = 'Code invalide — vérifie que tu l\'as copié en entier.';
       feedback.className = 'sheet-feedback error';
       return;
@@ -1332,6 +1841,179 @@
     $('exportArea').value = generateCharacterCode();
     feedback.textContent = 'Fiche chargée avec succès !';
     feedback.className = 'sheet-feedback ok';
+  });
+
+  // =====================================================
+  // FICHES DES AUTRES (consultation seule)
+  // =====================================================
+  function loadOthers() {
+    try {
+      const raw = localStorage.getItem(OTHERS_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr.filter(e => e && typeof e.id === 'string' && typeof e.code === 'string') : [];
+    } catch (e) { return []; }
+  }
+  function saveOthers(list) {
+    try { localStorage.setItem(OTHERS_KEY, JSON.stringify(list)); return true; } catch (e) { return false; }
+  }
+
+  function addOther(raw) {
+    const payload = decodeCode(raw);
+    if (!payload) return { ok: false, msg: 'Code invalide — vérifie qu\'il est copié en entier.' };
+    const ch = sanitizeCharacter(payload).character;
+    const nom = ch.nom || 'Sans nom';
+    const list = loadOthers();
+    const existing = list.find(e => e.nom.toLowerCase() === nom.toLowerCase());
+    let entry;
+    if (existing) {
+      existing.code = raw.trim();
+      existing.savedAt = Date.now();
+      entry = existing;
+    } else {
+      entry = { id: 'o' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), nom, code: raw.trim(), savedAt: Date.now() };
+      list.push(entry);
+    }
+    if (list.length > 40) list.splice(0, list.length - 40);
+    if (!saveOthers(list)) return { ok: false, msg: 'Impossible d\'enregistrer dans ce navigateur (stockage bloqué).' };
+    selectedOtherId = entry.id;
+    return { ok: true, msg: existing ? `Fiche « ${nom} » mise à jour.` : `Fiche « ${nom} » ajoutée.` };
+  }
+
+  function barBlock(name, cls, valueText, pct, over) {
+    return `<div class="bar-block"><div class="bar-label"><span class="name ${cls}">${name}</span><span class="value ${over ? 'over' : ''}">${h(valueText)}</span></div><div class="bar-track"><div class="bar-fill ${cls}" style="width:${Math.max(0, Math.min(100, pct))}%"></div></div></div>`;
+  }
+
+  function otherSheetHtml(entry) {
+    const payload = decodeCode(entry.code);
+    if (!payload) return '<div class="panel empty-panel">Le code enregistré est illisible. Supprime cette fiche et colle à nouveau son code.</div>';
+    const { character: ch, notes } = sanitizeCharacter(payload);
+    const comp = computeFor(ch);
+
+    const statRows = STAT_NAMES.map(name => {
+      const base = ch.baseStats[name];
+      const bonus = comp.implantBonus[name] || 0;
+      const total = Math.max(0, Math.min(base + bonus, MAX_LEVEL));
+      return `<div class="stat-row" title="Niveau ${total} (base ${base}${bonus ? ', implants ' + (bonus > 0 ? '+' : '') + bonus : ''})">
+        <span class="stat-name">${name}</span>
+        <div class="stat-controls"><div class="pips">${pipsHtml(base, bonus)}</div><span class="stat-num ${bonus > 0 ? 'boosted' : ''}">${total}</span></div>
+      </div>`;
+    }).join('');
+
+    const over = comp.cybercapUsed > ch.cybercapMax;
+    const ccMax = (ch.cybercapMax / RESOURCE_CONFIG.cybercap.max) * 100;
+    const ccUsed = (comp.cybercapUsed / RESOURCE_CONFIG.cybercap.max) * 100;
+    const bars = `
+      ${barBlock('Humanité', 'humanite', comp.humanite + ' / 100', comp.humanite)}
+      <div class="bar-block"><div class="bar-label"><span class="name cybercap">Cybercapacité</span><span class="value ${over ? 'over' : ''}">${over ? '⚠ ' : ''}${comp.cybercapUsed} utilisé / ${ch.cybercapMax} max</span></div>
+        <div class="bar-track"><div class="bar-fill cybercap-max" style="width:${Math.min(100, ccMax)}%"></div><div class="bar-fill cybercap-used" style="width:${Math.min(100, ccUsed)}%"></div></div></div>
+      ${barBlock('RAM', 'ram', comp.ramBonus + ' / ' + RESOURCE_CONFIG.ram.max, (comp.ramBonus / RESOURCE_CONFIG.ram.max) * 100)}
+      ${barBlock('Glace', 'glace', comp.glaceBonus + ' / ' + RESOURCE_CONFIG.glace.max, (comp.glaceBonus / RESOURCE_CONFIG.glace.max) * 100)}
+      <div class="money-line"><span>Argent</span><b>${h(money(ch.argent))}</b></div>`;
+
+    const markers = Object.entries(ZONE_BOXES).map(([zone, style]) => {
+      const count = ch.equipped.filter(id => getItem(id)?.categorie === zone).length;
+      return `<div class="zone-marker ${count ? 'equipped' : ''}" data-label="${h(ZONES[zone])}" style="${style}"><span class="zone-badge">${count}</span></div>`;
+    }).join('');
+
+    const zoneBlocks = Object.entries(ZONES).map(([zone, label]) => {
+      const items = ch.equipped.map(getItem).filter(i => i && i.categorie === zone);
+      if (!items.length) return '';
+      return `<div class="v-zone"><div class="v-zone-title">${h(label)}</div>${items.map(i => `
+        <div class="v-item">
+          <div class="v-item-main"><span class="dot ${i.nature === 'illegal' ? 'illegal' : 'legal'}"></span>
+            <div><div class="v-item-name">${h(i.nom)}</div><div class="v-item-sub">${h(i.emplacementDetaille)} — ${h(i.effets)}</div></div></div>
+          <div class="cy-badges"><span class="badge cc">${h(i.cybercapacite)} CC</span><span class="badge hu">-${h(i.humanite)} HU</span></div>
+        </div>`).join('')}</div>`;
+    }).join('');
+
+    const atouts = ch.atouts.map(getAtout).filter(Boolean);
+    const atoutHtml = atouts.length
+      ? atouts.map(a => `<div class="v-atout"><div class="v-atout-name">${h(a.nom)}</div><div class="v-item-sub">${h(a.effets)}</div></div>`).join('')
+      : '<div class="strip-empty">Aucun atout.</div>';
+
+    const invHtml = ch.inventaire.length
+      ? ch.inventaire.map(e => {
+          const it = getShopItem(e.id);
+          return `<div class="inv-row" style="margin-bottom:8px">
+            <div class="inv-thumb">${it ? imgHtml(it) : placeholderHtml('divers')}</div>
+            <div class="inv-main"><div class="inv-name">${h(it ? it.nom : 'Objet inconnu')} <span class="inv-qty">×${e.qty}</span></div>
+            <div class="inv-sub">${it ? h(SHOP_CATEGORIES[catKey(it.categorie)]) : ''}</div></div></div>`;
+        }).join('')
+      : '<div class="strip-empty">Inventaire vide.</div>';
+
+    const noteHtml = notes.length ? `<div class="notice" style="margin-bottom:16px">${notes.map(h).join('<br>')}</div>` : '';
+    const saved = new Date(entry.savedAt || Date.now()).toLocaleDateString('fr-FR');
+
+    return `
+      <h2 class="view-title">${h(ch.nom || 'Sans nom')}</h2>
+      <div class="view-sub">Fiche en consultation seule · code enregistré le ${h(saved)}</div>
+      ${noteHtml}
+      <div class="view-grid readonly">
+        <div class="panel">
+          <div class="panel-title"><span>Statistiques</span></div>
+          ${statRows}
+          <div style="height:20px"></div>
+          <div class="panel-title"><span>État du personnage</span></div>
+          ${bars}
+        </div>
+        <div class="view-right">
+          <div class="panel">
+            <div class="panel-title"><span>Implants installés</span></div>
+            <div class="view-implants">
+              <div class="skel"><div class="skeleton-wrap small"><img src="skeleton.png" alt="">${markers}</div></div>
+              <div class="view-list">${zoneBlocks || '<div class="strip-empty">Aucun implant installé.</div>'}</div>
+            </div>
+          </div>
+          <div class="view-two">
+            <div class="panel"><div class="panel-title"><span>Atouts</span></div>${atoutHtml}</div>
+            <div class="panel"><div class="panel-title"><span>Inventaire</span></div>${invHtml}</div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function renderOthers() {
+    const list = loadOthers();
+    const box = $('othersList');
+    if (list.length === 0) {
+      box.innerHTML = '<div class="empty-panel">Aucune fiche enregistrée pour l\'instant.</div>';
+    } else {
+      box.innerHTML = list.map(e => `
+        <div class="saved-row ${e.id === selectedOtherId ? 'active' : ''}">
+          <button class="saved-pick" data-pick="${h(e.id)}">${h(e.nom)}<small>${h(new Date(e.savedAt || 0).toLocaleDateString('fr-FR'))}</small></button>
+          <button class="saved-del" data-del="${h(e.id)}" title="Supprimer cette fiche">✕</button>
+        </div>`).join('');
+      box.querySelectorAll('[data-pick]').forEach(b => b.addEventListener('click', () => { selectedOtherId = b.dataset.pick; renderOthers(); }));
+      box.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => {
+        const target = loadOthers().find(e => e.id === b.dataset.del);
+        if (!target || !confirm(`Supprimer la fiche « ${target.nom} » de ta liste ?`)) return;
+        saveOthers(loadOthers().filter(e => e.id !== b.dataset.del));
+        if (selectedOtherId === b.dataset.del) selectedOtherId = null;
+        renderOthers();
+      }));
+    }
+
+    if (!selectedOtherId || !list.some(e => e.id === selectedOtherId)) selectedOtherId = list.length ? list[0].id : null;
+    const view = $('othersView');
+    const entry = list.find(e => e.id === selectedOtherId);
+    if (!entry) {
+      view.innerHTML = '<div class="panel empty-panel">Aucune fiche à afficher. Colle le code d\'une fiche dans le champ à gauche pour la consulter.</div>';
+      return;
+    }
+    // la sélection a pu changer : rafraîchit l'état « actif » de la liste
+    box.querySelectorAll('.saved-row').forEach((row, i) => row.classList.toggle('active', list[i].id === selectedOtherId));
+    view.innerHTML = otherSheetHtml(entry);
+    bindImageFallbacks(view);
+  }
+
+  $('othersAddBtn').addEventListener('click', () => {
+    const fb = $('othersFeedback');
+    const raw = $('othersCode').value.trim();
+    if (!raw) { fb.textContent = 'Colle un code avant d\'ajouter.'; fb.className = 'sheet-feedback error'; return; }
+    const res = addOther(raw);
+    fb.textContent = res.msg;
+    fb.className = 'sheet-feedback ' + (res.ok ? 'ok' : 'error');
+    if (res.ok) { $('othersCode').value = ''; renderOthers(); }
   });
 
   // =====================================================
@@ -1351,7 +2033,7 @@
     if (e.key !== 'Escape') return;
     if (sheetDrawer.classList.contains('open')) closeSheetDrawer();
     else if (drawer.classList.contains('open')) closeDrawer();
-    else if (selectedCyberId) { selectedCyberId = null; renderZonePanel(true); }
+    else if (activeTab === 'sheet' && selectedCyberId) { selectedCyberId = null; renderZonePanel(true); }
   });
 
   // =====================================================
@@ -1366,15 +2048,20 @@
     renderAtoutsStrip();
     renderZonePanel();
     renderAtoutGrid();
+    renderInventory();
+    if (activeTab === 'shop') renderShop();
+    if (drawerState) renderDrawer();
+    const ni = $('charName');
+    if (document.activeElement !== ni) ni.value = character.nom || '';
     schedulePersist();
   }
 
   // =====================================================
-  // CHARGEMENT DES DONNÉES (data/catalogue.json + data/atouts.json)
+  // CHARGEMENT DES DONNÉES (data/*.json)
   // =====================================================
   async function loadJson(path) {
     const res = await fetch(path, { cache: 'no-store' });
-    if (!res.ok) throw new Error(path + ' : HTTP ' + res.status);
+    if (!res.ok) { const err = new Error(path + ' : HTTP ' + res.status); err.status = res.status; throw err; }
     const json = await res.json();
     if (!Array.isArray(json)) throw new Error(path + ' : le fichier doit contenir une liste [ ... ]');
     return json;
@@ -1386,6 +2073,12 @@
     catch (err) { console.error(err); errors.push('Impossible de charger les cyberwares (' + err.message + ').'); }
     try { ATOUTS = await loadJson('data/atouts.json'); dataOk.atout = true; }
     catch (err) { console.error(err); errors.push('Impossible de charger les atouts (' + err.message + ').'); }
+    try { SHOP = await loadJson('data/boutique.json'); dataOk.shop = true; }
+    catch (err) {
+      console.error(err);
+      // Fichier absent (pas encore créé) : boutique vide, sans message d'erreur
+      if (err.status !== 404) errors.push('Impossible de charger la boutique (' + err.message + ').');
+    }
 
     if (errors.length) {
       $('loadError').innerHTML =
@@ -1408,6 +2101,9 @@
     ready = true;
     refreshAll();
     persist();
+
+    const fromHash = (location.hash || '').replace('#', '');
+    if (TABS.includes(fromHash) && fromHash !== 'sheet') switchTab(fromHash, false);
   }
 
   init();
