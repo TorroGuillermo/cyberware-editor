@@ -21,8 +21,9 @@
     --blue: #4ea3d1;
     --blue-dim: #38759a;
     --green: #4caf7d;
-    --text: #d8dce2;
-    --text-dim: #7d8590;
+    --text: #e2e6ec;
+    --text-dim: #9aa5b3;
+    --text-faint: #7f8a98;
   }
 
   * { box-sizing: border-box; }
@@ -34,83 +35,99 @@
       repeating-linear-gradient(0deg, rgba(255,59,59,0.02) 0px, rgba(255,59,59,0.02) 1px, transparent 1px, transparent 3px);
     color: var(--text);
     font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.4;
     margin: 0;
-    padding: 36px;
+    padding: 28px 36px 40px;
     min-height: 100vh;
   }
 
-  h1 {
-    font-size: 16px;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: var(--red);
-    margin: 0 0 28px 0;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-  }
+  button { font-family: inherit; }
 
-  .load-error {
-    background: #2a1215; border: 1px solid var(--red); color: var(--red);
-    padding: 12px 16px; border-radius: 4px; font-size: 11px; margin-bottom: 20px; line-height: 1.5;
+  /* ---- En-tête ---- */
+  .page-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    max-width: 1700px; padding-bottom: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border);
   }
+  h1 { font-size: 17px; letter-spacing: 4px; text-transform: uppercase; color: var(--red); margin: 0; }
+  .head-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .save-state { font-size: 11.5px; color: var(--text-faint); transition: color .2s ease; }
+  .save-state.flash { color: var(--green); }
+  .save-state.off { color: var(--red); }
+  .head-btn {
+    background: var(--bg-panel); border: 1px solid var(--border-strong); color: var(--text);
+    font-size: 11.5px; letter-spacing: 1px; text-transform: uppercase; padding: 9px 14px;
+    border-radius: 4px; cursor: pointer; transition: all .15s ease;
+  }
+  .head-btn:hover { border-color: var(--red); color: var(--red); }
 
-  .top-layout { display: flex; gap: 24px; align-items: flex-start; max-width: 1600px; flex-wrap: wrap; }
+  .notice, .load-error {
+    max-width: 1700px; padding: 12px 16px; border-radius: 4px; font-size: 12.5px; margin-bottom: 18px; line-height: 1.5;
+    position: relative;
+  }
+  .notice { background: #e0a9400f; border: 1px solid var(--amber-dim); color: var(--amber); padding-right: 40px; }
+  .notice-close { position: absolute; top: 8px; right: 10px; background: none; border: none; color: var(--amber); cursor: pointer; font-size: 14px; }
+  .load-error { background: #2a1215; border: 1px solid var(--red); color: var(--red); }
+
+  .top-layout { display: flex; gap: 22px; align-items: stretch; max-width: 1700px; }
 
   .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; }
 
   .panel-title {
-    font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim);
+    font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim);
     margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
   }
 
   /* ---- Colonne gauche : stats + barres ---- */
-  .left-column { width: 340px; display: flex; flex-direction: column; gap: 18px; flex-shrink: 0; }
+  .left-column { width: 360px; display: flex; flex-direction: column; gap: 18px; flex-shrink: 0; }
 
-  .profiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 16px; }
+  .profiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; margin-bottom: 18px; }
   .profile-btn {
     background: transparent; border: 1px solid var(--border); color: var(--text-dim);
-    font-family: inherit; font-size: 8.5px; letter-spacing: 0.5px; text-transform: uppercase;
-    padding: 7px 2px; border-radius: 3px; cursor: pointer; transition: all .15s ease; text-align: center;
+    font-size: 10px; letter-spacing: 0.3px; text-transform: uppercase;
+    padding: 8px 2px; border-radius: 3px; cursor: pointer; transition: all .15s ease; text-align: center;
   }
   .profile-btn:hover { border-color: var(--red); color: var(--red); }
   .profile-btn.active { background: var(--red); border-color: var(--red); color: #000; font-weight: bold; }
 
-  .points-remaining { font-size: 10px; color: var(--amber); }
-  .points-remaining.zero { color: var(--text-dim); }
+  .points-remaining { font-size: 12px; color: var(--amber); letter-spacing: 0; }
+  .points-remaining.zero { color: var(--text-faint); }
 
-  .stat-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #ffffff0d; }
+  .stat-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 0; border-bottom: 1px solid #ffffff12; }
   .stat-row:last-child { border-bottom: none; }
-  .stat-name { font-size: 13px; color: var(--text); width: 110px; }
-  .stat-controls { display: flex; align-items: center; gap: 9px; }
+  .stat-name { font-size: 13.5px; color: var(--text); width: 90px; flex-shrink: 0; }
+  .stat-controls { display: flex; align-items: center; gap: 7px; flex: 1; min-width: 0; }
   .stat-btn {
-    width: 22px; height: 22px; border: 1px solid var(--border-strong); background: transparent; color: var(--red);
-    font-size: 13px; line-height: 1; cursor: pointer; border-radius: 3px; display: flex; align-items: center;
-    justify-content: center; transition: all .15s ease;
+    width: 24px; height: 24px; border: 1px solid var(--border-strong); background: transparent; color: var(--red);
+    font-size: 14px; line-height: 1; cursor: pointer; border-radius: 3px; display: flex; align-items: center;
+    justify-content: center; transition: all .15s ease; flex-shrink: 0;
   }
   .stat-btn:hover { background: var(--red); color: #000; }
   .stat-btn:disabled { opacity: 0.25; cursor: not-allowed; }
   .stat-btn:disabled:hover { background: transparent; color: var(--red); }
-  .stat-value { width: 38px; text-align: center; font-size: 14px; font-weight: bold; color: var(--amber); letter-spacing: 1px; }
-  .stat-value.locked-boost { color: var(--red); }
-  .stat-lock { font-size: 9px; color: var(--text-dim); width: 14px; }
+  .pips { display: flex; gap: 3px; flex: 1; min-width: 0; }
+  .pip { flex: 1; min-width: 5px; height: 13px; border: 1px solid var(--border-strong); background: #05070a; border-radius: 2px; }
+  .pip.base { background: var(--amber); border-color: var(--amber); }
+  .pip.bonus { background: var(--red); border-color: var(--red); box-shadow: 0 0 6px #ff3b3b66; }
+  .pip.malus { background: transparent; border: 1px dashed var(--blue); }
+  .stat-num { width: 24px; text-align: center; font-size: 15px; font-weight: bold; color: var(--amber); flex-shrink: 0; }
+  .stat-num.boosted { color: var(--red); }
 
   /* ---- Barres ---- */
   .bar-block { margin-bottom: 20px; }
   .bar-block:last-child { margin-bottom: 0; }
-  .bar-label { display: flex; justify-content: space-between; font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 7px; }
   .bar-label .name.humanite { color: var(--red); }
   .bar-label .name.cybercap { color: var(--amber); }
   .bar-label .name.ram { color: var(--purple); }
   .bar-label .name.glace { color: var(--blue); }
-  .bar-label .value { color: var(--text-dim); }
+  .bar-label .value { color: var(--text-dim); letter-spacing: 0; }
+  .bar-label .value.over { color: var(--red); font-weight: bold; }
 
-  .bar-track { position: relative; height: 20px; background: #05070a; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+  .bar-ctrl { display: flex; align-items: center; gap: 8px; }
+  .bar-track { position: relative; height: 22px; background: #05070a; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; flex: 1; }
   .bar-track.draggable { cursor: pointer; touch-action: none; }
   .bar-track.draggable:hover { border-color: var(--border-strong); }
-  .bar-track.draggable::after {
-    content: '⇔'; position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
-    font-size: 9px; color: #ffffff33; pointer-events: none;
-  }
 
   .bar-fill { position: absolute; top: 0; left: 0; height: 100%; transition: width .15s ease; }
   .bar-fill.humanite { background: linear-gradient(90deg, var(--red-dim), var(--red)); box-shadow: 0 0 8px #ff3b3b66; }
@@ -124,26 +141,121 @@
     box-shadow: 0 0 6px #fff; z-index: 3; pointer-events: none; transform: translateX(-50%);
   }
 
-  .bar-note { font-size: 8.5px; color: #545c66; margin-top: 5px; font-style: italic; }
+  .bar-note { font-size: 11px; color: var(--text-faint); margin-top: 6px; line-height: 1.45; }
+  .bar-hint { font-size: 11.5px; color: var(--amber); margin-top: 6px; line-height: 1.45; display: none; }
+  .bar-hint.on { display: block; }
+  .bar-hint.error { color: var(--red); }
 
   /* ---- Squelette central ---- */
   .skeleton-panel { flex: 1; min-width: 320px; display: flex; flex-direction: column; align-items: center; }
   .skeleton-wrap { position: relative; height: 640px; max-width: 100%; }
   .skeleton-wrap img { height: 100%; width: auto; display: block; border-radius: 6px; margin: 0 auto; }
-  .zone-marker { position: absolute; border: 1px dashed #ff3b3b33; border-radius: 6px; cursor: pointer; transition: all .2s ease; }
-  .zone-marker:hover { border-color: var(--red); background: #ff3b3b11; }
+  .zone-marker {
+    position: absolute; border: 1px dashed #ff3b3b77; background: #ff3b3b0c; border-radius: 6px;
+    cursor: pointer; transition: all .2s ease;
+  }
+  .zone-marker:hover { border-color: var(--red); background: #ff3b3b1c; }
+  .zone-marker.active { border-style: solid; border-color: var(--red); background: #ff3b3b1c; }
   .zone-marker.equipped { border-color: var(--amber); background: #e0a94022; box-shadow: 0 0 14px #e0a94066 inset; }
+  .zone-marker::before {
+    content: attr(data-label); position: absolute; left: 50%; bottom: calc(100% + 4px); transform: translateX(-50%);
+    background: #0c1017; border: 1px solid var(--border-strong); color: var(--text); font-size: 11.5px;
+    padding: 2px 8px; border-radius: 3px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .15s ease; z-index: 5;
+  }
+  .zone-marker:hover::before, .zone-marker.active::before { opacity: 1; }
   .zone-badge {
-    position: absolute; top: -8px; right: -8px; background: var(--amber); color: #000; font-size: 9px; font-weight: bold;
-    width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    position: absolute; top: -9px; right: -9px; background: var(--amber); color: #000; font-size: 11px; font-weight: bold;
+    width: 19px; height: 19px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
     opacity: 0; transition: opacity .2s ease;
   }
   .zone-marker.equipped .zone-badge { opacity: 1; }
-  .skeleton-legend { margin-top: 14px; font-size: 9px; color: var(--text-dim); text-align: center; letter-spacing: 0.5px; }
+  .skeleton-legend { margin-top: 14px; font-size: 11.5px; color: var(--text-dim); text-align: center; letter-spacing: 0.3px; }
+
+  /* ---- Panneau de droite : catalogue de la zone ---- */
+  .zone-panel { width: 410px; flex-shrink: 0; position: relative; min-height: 640px; padding: 0; }
+  .zone-panel-inner { position: absolute; inset: 0; padding: 18px 20px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent; }
+
+  .zone-tabs { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .zone-tab {
+    background: var(--bg-panel); border: 1px solid var(--border); color: var(--text-dim);
+    font-size: 11.5px; letter-spacing: 0.5px; text-transform: uppercase;
+    padding: 7px 10px; border-radius: 4px; cursor: pointer; transition: all .15s ease;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .zone-tab:hover { border-color: var(--red); color: var(--red); }
+  .zone-tab.active { background: var(--red); border-color: var(--red); color: #000; font-weight: bold; }
+  .zone-tab .tab-count { font-size: 10.5px; background: #00000040; padding: 1px 6px; border-radius: 8px; }
+
+  .hint-banner { font-size: 12px; color: var(--amber); background: #e0a9400f; border-left: 2px solid var(--amber); padding: 9px 11px; border-radius: 3px; margin-bottom: 12px; line-height: 1.5; }
+
+  .legend-row { display: flex; gap: 12px; font-size: 11px; color: var(--text-dim); margin-bottom: 12px; flex-wrap: wrap; }
+  .legend-row span { display: flex; align-items: center; gap: 5px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+  .dot.legal { background: var(--green); }
+  .dot.illegal { background: var(--red); }
+
+  .cy-list { display: flex; flex-direction: column; gap: 8px; }
+  .cy-row {
+    background: var(--bg-row); border: 1px solid var(--border); border-radius: 5px; padding: 11px 12px;
+    cursor: pointer; transition: all .15s ease; display: flex; flex-direction: column; gap: 8px; text-align: left; color: var(--text); width: 100%;
+  }
+  .cy-row:hover { border-color: var(--border-strong); background: var(--bg-row-hover); }
+  .cy-row.item-equipped { border-color: var(--amber); box-shadow: 0 0 10px #e0a94033; }
+  .cy-row.locked { opacity: 0.6; }
+  .cy-top { display: flex; align-items: center; gap: 8px; }
+  .cy-name { font-size: 13.5px; flex: 1; }
+  .cy-loc { font-size: 11px; color: var(--text-faint); }
+  .cy-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+
+  .badge { font-size: 11px; padding: 2px 7px; border-radius: 3px; border: 1px solid; white-space: nowrap; }
+  .badge.cc { color: var(--amber); border-color: var(--amber-dim); }
+  .badge.hu { color: var(--red); border-color: var(--red-dim); }
+  .badge.ram { color: var(--purple); border-color: var(--purple-dim); }
+  .badge.glace { color: var(--blue); border-color: var(--blue-dim); }
+  .badge.equipped-tag { color: #000; background: var(--amber); border-color: var(--amber); font-weight: bold; }
+  .badge.atout-tag { color: #000; background: var(--purple); border-color: var(--purple); font-weight: bold; }
+
+  /* ---- Détail d'un cyberware (dans le panneau) ---- */
+  .back-btn { background: none; border: none; color: var(--text-dim); font-size: 12px; cursor: pointer; padding: 0; margin-bottom: 14px; letter-spacing: 0.5px; }
+  .back-btn:hover { color: var(--red); }
+  .detail-header { margin: 0 0 16px 0; }
+  .detail-name { font-size: 17px; color: var(--amber); letter-spacing: 1px; margin-bottom: 8px; }
+  .detail-name.atout-color { color: var(--purple); }
+  .detail-nature { display: inline-block; font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 3px 9px; border-radius: 3px; border: 1px solid; }
+  .detail-nature.legal { color: var(--green); border-color: var(--green); }
+  .detail-nature.illegal { color: var(--red); border-color: var(--red); }
+
+  .detail-field { margin-bottom: 14px; font-size: 12.5px; }
+  .detail-field .field-label { color: var(--text-dim); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .detail-field .field-value { color: var(--text); line-height: 1.5; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+
+  .preview { background: var(--bg-row); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 4px; padding: 12px 14px; margin: 18px 0 4px; }
+  .preview-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--amber); margin-bottom: 10px; }
+  .pv-row { display: flex; justify-content: space-between; gap: 10px; font-size: 12.5px; padding: 4px 0; }
+  .pv-label { color: var(--text-dim); }
+  .pv-values { color: var(--text); text-align: right; }
+  .pv-arrow { color: var(--text-faint); margin: 0 4px; }
+  .pv-after { font-weight: bold; color: var(--amber); }
+  .pv-after.good { color: var(--green); }
+  .pv-after.bad { color: var(--red); }
+
+  .detail-actions { margin-top: 18px; display: flex; flex-direction: column; gap: 10px; }
+  .equip-btn {
+    background: var(--amber); color: #000; border: none; font-weight: bold;
+    font-size: 12.5px; letter-spacing: 1px; text-transform: uppercase; padding: 13px; border-radius: 3px;
+    cursor: pointer; transition: all .15s ease;
+  }
+  .equip-btn.atout-btn { background: var(--purple); }
+  .equip-btn:hover { filter: brightness(1.15); }
+  .equip-btn.remove { background: transparent; border: 1px solid var(--red); color: var(--red); }
+  .equip-btn.remove:hover { background: var(--red); color: #000; }
+  .equip-btn:disabled { opacity: 0.3; cursor: not-allowed; filter: none; }
+  .equip-error { font-size: 12px; color: var(--red); text-align: center; line-height: 1.45; }
 
   /* ---- Bandes compactes (équipement / atouts) ---- */
-  .strip-wrap { max-width: 1600px; margin-top: 22px; }
-  .strip-empty { color: var(--text-dim); font-size: 11px; padding: 12px 4px; }
+  .strip-wrap { max-width: 1700px; margin-top: 24px; }
+  .strip-empty { color: var(--text-dim); font-size: 12.5px; padding: 10px 4px; }
   .item-strip {
     display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px;
     scrollbar-width: thin; scrollbar-color: var(--border-strong) transparent;
@@ -153,68 +265,39 @@
 
   .strip-chip {
     flex-shrink: 0; background: var(--bg-row); border: 1px solid var(--border);
-    border-left: 3px solid var(--amber); border-radius: 4px; padding: 8px 10px;
+    border-left: 3px solid var(--amber); border-radius: 4px; padding: 9px 11px;
     display: flex; align-items: center; gap: 8px; cursor: pointer; transition: background .15s ease;
-    max-width: 220px;
+    max-width: 240px;
   }
   .strip-chip.atout-chip { border-left-color: var(--purple); }
   .strip-chip:hover { background: var(--bg-row-hover); }
-  .strip-chip .chip-text { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-  .strip-chip .chip-name { font-size: 10.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .strip-chip .chip-zone { font-size: 8px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
-  .chip-remove { background: transparent; border: none; color: var(--red); font-size: 13px; cursor: pointer; line-height: 1; flex-shrink: 0; padding: 2px 4px; }
+  .strip-chip .chip-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .strip-chip .chip-name { font-size: 12.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .strip-chip .chip-zone { font-size: 10.5px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+  .chip-remove { background: transparent; border: none; color: var(--red); font-size: 14px; cursor: pointer; line-height: 1; flex-shrink: 0; padding: 2px 4px; }
   .chip-remove:hover { color: #fff; }
 
-  /* ---- Catalogue : onglets + grille de cartes ---- */
-  .catalogue { max-width: 1600px; margin-top: 24px; }
-  .catalogue-title { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
-  .legend-row { display: flex; gap: 18px; font-size: 9px; color: var(--text-dim); margin-bottom: 14px; flex-wrap: wrap; }
-  .legend-row span { display: flex; align-items: center; gap: 5px; }
-  .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-  .dot.legal { background: var(--green); }
-  .dot.illegal { background: var(--red); }
-  .badge-sample { font-size: 8px; padding: 1px 5px; border-radius: 3px; border: 1px solid; }
-
-  .zone-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
-  .zone-tab {
-    background: var(--bg-panel); border: 1px solid var(--border); color: var(--text-dim);
-    font-family: inherit; font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase;
-    padding: 10px 16px; border-radius: 4px; cursor: pointer; transition: all .15s ease;
-    display: flex; align-items: center; gap: 7px;
-  }
-  .zone-tab:hover { border-color: var(--red); color: var(--red); }
-  .zone-tab.active { background: var(--red); border-color: var(--red); color: #000; font-weight: bold; }
-  .zone-tab .tab-count { font-size: 8.5px; background: #00000033; padding: 1px 6px; border-radius: 8px; }
-  .zone-tab.active .tab-count { background: #00000044; }
-
-  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+  /* ---- Atouts : grille de cartes ---- */
+  .catalogue { max-width: 1700px; margin-top: 24px; }
+  .catalogue-title { font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 10px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
   .item-card {
     background: var(--bg-panel); border: 1px solid var(--border); border-radius: 5px; padding: 14px;
     cursor: pointer; transition: all .15s ease; display: flex; flex-direction: column; gap: 8px;
   }
   .item-card:hover { border-color: var(--border-strong); background: var(--bg-row-hover); transform: translateY(-1px); }
-  .item-card.item-equipped { border-color: var(--amber); box-shadow: 0 0 10px #e0a94033; }
   .item-card.atout-card.item-equipped { border-color: var(--purple); box-shadow: 0 0 10px #a978d933; }
-
   .item-card-top { display: flex; align-items: center; gap: 7px; }
-  .item-card-name { font-size: 12px; color: var(--text); flex: 1; }
+  .item-card-name { font-size: 13.5px; color: var(--text); flex: 1; }
   .item-card-badges { display: flex; gap: 5px; flex-wrap: wrap; }
-  .item-card-desc { font-size: 10px; color: var(--text-dim); line-height: 1.4; }
+  .item-card-desc { font-size: 12px; color: var(--text-dim); line-height: 1.45; }
 
-  .badge { font-size: 8.5px; padding: 2px 6px; border-radius: 3px; border: 1px solid; white-space: nowrap; }
-  .badge.cc { color: var(--amber); border-color: var(--amber-dim); }
-  .badge.hu { color: var(--red); border-color: var(--red-dim); }
-  .badge.ram { color: var(--purple); border-color: var(--purple-dim); }
-  .badge.glace { color: var(--blue); border-color: var(--blue-dim); }
-  .badge.equipped-tag { color: #000; background: var(--amber); border-color: var(--amber); font-weight: bold; }
-  .badge.atout-tag { color: #000; background: var(--purple); border-color: var(--purple); font-weight: bold; }
-
-  /* ---- Panneau détail glissant (drawer) ---- */
+  /* ---- Tiroir (atouts) ---- */
   #drawerBackdrop { position: fixed; inset: 0; background: #000000aa; z-index: 100; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
   #drawerBackdrop.open { opacity: 1; pointer-events: auto; }
 
   #detailDrawer {
-    position: fixed; top: 0; right: 0; height: 100vh; width: 380px; max-width: 90vw;
+    position: fixed; top: 0; right: 0; height: 100vh; width: 400px; max-width: 90vw;
     background: var(--bg-panel); border-left: 1px solid var(--border-strong);
     z-index: 101; transform: translateX(100%); transition: transform .28s ease;
     padding: 24px 22px; overflow-y: auto; box-shadow: -10px 0 30px #000000aa;
@@ -223,88 +306,39 @@
 
   .drawer-close {
     position: absolute; top: 18px; right: 18px; background: transparent; border: 1px solid var(--border-strong);
-    color: var(--text-dim); width: 26px; height: 26px; border-radius: 3px; cursor: pointer; font-size: 14px;
+    color: var(--text-dim); width: 28px; height: 28px; border-radius: 3px; cursor: pointer; font-size: 14px;
     display: flex; align-items: center; justify-content: center;
   }
   .drawer-close:hover { color: var(--red); border-color: var(--red); }
+  #detailDrawer .detail-header { margin-right: 36px; }
 
-  .detail-header { margin: 4px 30px 18px 0; }
-  .detail-name { font-size: 16px; color: var(--amber); letter-spacing: 1px; margin-bottom: 8px; }
-  .detail-name.atout-color { color: var(--purple); }
-  .detail-nature { display: inline-block; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; border: 1px solid; }
-  .detail-nature.legal { color: var(--green); border-color: var(--green); }
-  .detail-nature.illegal { color: var(--red); border-color: var(--red); }
-
-  .detail-field { margin-bottom: 14px; font-size: 11px; }
-  .detail-field .field-label { color: var(--text-dim); font-size: 9px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
-  .detail-field .field-value { color: var(--text); line-height: 1.5; }
-
-  .detail-actions { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
-  .equip-btn {
-    background: var(--amber); color: #000; border: none; font-family: inherit; font-weight: bold;
-    font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 12px; border-radius: 3px;
-    cursor: pointer; transition: all .15s ease;
-  }
-  .equip-btn.atout-btn { background: var(--purple); }
-  .equip-btn:hover { filter: brightness(1.15); }
-  .equip-btn.remove { background: transparent; border: 1px solid var(--red); color: var(--red); }
-  .equip-btn.remove:hover { background: var(--red); color: #000; }
-  .equip-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .equip-error { font-size: 10px; color: var(--red); text-align: center; }
-
-  /* ---- Bouton + volet Fiche partageable ---- */
-  .sheet-toggle-btn {
-    position: fixed;
-    top: 24px;
-    left: 24px;
-    z-index: 90;
-    background: var(--bg-panel);
-    border: 1px solid var(--border-strong);
-    color: var(--text);
-    font-family: inherit;
-    font-size: 10px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    padding: 10px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all .15s ease;
-    box-shadow: 0 2px 10px #00000066;
-  }
-  .sheet-toggle-btn:hover { border-color: var(--red); color: var(--red); }
-
+  /* ---- Volet Fiche partageable ---- */
   #sheetBackdrop { position: fixed; inset: 0; background: #000000aa; z-index: 110; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
   #sheetBackdrop.open { opacity: 1; pointer-events: auto; }
 
   #sheetDrawer {
-    position: fixed; top: 0; right: 0; height: 100vh; width: 420px; max-width: 92vw;
+    position: fixed; top: 0; right: 0; height: 100vh; width: 440px; max-width: 92vw;
     background: var(--bg-panel); border-left: 1px solid var(--border-strong);
     z-index: 111; transform: translateX(100%); transition: transform .28s ease;
     padding: 24px 22px; overflow-y: auto; box-shadow: -10px 0 30px #000000aa;
   }
   #sheetDrawer.open { transform: translateX(0); }
 
-  .sheet-section-title {
-    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber);
-    margin: 26px 0 10px 0;
-  }
+  .sheet-section-title { font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber); margin: 26px 0 10px 0; }
   .sheet-section-title:first-of-type { margin-top: 4px; }
-  .sheet-hint { font-size: 9.5px; color: var(--text-dim); margin-bottom: 10px; line-height: 1.5; }
+  .sheet-hint { font-size: 12px; color: var(--text-dim); margin-bottom: 10px; line-height: 1.5; }
 
   .sheet-textarea {
     width: 100%; min-height: 110px; background: #05070a; border: 1px solid var(--border);
-    color: var(--green); font-family: inherit; font-size: 10px; padding: 10px; border-radius: 4px;
+    color: var(--green); font-family: inherit; font-size: 11.5px; padding: 10px; border-radius: 4px;
     resize: vertical; word-break: break-all;
   }
   .sheet-textarea.import-area { color: var(--text); }
   .sheet-textarea:focus { outline: none; border-color: var(--border-strong); }
 
   .sheet-btn {
-    width: 100%; margin-top: 10px; border: none; font-family: inherit; font-weight: bold;
-    font-size: 11px; letter-spacing: 1px; text-transform: uppercase; padding: 11px; border-radius: 4px;
+    width: 100%; margin-top: 10px; border: none; font-weight: bold;
+    font-size: 12px; letter-spacing: 1px; text-transform: uppercase; padding: 12px; border-radius: 4px;
     cursor: pointer; transition: all .15s ease;
   }
   .sheet-btn.export-btn { background: var(--amber); color: #000; }
@@ -314,26 +348,24 @@
   .sheet-btn.import-btn:hover { background: var(--text); color: #000; }
 
   .sheet-divider { border: none; border-top: 1px solid var(--border); margin: 22px 0; }
-  .sheet-feedback { font-size: 10px; margin-top: 8px; min-height: 14px; }
+  .sheet-feedback { font-size: 12px; margin-top: 8px; min-height: 14px; line-height: 1.5; }
   .sheet-feedback.ok { color: var(--green); }
   .sheet-feedback.error { color: var(--red); }
 
   /* ---- Tooltip flottant ---- */
   #tooltip {
     position: fixed; z-index: 999; background: #0c1017; border: 1px solid var(--border-strong);
-    border-radius: 4px; padding: 10px 12px; font-size: 10px; color: var(--text); max-width: 220px;
+    border-radius: 4px; padding: 10px 12px; font-size: 12px; color: var(--text); max-width: 240px;
     pointer-events: none; opacity: 0; transition: opacity .12s ease; box-shadow: 0 4px 18px #000000aa;
   }
   #tooltip.visible { opacity: 1; }
-  #tooltip .tt-name { color: var(--amber); font-size: 11px; margin-bottom: 4px; }
+  #tooltip .tt-name { color: var(--amber); font-size: 13px; margin-bottom: 4px; }
   #tooltip .tt-name.atout-color { color: var(--purple); }
-  #tooltip .tt-loc { color: var(--text-dim); font-size: 9px; margin-bottom: 6px; }
+  #tooltip .tt-loc { color: var(--text-dim); font-size: 11px; margin-bottom: 6px; }
   #tooltip .tt-effets { color: var(--text); }
 </style>
 </head>
 <body>
-
-  <button class="sheet-toggle-btn" id="sheetToggleBtn">📋 Fiche partageable</button>
 
   <div id="sheetBackdrop"></div>
   <div id="sheetDrawer">
@@ -347,14 +379,22 @@
     <hr class="sheet-divider">
 
     <div class="sheet-section-title">Charger une fiche</div>
-    <div class="sheet-hint">Colle ici le code reçu de quelqu'un d'autre pour afficher sa fiche.</div>
+    <div class="sheet-hint">Colle ici le code reçu de quelqu'un d'autre. Attention : cela remplace la fiche actuelle (exporte-la d'abord si tu veux la garder).</div>
     <textarea class="sheet-textarea import-area" id="importArea" placeholder="Colle le code ici..."></textarea>
     <button class="sheet-btn import-btn" id="loadCodeBtn">Charger cette fiche</button>
     <div class="sheet-feedback" id="importFeedback"></div>
   </div>
 
-  <h1>// Fiche de personnage</h1>
+  <header class="page-head">
+    <h1>// Fiche de personnage</h1>
+    <div class="head-actions">
+      <span class="save-state" id="saveState">Sauvegarde automatique dans ce navigateur</span>
+      <button class="head-btn" id="sheetToggleBtn">📋 Fiche partageable</button>
+      <button class="head-btn" id="newSheetBtn">Nouvelle fiche</button>
+    </div>
+  </header>
 
+  <div id="notice"></div>
   <div id="loadError"></div>
 
   <div class="top-layout">
@@ -390,24 +430,29 @@
 
         <div class="bar-block">
           <div class="bar-label"><span class="name cybercap">Cybercapacité</span><span class="value" id="cybercapValue">0 utilisé / 0 max</span></div>
-          <div class="bar-track draggable" id="cybercapTrack">
-            <div class="bar-fill cybercap-max" id="cybercapMaxFill" style="width:0%"></div>
-            <div class="bar-fill cybercap-used" id="cybercapUsedFill" style="width:0%"></div>
-            <div class="bar-handle" id="cybercapHandle" style="left:0%"></div>
+          <div class="bar-ctrl">
+            <button class="stat-btn" id="ccMinus" title="Baisser le plafond de 10">−</button>
+            <div class="bar-track draggable" id="cybercapTrack">
+              <div class="bar-fill cybercap-max" id="cybercapMaxFill" style="width:0%"></div>
+              <div class="bar-fill cybercap-used" id="cybercapUsedFill" style="width:0%"></div>
+              <div class="bar-handle" id="cybercapHandle" style="left:0%"></div>
+            </div>
+            <button class="stat-btn" id="ccPlus" title="Monter le plafond de 10">+</button>
           </div>
-          <div class="bar-note">Glisse pour régler ton plafond (0-500). Zone vive = consommé par tes implants.</div>
+          <div class="bar-note">Glisse la barre ou utilise − / + (par 10) pour régler ton plafond (0 à 500). Zone vive = consommé par tes implants.</div>
+          <div class="bar-hint" id="cybercapHint"></div>
         </div>
 
         <div class="bar-block">
           <div class="bar-label"><span class="name ram">RAM</span><span class="value" id="ramValue">0 / 30</span></div>
           <div class="bar-track"><div class="bar-fill ram" id="ramFill" style="width:0%"></div></div>
-          <div class="bar-note">Uniquement augmentée par certains implants — pas de réglage manuel.</div>
+          <div class="bar-note">Augmentée uniquement par certains implants.</div>
         </div>
 
         <div class="bar-block">
           <div class="bar-label"><span class="name glace">Glace</span><span class="value" id="glaceValue">0 / 100</span></div>
           <div class="bar-track"><div class="bar-fill glace" id="glaceFill" style="width:0%"></div></div>
-          <div class="bar-note">Uniquement augmentée par certains implants — pas de réglage manuel.</div>
+          <div class="bar-note">Augmentée uniquement par certains implants.</div>
         </div>
 
       </div>
@@ -418,14 +463,19 @@
     <div class="panel skeleton-panel">
       <div class="skeleton-wrap">
         <img src="skeleton.png" alt="Squelette cyberpunk">
-        <div class="zone-marker" data-zone="tete"      style="top:11.0%; left:39.7%; width:20.6%; height:15.3%;"><span class="zone-badge">0</span></div>
-        <div class="zone-marker" data-zone="tronc"     style="top:24.6%; left:25.0%; width:50.0%; height:28.8%;"><span class="zone-badge">0</span></div>
-        <div class="zone-marker" data-zone="bras_g"    style="top:26.3%; left:13.2%; width:13.2%; height:33.9%;"><span class="zone-badge">0</span></div>
-        <div class="zone-marker" data-zone="bras_d"    style="top:26.3%; left:75.0%; width:13.2%; height:33.9%;"><span class="zone-badge">0</span></div>
-        <div class="zone-marker" data-zone="jambe_g"   style="top:53.4%; left:29.4%; width:13.2%; height:39.0%;"><span class="zone-badge">0</span></div>
-        <div class="zone-marker" data-zone="jambe_d"   style="top:53.4%; left:54.4%; width:13.2%; height:39.0%;"><span class="zone-badge">0</span></div>
+        <div class="zone-marker" data-zone="tete"    data-label="Tête"          style="top:11.0%; left:39.7%; width:20.6%; height:15.3%;"><span class="zone-badge">0</span></div>
+        <div class="zone-marker" data-zone="tronc"   data-label="Tronc"         style="top:24.6%; left:25.0%; width:50.0%; height:28.8%;"><span class="zone-badge">0</span></div>
+        <div class="zone-marker" data-zone="bras_g"  data-label="Bras gauche"   style="top:26.3%; left:13.2%; width:13.2%; height:33.9%;"><span class="zone-badge">0</span></div>
+        <div class="zone-marker" data-zone="bras_d"  data-label="Bras droit"    style="top:26.3%; left:75.0%; width:13.2%; height:33.9%;"><span class="zone-badge">0</span></div>
+        <div class="zone-marker" data-zone="jambe_g" data-label="Jambe gauche"  style="top:53.4%; left:29.4%; width:13.2%; height:39.0%;"><span class="zone-badge">0</span></div>
+        <div class="zone-marker" data-zone="jambe_d" data-label="Jambe droite"  style="top:53.4%; left:54.4%; width:13.2%; height:39.0%;"><span class="zone-badge">0</span></div>
       </div>
-      <div class="skeleton-legend">Clique une zone pour ouvrir son onglet de cyberware en bas.</div>
+      <div class="skeleton-legend">Clique une zone du squelette : ses implants s'affichent à droite.</div>
+    </div>
+
+    <!-- CATALOGUE DE LA ZONE -->
+    <div class="panel zone-panel">
+      <div class="zone-panel-inner" id="zonePanel"></div>
     </div>
 
   </div>
@@ -434,21 +484,6 @@
   <div class="strip-wrap">
     <div class="catalogue-title">// Équipement installé</div>
     <div id="equippedStrip"></div>
-  </div>
-
-  <!-- CATALOGUE CYBERWARES -->
-  <div class="catalogue">
-    <div class="catalogue-title">// Cyberwares disponibles</div>
-    <div class="legend-row">
-      <span><span class="dot legal"></span> Légal</span>
-      <span><span class="dot illegal"></span> Illégal</span>
-      <span class="badge-sample badge cc">CC = Coût Cybercapacité</span>
-      <span class="badge-sample badge hu">HU = Coût Humanité</span>
-      <span class="badge-sample badge ram">RAM = Bonus RAM</span>
-      <span class="badge-sample badge glace">GLC = Bonus Glace</span>
-    </div>
-    <div class="zone-tabs" id="zoneTabs"></div>
-    <div class="card-grid" id="cardGrid"></div>
   </div>
 
   <!-- ATOUTS SÉLECTIONNÉS -->
@@ -463,7 +498,7 @@
     <div class="card-grid" id="atoutGrid"></div>
   </div>
 
-  <!-- DRAWER DÉTAIL -->
+  <!-- TIROIR DÉTAIL (atouts) -->
   <div id="drawerBackdrop"></div>
   <div id="detailDrawer">
     <button class="drawer-close" id="drawerClose">✕</button>
@@ -473,10 +508,9 @@
   <div id="tooltip"></div>
 
 <script>
-  // =====================================================
-  // UTILITAIRE — échappement HTML (évite qu'un < ou un " dans une
-  // description casse l'affichage)
-  // =====================================================
+  const $ = (id) => document.getElementById(id);
+
+  // Échappement HTML (un < ou un " dans une description ne casse plus l'affichage)
   function h(value) {
     return String(value == null ? '' : value).replace(/[&<>"']/g, c => (
       { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
@@ -484,13 +518,14 @@
   }
 
   // =====================================================
-  // DONNÉES DE BASE — STATS
+  // RÉGLAGES
   // =====================================================
   const STAT_NAMES = ["Force", "Réflexes", "Vitesse", "Endurance", "Résistance", "Esprit"];
   const TOTAL_POINTS = 10;
   const BASE_CAP = 5;
   const MAX_LEVEL = 15;
-  const ROMAN = ["", "I","II","III","IV","V","VI","VII","VIII","IX","X","XI","XII","XIII","XIV","XV"];
+  const DEFAULT_CYBERCAP_MAX = 0;   // plafond de cybercapacité d'une fiche vierge (change-le si besoin)
+  const STORAGE_KEY = 'cyberware_character_v1';
 
   const RESOURCE_CONFIG = {
     cybercap: { max: 500, step: 10 },
@@ -506,10 +541,6 @@
     TIREUR:     { Force:0, "Réflexes":4, Vitesse:3, Endurance:1, "Résistance":0, Esprit:2 },
   };
 
-  // =====================================================
-  // ZONES + CATALOGUES (chargés depuis data/*.json)
-  // Pour ajouter un implant ou un atout : utilise admin.html
-  // =====================================================
   const ZONES = {
     tete:    "Tête",
     tronc:   "Tronc",
@@ -519,25 +550,32 @@
     jambe_d: "Jambe droite",
   };
 
+  // Catalogues : chargés depuis data/*.json (édités via admin.html)
   let CATALOGUE = [];
   let ATOUTS = [];
+  const dataOk = { cyber: false, atout: false };
 
   // =====================================================
-  // ÉTAT DU PERSONNAGE
+  // ÉTAT
   // =====================================================
-  let character = {
-    baseStats: Object.fromEntries(STAT_NAMES.map(n => [n, 1])),
-    cybercapMax: 0,
-    equipped: [],   // cyberwares
-    atouts: [],     // atouts sélectionnés
-  };
+  function defaultCharacter() {
+    return {
+      baseStats: Object.fromEntries(STAT_NAMES.map(n => [n, 1])),
+      cybercapMax: DEFAULT_CYBERCAP_MAX,
+      equipped: [],
+      atouts: [],
+    };
+  }
 
-  let selectedItemId = null;
-  let selectedItemType = null; // 'cyber' | 'atout'
-  let activeZone = "tete";
+  let character = defaultCharacter();
+  let activeZone = 'tete';
+  let selectedCyberId = null;   // null = liste de la zone, sinon détail
+  let selectedAtoutId = null;
+  let ready = false;            // true une fois les données et la sauvegarde chargées
 
   let computed = {
     implantBonus: Object.fromEntries(STAT_NAMES.map(n => [n, 0])),
+    humaniteCost: 0,
     humanite: 100,
     cybercapUsed: 0,
     ramBonus: 0,
@@ -555,7 +593,7 @@
       const item = getItem(id);
       if (!item) return;
       Object.entries(item.statistiques || {}).forEach(([stat, val]) => {
-        bonus[stat] = (bonus[stat] || 0) + val;
+        if (stat in bonus) bonus[stat] += val;
       });
       humaniteCost += item.humanite || 0;
       cybercapUsed += item.cybercapacite || 0;
@@ -564,10 +602,108 @@
     });
 
     computed.implantBonus = bonus;
+    computed.humaniteCost = humaniteCost;
     computed.humanite = Math.max(0, 100 - humaniteCost);
     computed.cybercapUsed = cybercapUsed;
     computed.ramBonus = ramBonus;
     computed.glaceBonus = glaceBonus;
+  }
+
+  // =====================================================
+  // SAUVEGARDE AUTOMATIQUE (localStorage)
+  // =====================================================
+  let saveTimer = null, flashTimer = null;
+
+  function setSaveState(ok, flash) {
+    const el = $('saveState');
+    if (!ok) { el.textContent = 'Sauvegarde indisponible dans ce navigateur'; el.className = 'save-state off'; return; }
+    el.textContent = flash ? 'Sauvegardé ✓' : 'Sauvegarde automatique dans ce navigateur';
+    el.className = 'save-state' + (flash ? ' flash' : '');
+    if (flash) {
+      clearTimeout(flashTimer);
+      flashTimer = setTimeout(() => setSaveState(true, false), 1500);
+    }
+  }
+
+  function persist() {
+    if (!ready) return;
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ v: 1, ...character }));
+      setSaveState(true, true);
+    } catch (e) {
+      setSaveState(false);
+    }
+  }
+  function schedulePersist() {
+    if (!ready) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(persist, 250);
+  }
+
+  function readSaved() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Nettoie une fiche venant du stockage ou d'un code partagé
+  function sanitizeCharacter(payload) {
+    const notes = [];
+    const src = payload && typeof payload === 'object' ? payload : {};
+
+    const stats = {};
+    let points = 0;
+    STAT_NAMES.forEach(n => {
+      let v = parseInt(src.baseStats && src.baseStats[n], 10);
+      if (!Number.isFinite(v)) v = 1;
+      v = Math.max(1, Math.min(BASE_CAP, v));
+      stats[n] = v;
+      points += v - 1;
+    });
+    let baseStats = stats;
+    if (points > TOTAL_POINTS) {
+      baseStats = Object.fromEntries(STAT_NAMES.map(n => [n, 1]));
+      notes.push(`La répartition des statistiques dépassait ${TOTAL_POINTS} points : elle a été remise à zéro.`);
+    }
+
+    const cfg = RESOURCE_CONFIG.cybercap;
+    let cc = Number(src.cybercapMax);
+    if (!Number.isFinite(cc)) cc = DEFAULT_CYBERCAP_MAX;
+    cc = Math.max(0, Math.min(cfg.max, Math.round(cc / cfg.step) * cfg.step));
+
+    function clean(arr, exists, filter) {
+      const seen = new Set();
+      const kept = [];
+      let removed = 0;
+      (Array.isArray(arr) ? arr : []).forEach(id => {
+        if (typeof id !== 'string' || seen.has(id)) return;
+        seen.add(id);
+        if (filter && !exists(id)) { removed++; return; }
+        kept.push(id);
+      });
+      return { kept, removed };
+    }
+    const eq = clean(src.equipped, getItem, dataOk.cyber);
+    const at = clean(src.atouts, getAtout, dataOk.atout);
+    if (eq.removed) notes.push(`${eq.removed} implant(s) n'existent plus dans le catalogue : retirés de la fiche.`);
+    if (at.removed) notes.push(`${at.removed} atout(s) n'existent plus dans le catalogue : retirés de la fiche.`);
+
+    return { character: { baseStats, cybercapMax: cc, equipped: eq.kept, atouts: at.kept }, notes };
+  }
+
+  function hasProgress() {
+    const pts = STAT_NAMES.reduce((s, n) => s + (character.baseStats[n] - 1), 0);
+    return pts > 0 || character.equipped.length > 0 || character.atouts.length > 0 || character.cybercapMax > DEFAULT_CYBERCAP_MAX;
+  }
+
+  function showNotice(lines) {
+    const el = $('notice');
+    if (!lines || !lines.length) { el.innerHTML = ''; return; }
+    el.innerHTML = `<div class="notice">${lines.map(h).join('<br>')}<button class="notice-close" id="noticeClose" title="Fermer">✕</button></div>`;
+    $('noticeClose').addEventListener('click', () => { el.innerHTML = ''; });
   }
 
   // =====================================================
@@ -577,34 +713,54 @@
     return STAT_NAMES.reduce((sum, n) => sum + (character.baseStats[n] - 1), 0);
   }
 
-  function renderStats() {
-    const container = document.getElementById('statsList');
-    container.innerHTML = '';
-    const used = pointsUsed();
-    const remaining = TOTAL_POINTS - used;
+  function currentProfile() {
+    for (const [key, prof] of Object.entries(PROFILES)) {
+      if (STAT_NAMES.every(n => character.baseStats[n] === 1 + (prof[n] || 0))) return key;
+    }
+    return null;
+  }
 
-    const remainingEl = document.getElementById('pointsRemaining');
+  function pipsHtml(base, bonus) {
+    const total = Math.max(0, Math.min(base + bonus, MAX_LEVEL));
+    const cells = Math.max(BASE_CAP, total, base);
+    let out = '';
+    for (let i = 1; i <= cells; i++) {
+      let cls = 'pip';
+      if (i <= Math.min(base, total)) cls += ' base';
+      else if (i > base && i <= total) cls += ' bonus';
+      else if (i > total && i <= base) cls += ' malus';
+      out += `<span class="${cls}"></span>`;
+    }
+    return out;
+  }
+
+  function renderStats() {
+    const container = $('statsList');
+    container.innerHTML = '';
+    const remaining = TOTAL_POINTS - pointsUsed();
+
+    const remainingEl = $('pointsRemaining');
     remainingEl.textContent = remaining + ' pts restants';
     remainingEl.classList.toggle('zero', remaining === 0);
 
     STAT_NAMES.forEach(name => {
       const base = character.baseStats[name];
       const bonus = computed.implantBonus[name] || 0;
-      const total = Math.min(base + bonus, MAX_LEVEL);
-      const isBoosted = bonus > 0;
+      const total = Math.max(0, Math.min(base + bonus, MAX_LEVEL));
+      const canDecrease = base > 1;
+      const canIncrease = base < BASE_CAP && remaining > 0;
+      const tip = `Niveau ${total} (base ${base}${bonus ? `, implants ${bonus > 0 ? '+' : ''}${bonus}` : ''})`;
 
       const row = document.createElement('div');
       row.className = 'stat-row';
-      const canDecrease = base > 1;
-      const canIncrease = base < BASE_CAP && remaining > 0;
-
+      row.title = tip;
       row.innerHTML = `
         <span class="stat-name">${name}</span>
         <div class="stat-controls">
           <button class="stat-btn" data-stat="${name}" data-dir="-1" ${canDecrease ? '' : 'disabled'}>−</button>
-          <span class="stat-value ${isBoosted ? 'locked-boost' : ''}">${ROMAN[Math.max(0, total)] || total}</span>
+          <div class="pips">${pipsHtml(base, bonus)}</div>
           <button class="stat-btn" data-stat="${name}" data-dir="1" ${canIncrease ? '' : 'disabled'}>+</button>
-          <span class="stat-lock">${base >= BASE_CAP ? '🔒' : ''}</span>
+          <span class="stat-num ${bonus > 0 ? 'boosted' : ''}">${total}</span>
         </div>
       `;
       container.appendChild(row);
@@ -613,49 +769,53 @@
     container.querySelectorAll('.stat-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const stat = btn.dataset.stat;
-        const dir = parseInt(btn.dataset.dir);
+        const dir = parseInt(btn.dataset.dir, 10);
         const newVal = character.baseStats[stat] + dir;
         if (newVal >= 1 && newVal <= BASE_CAP) {
           if (dir > 0 && pointsUsed() >= TOTAL_POINTS) return;
           character.baseStats[stat] = newVal;
-          document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('active'));
-          renderStats();
+          refreshAll();
         }
       });
     });
+
+    const profile = currentProfile();
+    document.querySelectorAll('.profile-btn').forEach(b => b.classList.toggle('active', b.dataset.profile === profile));
   }
 
   document.querySelectorAll('.profile-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const profile = PROFILES[btn.dataset.profile];
-      STAT_NAMES.forEach(name => {
-        character.baseStats[name] = 1 + (profile[name] || 0);
-      });
-      document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderStats();
+      STAT_NAMES.forEach(name => { character.baseStats[name] = 1 + (profile[name] || 0); });
+      refreshAll();
     });
   });
 
   // =====================================================
-  // BARRE CYBERCAPACITÉ — seule barre réglable manuellement
+  // BARRE CYBERCAPACITÉ (glisser ou boutons − / +)
   // Le plafond ne peut pas descendre sous la capacité déjà utilisée.
   // =====================================================
-  function setupDraggableBar(trackId, key, cfg, onChange, getMin) {
-    const track = document.getElementById(trackId);
+  function minCybercap() {
+    const cfg = RESOURCE_CONFIG.cybercap;
+    return Math.ceil(computed.cybercapUsed / cfg.step) * cfg.step;
+  }
+
+  function onCybercapChange() {
+    renderBars();
+    renderZonePanel();
+    schedulePersist();
+  }
+
+  function setupDraggableBar(trackId, cfg) {
+    const track = $(trackId);
     function setFromClientX(clientX) {
       const rect = track.getBoundingClientRect();
       let ratio = (clientX - rect.left) / rect.width;
       ratio = Math.max(0, Math.min(1, ratio));
-      let raw = ratio * cfg.max;
-      let stepped = Math.round(raw / cfg.step) * cfg.step;
-      if (getMin) {
-        const min = Math.ceil(getMin() / cfg.step) * cfg.step;
-        stepped = Math.max(stepped, min);
-      }
-      stepped = Math.max(0, Math.min(cfg.max, stepped));
-      character[key] = stepped;
-      onChange();
+      let stepped = Math.round((ratio * cfg.max) / cfg.step) * cfg.step;
+      stepped = Math.max(stepped, minCybercap());
+      character.cybercapMax = Math.max(0, Math.min(cfg.max, stepped));
+      onCybercapChange();
     }
     let dragging = false;
     track.addEventListener('pointerdown', (e) => { dragging = true; track.setPointerCapture(e.pointerId); setFromClientX(e.clientX); });
@@ -663,24 +823,50 @@
     track.addEventListener('pointerup', () => { dragging = false; });
     track.addEventListener('pointercancel', () => { dragging = false; });
   }
-  setupDraggableBar('cybercapTrack', 'cybercapMax', RESOURCE_CONFIG.cybercap, renderBars, () => computed.cybercapUsed);
+  setupDraggableBar('cybercapTrack', RESOURCE_CONFIG.cybercap);
+
+  function adjustCybercap(delta) {
+    const cfg = RESOURCE_CONFIG.cybercap;
+    const current = character.cybercapMax;
+    let next = Math.max(0, Math.min(cfg.max, current + delta));
+    if (delta < 0) next = Math.max(next, Math.min(minCybercap(), current));
+    character.cybercapMax = next;
+    onCybercapChange();
+  }
+  $('ccMinus').addEventListener('click', () => adjustCybercap(-RESOURCE_CONFIG.cybercap.step));
+  $('ccPlus').addEventListener('click', () => adjustCybercap(RESOURCE_CONFIG.cybercap.step));
 
   function renderBars() {
-    document.getElementById('humaniteFill').style.width = computed.humanite + '%';
-    document.getElementById('humaniteValue').textContent = computed.humanite + ' / 100';
+    $('humaniteFill').style.width = computed.humanite + '%';
+    $('humaniteValue').textContent = computed.humanite + ' / 100';
 
     const maxPct = (character.cybercapMax / RESOURCE_CONFIG.cybercap.max) * 100;
     const usedPct = (computed.cybercapUsed / RESOURCE_CONFIG.cybercap.max) * 100;
-    document.getElementById('cybercapMaxFill').style.width = Math.min(100, maxPct) + '%';
-    document.getElementById('cybercapUsedFill').style.width = Math.min(100, usedPct) + '%';
-    document.getElementById('cybercapHandle').style.left = Math.min(100, maxPct) + '%';
-    document.getElementById('cybercapValue').textContent = computed.cybercapUsed + ' utilisé / ' + character.cybercapMax + ' max';
+    $('cybercapMaxFill').style.width = Math.min(100, maxPct) + '%';
+    $('cybercapUsedFill').style.width = Math.min(100, usedPct) + '%';
+    $('cybercapHandle').style.left = Math.min(100, maxPct) + '%';
 
-    document.getElementById('ramFill').style.width = Math.min(100, (computed.ramBonus / RESOURCE_CONFIG.ram.max) * 100) + '%';
-    document.getElementById('ramValue').textContent = computed.ramBonus + ' / ' + RESOURCE_CONFIG.ram.max;
+    const over = computed.cybercapUsed > character.cybercapMax;
+    const val = $('cybercapValue');
+    val.textContent = (over ? '⚠ ' : '') + computed.cybercapUsed + ' utilisé / ' + character.cybercapMax + ' max';
+    val.classList.toggle('over', over);
 
-    document.getElementById('glaceFill').style.width = Math.min(100, (computed.glaceBonus / RESOURCE_CONFIG.glace.max) * 100) + '%';
-    document.getElementById('glaceValue').textContent = computed.glaceBonus + ' / ' + RESOURCE_CONFIG.glace.max;
+    const hint = $('cybercapHint');
+    if (over) {
+      hint.textContent = `Tes implants dépassent ton plafond de ${computed.cybercapUsed - character.cybercapMax}. Augmente-le ou retire un implant.`;
+      hint.className = 'bar-hint on error';
+    } else if (character.cybercapMax === 0) {
+      hint.textContent = 'Plafond à 0 : règle-le ici pour pouvoir équiper des implants.';
+      hint.className = 'bar-hint on';
+    } else {
+      hint.className = 'bar-hint';
+    }
+
+    $('ramFill').style.width = Math.min(100, (computed.ramBonus / RESOURCE_CONFIG.ram.max) * 100) + '%';
+    $('ramValue').textContent = computed.ramBonus + ' / ' + RESOURCE_CONFIG.ram.max;
+
+    $('glaceFill').style.width = Math.min(100, (computed.glaceBonus / RESOURCE_CONFIG.glace.max) * 100) + '%';
+    $('glaceValue').textContent = computed.glaceBonus + ' / ' + RESOURCE_CONFIG.glace.max;
   }
 
   // =====================================================
@@ -691,24 +877,38 @@
       const zone = marker.dataset.zone;
       const count = character.equipped.filter(id => getItem(id)?.categorie === zone).length;
       marker.classList.toggle('equipped', count > 0);
+      marker.classList.toggle('active', zone === activeZone);
       marker.querySelector('.zone-badge').textContent = count;
     });
   }
 
+  function selectZone(zone) {
+    activeZone = zone;
+    selectedCyberId = null;
+    hideTooltip();
+    renderZones();
+    renderZonePanel(true);
+  }
+
+  function openCyber(id) {
+    const item = getItem(id);
+    if (!item) return;
+    activeZone = item.categorie;
+    selectedCyberId = id;
+    hideTooltip();
+    renderZones();
+    renderZonePanel(true);
+  }
+
   document.querySelectorAll('.zone-marker').forEach(marker => {
-    marker.addEventListener('click', () => {
-      activeZone = marker.dataset.zone;
-      renderTabs();
-      renderCardGrid();
-      document.getElementById('zoneTabs').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    });
+    marker.addEventListener('click', () => selectZone(marker.dataset.zone));
   });
 
   // =====================================================
-  // ÉQUIPEMENT INSTALLÉ — bande compacte
+  // ÉQUIPEMENT INSTALLÉ / ATOUTS SÉLECTIONNÉS (bandes)
   // =====================================================
   function renderEquippedStrip() {
-    const container = document.getElementById('equippedStrip');
+    const container = $('equippedStrip');
     const valid = character.equipped.filter(id => getItem(id));
     if (valid.length === 0) {
       container.innerHTML = '<div class="strip-empty">Aucun cyberware installé pour le moment.</div>';
@@ -732,7 +932,8 @@
     container.querySelectorAll('[data-open]').forEach(chip => {
       chip.addEventListener('click', (e) => {
         if (e.target.closest('[data-remove]')) return;
-        openDrawer(chip.dataset.open, 'cyber');
+        openCyber(chip.dataset.open);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
     container.querySelectorAll('[data-remove]').forEach(btn => {
@@ -744,11 +945,8 @@
     });
   }
 
-  // =====================================================
-  // ATOUTS SÉLECTIONNÉS — bande compacte
-  // =====================================================
   function renderAtoutsStrip() {
-    const container = document.getElementById('atoutsStrip');
+    const container = $('atoutsStrip');
     const valid = character.atouts.filter(id => getAtout(id));
     if (valid.length === 0) {
       container.innerHTML = '<div class="strip-empty">Aucun atout sélectionné pour le moment.</div>';
@@ -772,7 +970,7 @@
     container.querySelectorAll('[data-open]').forEach(chip => {
       chip.addEventListener('click', (e) => {
         if (e.target.closest('[data-remove]')) return;
-        openDrawer(chip.dataset.open, 'atout');
+        openAtoutDrawer(chip.dataset.open);
       });
     });
     container.querySelectorAll('[data-remove]').forEach(btn => {
@@ -785,75 +983,184 @@
   }
 
   // =====================================================
-  // ONGLETS DE ZONE + GRILLE DE CARTES (CYBERWARES)
+  // PANNEAU DE DROITE : liste de la zone / détail d'un cyberware
   // =====================================================
   function canEquip(item) {
     if (character.equipped.includes(item.id)) return { ok: true };
-    const projectedUsed = computed.cybercapUsed + item.cybercapacite;
-    if (projectedUsed > character.cybercapMax) {
-      return { ok: false, reason: `Cybercapacité insuffisante (${projectedUsed} / ${character.cybercapMax})` };
+    const projected = computed.cybercapUsed + (item.cybercapacite || 0);
+    if (projected > character.cybercapMax) {
+      if (character.cybercapMax === 0) {
+        return { ok: false, reason: 'Règle d\'abord ta cybercapacité maximale avec la barre à gauche.' };
+      }
+      return { ok: false, reason: `Cybercapacité insuffisante : il te manque ${projected - character.cybercapMax} (${projected} / ${character.cybercapMax}).` };
     }
     const conflict = character.equipped
       .map(id => getItem(id))
       .find(eq => eq && ((eq.incompatibleWith || []).includes(item.id) || (item.incompatibleWith || []).includes(eq.id)));
-    if (conflict) return { ok: false, reason: `Incompatible avec "${conflict.nom}" déjà équipé` };
+    if (conflict) return { ok: false, reason: `Incompatible avec « ${conflict.nom} » déjà équipé.` };
     return { ok: true };
   }
 
-  function renderTabs() {
-    const container = document.getElementById('zoneTabs');
-    container.innerHTML = '';
-    Object.entries(ZONES).forEach(([zoneKey, zoneLabel]) => {
-      const items = CATALOGUE.filter(i => i.categorie === zoneKey);
-      const equippedCount = items.filter(i => character.equipped.includes(i.id)).length;
-      const tab = document.createElement('button');
-      tab.className = 'zone-tab' + (zoneKey === activeZone ? ' active' : '');
-      tab.innerHTML = `${zoneLabel} <span class="tab-count">${equippedCount > 0 ? equippedCount : items.length}</span>`;
-      tab.addEventListener('click', () => { activeZone = zoneKey; renderTabs(); renderCardGrid(); });
-      container.appendChild(tab);
-    });
+  function renderZonePanel(resetScroll) {
+    const box = $('zonePanel');
+    const scroll = resetScroll ? 0 : box.scrollTop;
+    if (selectedCyberId && getItem(selectedCyberId)) renderCyberDetail(box);
+    else { selectedCyberId = null; renderZoneList(box); }
+    box.scrollTop = scroll;
   }
 
-  function renderCardGrid() {
-    const container = document.getElementById('cardGrid');
+  function renderZoneList(box) {
     const items = CATALOGUE.filter(i => i.categorie === activeZone);
-    if (items.length === 0) {
-      container.innerHTML = '<div class="strip-empty">Aucun cyberware dans cette zone.</div>';
-      return;
-    }
-    container.innerHTML = items.map(item => {
+
+    const tabs = Object.entries(ZONES).map(([key, label]) => {
+      const all = CATALOGUE.filter(i => i.categorie === key);
+      const eq = all.filter(i => character.equipped.includes(i.id)).length;
+      return `<button class="zone-tab ${key === activeZone ? 'active' : ''}" data-zone="${key}">${h(label)}<span class="tab-count">${eq}/${all.length}</span></button>`;
+    }).join('');
+
+    const banner = character.cybercapMax === 0
+      ? '<div class="hint-banner">Ta cybercapacité maximale est à 0 : règle-la avec la barre à gauche (ou les boutons − / +) pour pouvoir équiper des implants.</div>'
+      : '';
+
+    const legend = `
+      <div class="legend-row">
+        <span><span class="dot legal"></span> Légal</span>
+        <span><span class="dot illegal"></span> Illégal</span>
+        <span class="badge cc">CC cybercap.</span>
+        <span class="badge hu">HU humanité</span>
+        <span class="badge ram">RAM</span>
+        <span class="badge glace">GLC glace</span>
+      </div>`;
+
+    const rows = items.length ? items.map(item => {
       const isEquipped = character.equipped.includes(item.id);
+      const locked = !isEquipped && !canEquip(item).ok;
       return `
-        <div class="item-card ${isEquipped ? 'item-equipped' : ''}" data-item="${h(item.id)}">
-          <div class="item-card-top">
+        <button class="cy-row ${isEquipped ? 'item-equipped' : ''} ${locked ? 'locked' : ''}" data-item="${h(item.id)}">
+          <div class="cy-top">
             <span class="dot ${item.nature === 'illegal' ? 'illegal' : 'legal'}"></span>
-            <span class="item-card-name">${h(item.nom)}</span>
+            <span class="cy-name">${h(item.nom)}</span>
           </div>
-          <div class="item-card-badges">
+          <div class="cy-loc">${h(item.emplacementDetaille)}</div>
+          <div class="cy-badges">
             ${isEquipped ? '<span class="badge equipped-tag">Équipé</span>' : ''}
             <span class="badge cc">${h(item.cybercapacite)} CC</span>
             <span class="badge hu">-${h(item.humanite)} HU</span>
             ${item.ram ? `<span class="badge ram">+${h(item.ram)} RAM</span>` : ''}
             ${item.glace ? `<span class="badge glace">+${h(item.glace)} GLC</span>` : ''}
           </div>
-        </div>
-      `;
-    }).join('');
+        </button>`;
+    }).join('') : '<div class="strip-empty">Aucun cyberware dans cette zone.</div>';
 
-    container.querySelectorAll('.item-card').forEach(card => {
-      const item = getItem(card.dataset.item);
-      card.addEventListener('click', () => openDrawer(item.id, 'cyber'));
-      card.addEventListener('mouseenter', (e) => showTooltip(e, item, 'cyber'));
-      card.addEventListener('mousemove', (e) => moveTooltip(e));
-      card.addEventListener('mouseleave', hideTooltip);
+    box.innerHTML = `
+      <div class="panel-title"><span>Cyberwares</span></div>
+      <div class="zone-tabs">${tabs}</div>
+      ${banner}
+      ${legend}
+      <div class="cy-list">${rows}</div>
+    `;
+
+    box.querySelectorAll('.zone-tab').forEach(tab => {
+      tab.addEventListener('click', () => selectZone(tab.dataset.zone));
+    });
+    box.querySelectorAll('.cy-row').forEach(row => {
+      const item = getItem(row.dataset.item);
+      row.addEventListener('click', () => openCyber(item.id));
+      row.addEventListener('mouseenter', (e) => showTooltip(e, item, 'cyber'));
+      row.addEventListener('mousemove', moveTooltip);
+      row.addEventListener('mouseleave', hideTooltip);
+    });
+  }
+
+  function pvRow(label, before, after, tone, suffix) {
+    const diff = after - before;
+    let cls = '';
+    if (diff !== 0) {
+      if (tone === 'upGood') cls = diff > 0 ? 'good' : 'bad';
+      else if (tone === 'upBad') cls = diff > 0 ? 'bad' : 'good';
+    }
+    return `<div class="pv-row"><span class="pv-label">${h(label)}</span><span class="pv-values">${before}<span class="pv-arrow">→</span><b class="pv-after ${cls}">${after}</b>${suffix || ''}</span></div>`;
+  }
+
+  function previewHtml(item, equipping) {
+    const sign = equipping ? 1 : -1;
+    const rows = [];
+
+    const humAfter = Math.max(0, 100 - (computed.humaniteCost + sign * (item.humanite || 0)));
+    rows.push(pvRow('Humanité', computed.humanite, humAfter, 'upGood', ' / 100'));
+
+    const ccAfter = computed.cybercapUsed + sign * (item.cybercapacite || 0);
+    const ccOver = ccAfter > character.cybercapMax;
+    rows.push(`<div class="pv-row"><span class="pv-label">Cybercapacité</span><span class="pv-values">${computed.cybercapUsed}<span class="pv-arrow">→</span><b class="pv-after ${ccOver ? 'bad' : ''}">${ccAfter}</b> / ${character.cybercapMax}</span></div>`);
+
+    if (item.ram) rows.push(pvRow('RAM', computed.ramBonus, computed.ramBonus + sign * item.ram, 'upGood', ' / ' + RESOURCE_CONFIG.ram.max));
+    if (item.glace) rows.push(pvRow('Glace', computed.glaceBonus, computed.glaceBonus + sign * item.glace, 'upGood', ' / ' + RESOURCE_CONFIG.glace.max));
+
+    Object.entries(item.statistiques || {}).forEach(([stat, val]) => {
+      if (!STAT_NAMES.includes(stat) || !val) return;
+      const base = character.baseStats[stat];
+      const bonus = computed.implantBonus[stat] || 0;
+      const before = Math.max(0, Math.min(base + bonus, MAX_LEVEL));
+      const after = Math.max(0, Math.min(base + bonus + sign * val, MAX_LEVEL));
+      rows.push(pvRow(stat, before, after, 'upGood'));
+    });
+
+    return `
+      <div class="preview">
+        <div class="preview-title">${equipping ? 'Si tu l\'équipes' : 'Si tu le retires'}</div>
+        ${rows.join('')}
+      </div>`;
+  }
+
+  function renderCyberDetail(box) {
+    const item = getItem(selectedCyberId);
+    const isEquipped = character.equipped.includes(item.id);
+    const check = canEquip(item);
+    const statsText = Object.entries(item.statistiques || {}).map(([k, v]) => `${k} ${v > 0 ? '+' : ''}${v}`).join(', ') || 'Aucun';
+    const nature = item.nature === 'illegal' ? 'illegal' : 'legal';
+    const incompat = (item.incompatibleWith || []).map(id => (getItem(id) ? getItem(id).nom : id)).join(', ');
+
+    box.innerHTML = `
+      <button class="back-btn" id="backBtn">← Retour à ${h(ZONES[item.categorie] || 'la liste')}</button>
+      <div class="detail-header">
+        <div class="detail-name">${h(item.nom)}</div>
+        <div class="detail-nature ${nature}">${nature === 'legal' ? 'Légal' : 'Illégal'}</div>
+      </div>
+      <div class="detail-field"><div class="field-label">Emplacement</div><div class="field-value">${h(ZONES[item.categorie] || item.categorie)} — ${h(item.emplacementDetaille)}</div></div>
+      <div class="detail-field"><div class="field-label">Effets</div><div class="field-value">${h(item.effets)}</div></div>
+      <div class="detail-field"><div class="field-label">Description</div><div class="field-value">${h(item.description)}</div></div>
+      <div class="detail-grid">
+        <div class="detail-field"><div class="field-label">Cybercapacité</div><div class="field-value">${h(item.cybercapacite)}</div></div>
+        <div class="detail-field"><div class="field-label">Coût en humanité</div><div class="field-value">-${h(item.humanite)}</div></div>
+      </div>
+      <div class="detail-field"><div class="field-label">Statistiques</div><div class="field-value">${h(statsText)}</div></div>
+      ${incompat ? `<div class="detail-field"><div class="field-label">Incompatible avec</div><div class="field-value">${h(incompat)}</div></div>` : ''}
+      ${previewHtml(item, !isEquipped)}
+      <div class="detail-actions">
+        <button class="equip-btn ${isEquipped ? 'remove' : ''}" id="equipBtn" ${(!isEquipped && !check.ok) ? 'disabled' : ''}>
+          ${isEquipped ? 'Retirer' : 'Équiper'}
+        </button>
+        ${(!isEquipped && !check.ok) ? `<span class="equip-error">${h(check.reason)}</span>` : ''}
+      </div>
+    `;
+
+    $('backBtn').addEventListener('click', () => { selectedCyberId = null; renderZonePanel(true); });
+    $('equipBtn').addEventListener('click', () => {
+      if (isEquipped) {
+        character.equipped = character.equipped.filter(id => id !== item.id);
+      } else {
+        if (!canEquip(item).ok) return;
+        character.equipped.push(item.id);
+      }
+      refreshAll();
     });
   }
 
   // =====================================================
-  // GRILLE DE CARTES (ATOUTS)
+  // ATOUTS : grille + tiroir
   // =====================================================
   function renderAtoutGrid() {
-    const container = document.getElementById('atoutGrid');
+    const container = $('atoutGrid');
     if (ATOUTS.length === 0) {
       container.innerHTML = '<div class="strip-empty">Aucun atout disponible.</div>';
       return;
@@ -873,23 +1180,20 @@
 
     container.querySelectorAll('.item-card').forEach(card => {
       const atout = getAtout(card.dataset.atout);
-      card.addEventListener('click', () => openDrawer(atout.id, 'atout'));
+      card.addEventListener('click', () => openAtoutDrawer(atout.id));
       card.addEventListener('mouseenter', (e) => showTooltip(e, atout, 'atout'));
-      card.addEventListener('mousemove', (e) => moveTooltip(e));
+      card.addEventListener('mousemove', moveTooltip);
       card.addEventListener('mouseleave', hideTooltip);
     });
   }
 
-  // =====================================================
-  // DRAWER DE DÉTAIL (commun cyberwares + atouts)
-  // =====================================================
-  const drawer = document.getElementById('detailDrawer');
-  const backdrop = document.getElementById('drawerBackdrop');
+  const drawer = $('detailDrawer');
+  const backdrop = $('drawerBackdrop');
 
-  function openDrawer(id, type) {
-    selectedItemId = id;
-    selectedItemType = type;
-    renderDrawerContent();
+  function openAtoutDrawer(id) {
+    selectedAtoutId = id;
+    hideTooltip();
+    renderAtoutDrawer();
     drawer.classList.add('open');
     backdrop.classList.add('open');
   }
@@ -897,63 +1201,15 @@
     drawer.classList.remove('open');
     backdrop.classList.remove('open');
   }
-  document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+  $('drawerClose').addEventListener('click', closeDrawer);
   backdrop.addEventListener('click', closeDrawer);
 
-  function renderDrawerContent() {
-    if (selectedItemType === 'cyber') {
-      renderCyberDrawer();
-    } else if (selectedItemType === 'atout') {
-      renderAtoutDrawer();
-    }
-  }
-
-  function renderCyberDrawer() {
-    const item = getItem(selectedItemId);
-    if (!item) return;
-    const isEquipped = character.equipped.includes(item.id);
-    const check = canEquip(item);
-    const statsText = Object.entries(item.statistiques || {}).map(([k, v]) => `${k} ${v > 0 ? '+' : ''}${v}`).join(', ') || 'Aucun';
-    const nature = item.nature === 'illegal' ? 'illegal' : 'legal';
-
-    document.getElementById('drawerContent').innerHTML = `
-      <div class="detail-header">
-        <div class="detail-name">${h(item.nom)}</div>
-        <div class="detail-nature ${nature}">${nature === 'legal' ? 'Légal' : 'Illégal'}</div>
-      </div>
-      <div class="detail-field"><div class="field-label">Emplacement détaillé</div><div class="field-value">${h(ZONES[item.categorie] || item.categorie)} — ${h(item.emplacementDetaille)}</div></div>
-      <div class="detail-field"><div class="field-label">Effets</div><div class="field-value">${h(item.effets)}</div></div>
-      <div class="detail-field"><div class="field-label">Description</div><div class="field-value">${h(item.description)}</div></div>
-      <div class="detail-field"><div class="field-label">Cybercapacité</div><div class="field-value">${h(item.cybercapacite)}</div></div>
-      <div class="detail-field"><div class="field-label">Coût en Humanité</div><div class="field-value">-${h(item.humanite)}</div></div>
-      <div class="detail-field"><div class="field-label">Statistiques</div><div class="field-value">${h(statsText)}</div></div>
-      <div class="detail-actions">
-        <button class="equip-btn ${isEquipped ? 'remove' : ''}" id="equipBtn" ${(!isEquipped && !check.ok) ? 'disabled' : ''}>
-          ${isEquipped ? 'Retirer' : 'Équiper'}
-        </button>
-        ${(!isEquipped && !check.ok) ? `<span class="equip-error">${h(check.reason)}</span>` : ''}
-      </div>
-    `;
-
-    document.getElementById('equipBtn').addEventListener('click', () => {
-      if (isEquipped) {
-        character.equipped = character.equipped.filter(id => id !== item.id);
-      } else {
-        const c = canEquip(item);
-        if (!c.ok) return;
-        character.equipped.push(item.id);
-      }
-      refreshAll();
-      renderDrawerContent();
-    });
-  }
-
   function renderAtoutDrawer() {
-    const atout = getAtout(selectedItemId);
+    const atout = getAtout(selectedAtoutId);
     if (!atout) return;
     const isSelected = character.atouts.includes(atout.id);
 
-    document.getElementById('drawerContent').innerHTML = `
+    $('drawerContent').innerHTML = `
       <div class="detail-header">
         <div class="detail-name atout-color">${h(atout.nom)}</div>
       </div>
@@ -966,26 +1222,22 @@
       </div>
     `;
 
-    document.getElementById('atoutBtn').addEventListener('click', () => {
-      if (isSelected) {
-        character.atouts = character.atouts.filter(id => id !== atout.id);
-      } else {
-        character.atouts.push(atout.id);
-      }
+    $('atoutBtn').addEventListener('click', () => {
+      if (isSelected) character.atouts = character.atouts.filter(id => id !== atout.id);
+      else character.atouts.push(atout.id);
       refreshAll();
-      renderDrawerContent();
+      renderAtoutDrawer();
     });
   }
 
   // =====================================================
   // TOOLTIP
   // =====================================================
-  const tooltipEl = document.getElementById('tooltip');
+  const tooltipEl = $('tooltip');
   function showTooltip(e, entity, type) {
     if (type === 'cyber') {
       tooltipEl.innerHTML = `
         <div class="tt-name">${h(entity.nom)}</div>
-        <div class="tt-loc">${h(ZONES[entity.categorie] || entity.categorie)} — ${h(entity.emplacementDetaille)}</div>
         <div class="tt-effets">${h(entity.effets)}</div>
       `;
     } else {
@@ -1001,7 +1253,7 @@
     const offset = 14;
     let x = e.clientX + offset;
     let y = e.clientY + offset;
-    if (x + 230 > window.innerWidth) x = e.clientX - 230 - offset;
+    if (x + 250 > window.innerWidth) x = e.clientX - 250 - offset;
     tooltipEl.style.left = x + 'px';
     tooltipEl.style.top = y + 'px';
   }
@@ -1010,8 +1262,8 @@
   // =====================================================
   // FICHE PARTAGEABLE — export / import via code
   // =====================================================
-  const sheetDrawer = document.getElementById('sheetDrawer');
-  const sheetBackdrop = document.getElementById('sheetBackdrop');
+  const sheetDrawer = $('sheetDrawer');
+  const sheetBackdrop = $('sheetBackdrop');
 
   function generateCharacterCode() {
     const payload = {
@@ -1028,9 +1280,9 @@
   }
 
   function openSheetDrawer() {
-    document.getElementById('exportArea').value = generateCharacterCode();
-    document.getElementById('importFeedback').textContent = '';
-    document.getElementById('importFeedback').className = 'sheet-feedback';
+    $('exportArea').value = generateCharacterCode();
+    $('importFeedback').textContent = '';
+    $('importFeedback').className = 'sheet-feedback';
     sheetDrawer.classList.add('open');
     sheetBackdrop.classList.add('open');
   }
@@ -1039,44 +1291,67 @@
     sheetBackdrop.classList.remove('open');
   }
 
-  document.getElementById('sheetToggleBtn').addEventListener('click', openSheetDrawer);
-  document.getElementById('sheetClose').addEventListener('click', closeSheetDrawer);
+  $('sheetToggleBtn').addEventListener('click', openSheetDrawer);
+  $('sheetClose').addEventListener('click', closeSheetDrawer);
   sheetBackdrop.addEventListener('click', closeSheetDrawer);
 
-  document.getElementById('copyCodeBtn').addEventListener('click', () => {
-    const area = document.getElementById('exportArea');
+  $('copyCodeBtn').addEventListener('click', () => {
+    const area = $('exportArea');
     area.select();
     navigator.clipboard.writeText(area.value).then(() => {
-      const btn = document.getElementById('copyCodeBtn');
+      const btn = $('copyCodeBtn');
       btn.textContent = 'Copié ✓';
       btn.classList.add('copied');
       setTimeout(() => { btn.textContent = 'Copier le code'; btn.classList.remove('copied'); }, 1800);
     });
   });
 
-  document.getElementById('loadCodeBtn').addEventListener('click', () => {
-    const raw = document.getElementById('importArea').value.trim();
-    const feedback = document.getElementById('importFeedback');
+  $('loadCodeBtn').addEventListener('click', () => {
+    const raw = $('importArea').value.trim();
+    const feedback = $('importFeedback');
     if (!raw) {
       feedback.textContent = 'Colle un code avant de charger.';
       feedback.className = 'sheet-feedback error';
       return;
     }
+    let payload;
     try {
-      const payload = JSON.parse(decodeURIComponent(atob(raw)));
-      character.baseStats = { ...Object.fromEntries(STAT_NAMES.map(n => [n, 1])), ...(payload.baseStats || {}) };
-      character.cybercapMax = payload.cybercapMax || 0;
-      character.equipped = Array.isArray(payload.equipped) ? payload.equipped : [];
-      character.atouts = Array.isArray(payload.atouts) ? payload.atouts : [];
-      refreshAll();
-      document.getElementById('exportArea').value = generateCharacterCode();
-      feedback.textContent = 'Fiche chargée avec succès !';
-      feedback.className = 'sheet-feedback ok';
-      document.querySelectorAll('.profile-btn').forEach(b => b.classList.remove('active'));
+      payload = JSON.parse(decodeURIComponent(atob(raw)));
     } catch (err) {
       feedback.textContent = 'Code invalide — vérifie que tu l\'as copié en entier.';
       feedback.className = 'sheet-feedback error';
+      return;
     }
+    if (hasProgress() && !confirm('Charger cette fiche remplace ta fiche actuelle. Continuer ?')) return;
+
+    const result = sanitizeCharacter(payload);
+    character = result.character;
+    selectedCyberId = null;
+    showNotice(result.notes);
+    refreshAll();
+    $('exportArea').value = generateCharacterCode();
+    feedback.textContent = 'Fiche chargée avec succès !';
+    feedback.className = 'sheet-feedback ok';
+  });
+
+  // =====================================================
+  // NOUVELLE FICHE
+  // =====================================================
+  $('newSheetBtn').addEventListener('click', () => {
+    if (hasProgress() && !confirm('Créer une nouvelle fiche ? La fiche actuelle sera effacée de ce navigateur (exporte-la avant si tu veux la garder).')) return;
+    character = defaultCharacter();
+    activeZone = 'tete';
+    selectedCyberId = null;
+    showNotice([]);
+    refreshAll();
+  });
+
+  // Échap : ferme les tiroirs, ou revient à la liste depuis un détail
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (sheetDrawer.classList.contains('open')) closeSheetDrawer();
+    else if (drawer.classList.contains('open')) closeDrawer();
+    else if (selectedCyberId) { selectedCyberId = null; renderZonePanel(true); }
   });
 
   // =====================================================
@@ -1089,9 +1364,9 @@
     renderZones();
     renderEquippedStrip();
     renderAtoutsStrip();
-    renderTabs();
-    renderCardGrid();
+    renderZonePanel();
     renderAtoutGrid();
+    schedulePersist();
   }
 
   // =====================================================
@@ -1107,17 +1382,32 @@
 
   async function init() {
     const errors = [];
-    try { CATALOGUE = await loadJson('data/catalogue.json'); }
+    try { CATALOGUE = await loadJson('data/catalogue.json'); dataOk.cyber = true; }
     catch (err) { console.error(err); errors.push('Impossible de charger les cyberwares (' + err.message + ').'); }
-    try { ATOUTS = await loadJson('data/atouts.json'); }
+    try { ATOUTS = await loadJson('data/atouts.json'); dataOk.atout = true; }
     catch (err) { console.error(err); errors.push('Impossible de charger les atouts (' + err.message + ').'); }
 
     if (errors.length) {
-      document.getElementById('loadError').innerHTML =
+      $('loadError').innerHTML =
         '<div class="load-error">' + errors.map(h).join('<br>') +
         '<br>Vérifie que les fichiers existent dans le dossier data/ et que le JSON est valide (virgules, guillemets).</div>';
     }
+
+    // Restaure la fiche sauvegardée dans ce navigateur
+    const saved = readSaved();
+    if (saved) {
+      const result = sanitizeCharacter(saved);
+      character = result.character;
+      showNotice(result.notes);
+    }
+
+    // Ouvre la zone du premier implant équipé, sinon la tête
+    const firstEquipped = character.equipped.map(getItem).find(Boolean);
+    if (firstEquipped) activeZone = firstEquipped.categorie;
+
+    ready = true;
     refreshAll();
+    persist();
   }
 
   init();
