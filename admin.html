@@ -47,7 +47,7 @@
   .panel-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
   .panel-title .count { color: var(--amber); letter-spacing: 0; }
 
-  .mode-switch { display: flex; gap: 6px; margin-bottom: 20px; max-width: 520px; }
+  .mode-switch { display: flex; gap: 6px; margin-bottom: 20px; max-width: 700px; }
   .mode-btn {
     flex: 1; background: transparent; border: 1px solid var(--border); color: var(--text-dim);
     font-family: inherit; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;
@@ -68,7 +68,10 @@
     border-radius: 4px; padding: 9px 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px;
   }
   .list-row.is-atout { border-left-color: var(--purple); }
+  .list-row.is-shop { border-left-color: var(--green); }
   .list-row.editing { background: var(--bg-row-hover); border-color: var(--amber); }
+  .list-lead { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .list-thumb { width: 40px; height: 40px; border-radius: 3px; object-fit: cover; background: #05070a; flex-shrink: 0; border: 1px solid var(--border); }
   .list-main { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .list-name { font-size: 11.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
   .list-sub { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
@@ -108,6 +111,15 @@
   }
   .check-list label { display: flex; align-items: center; gap: 7px; font-size: 11px; color: var(--text); text-transform: none; letter-spacing: 0; margin: 0; cursor: pointer; }
   .check-list .missing { color: var(--red); }
+
+  .img-row { display: flex; gap: 14px; align-items: flex-start; }
+  .img-preview {
+    width: 130px; height: 98px; flex-shrink: 0; background: #05070a; border: 1px dashed var(--border-strong); border-radius: 4px;
+    display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 10px; text-align: center; overflow: hidden;
+  }
+  .img-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .img-controls { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .img-controls .btn { flex: none; padding: 9px; font-size: 10.5px; }
 
   .btn-row { display: flex; gap: 8px; margin-top: 6px; }
   .btn {
@@ -170,12 +182,13 @@
 <body>
 
   <h1>// Panneau Admin</h1>
-  <div class="subtitle">Modifie le catalogue ici, puis publie-le sur GitHub en un clic.</div>
+  <div class="subtitle">Modifie le catalogue, les atouts et la boutique ici, puis publie sur GitHub en un clic.</div>
   <div class="status" id="status">Chargement des données…</div>
 
   <div class="mode-switch">
     <button class="mode-btn active" data-mode="cyber">Cyberwares</button>
     <button class="mode-btn" data-mode="atout">Atouts</button>
+    <button class="mode-btn" data-mode="shop">Boutique</button>
   </div>
 
   <div class="layout">
@@ -275,6 +288,45 @@
         </div>
       </div>
 
+      <!-- Formulaire boutique -->
+      <div id="formShop" style="display:none;">
+        <div class="field">
+          <label>Nom</label>
+          <input type="text" id="s_nom" placeholder="Pistolet léger">
+        </div>
+        <div class="field">
+          <label>Identifiant (généré depuis le nom, modifiable)</label>
+          <input type="text" id="s_id" placeholder="pistolet_leger">
+          <div class="hint" id="s_id_hint">Lettres minuscules, chiffres et _ uniquement.</div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Catégorie</label>
+            <select id="s_categorie"></select>
+          </div>
+          <div class="field">
+            <label>Prix (€$)</label>
+            <input type="number" id="s_prix" min="0" value="0">
+          </div>
+        </div>
+        <div class="field">
+          <label>Image</label>
+          <div class="img-row">
+            <div class="img-preview" id="s_preview">Aucune image</div>
+            <div class="img-controls">
+              <input type="text" id="s_image" placeholder="images/boutique/pistolet.jpg ou https://…">
+              <button class="btn ghost" id="s_pick">Choisir une image…</button>
+              <input type="file" id="s_file" accept="image/*" hidden>
+            </div>
+          </div>
+          <div class="hint">Connecté à GitHub : l'image choisie est réduite (800 px max) et envoyée dans images/boutique/ à la publication. Sinon, colle le chemin ou l'adresse d'une image déjà en ligne. Sans image, la boutique affiche une illustration par défaut.</div>
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea id="s_description" placeholder="Description de l'objet…"></textarea>
+        </div>
+      </div>
+
       <div class="btn-row">
         <button class="btn primary" id="saveBtn">Ajouter</button>
         <button class="btn ghost" id="resetBtn">Vider le formulaire</button>
@@ -317,7 +369,7 @@
               2. <b>Personal access tokens</b>, <b>Fine-grained tokens</b>, <b>Generate new token</b>.<br>
               3. Nom libre, expiration au choix (par ex. 90 jours).<br>
               4. <b>Repository access</b> : <b>Only select repositories</b>, puis choisis <b>cyberware-editor</b>.<br>
-              5. <b>Permissions</b>, <b>Repository permissions</b>, <b>Contents</b> : <b>Read and write</b>.<br>
+              5. <b>Add permissions</b>, coche <b>Contents</b>, puis règle-la sur <b>Read and write</b>.<br>
               6. <b>Generate token</b>, copie-le tout de suite (il ne s'affiche qu'une fois) et colle-le ci-dessus.
             </div>
           </details>
@@ -331,7 +383,7 @@
             <button class="btn ghost" id="downloadBtn">Télécharger</button>
             <a class="btn ghost" id="githubLink" href="#" target="_blank" rel="noopener">Ouvrir ce fichier sur GitHub</a>
           </div>
-          <div class="inner">Copie le JSON, ouvre le fichier sur GitHub, Ctrl+A, Ctrl+V, puis Commit changes.</div>
+          <div class="inner">Copie le JSON, ouvre le fichier sur GitHub, Ctrl+A, Ctrl+V, puis Commit changes. Les images de la boutique doivent alors être ajoutées à la main dans le dossier images/boutique/.</div>
         </details>
 
         <details class="more">
@@ -352,25 +404,38 @@
   // =====================================================
   const GITHUB_REPO = "TorroGuillermo/cyberware-editor";
   const GITHUB_BRANCH = "main";
-  const FILES = { cyber: "data/catalogue.json", atout: "data/atouts.json" };
+  const FILES = { cyber: "data/catalogue.json", atout: "data/atouts.json", shop: "data/boutique.json" };
+  const IMAGE_DIR = "images/boutique";
   const GH_API = "https://api.github.com";
   const TOKEN_KEY = "cyberware_admin_gh_token";
 
   const ZONES = { tete:"Tête", tronc:"Tronc", bras_g:"Bras gauche", bras_d:"Bras droit", jambe_g:"Jambe gauche", jambe_d:"Jambe droite" };
   const STAT_KEYS = ["Force", "Réflexes", "Vitesse", "Endurance", "Résistance", "Esprit"];
+  const SHOP_CATEGORIES = { armes:"Armes", armures:"Armures", consommables:"Consommables", outils:"Outils & tech", vehicules:"Véhicules", divers:"Divers" };
+
+  const MODES = ['cyber', 'atout', 'shop'];
+  const MODE_TEXT = {
+    cyber: { list: 'Cyberwares existants', add: 'Nouveau cyberware', plural: 'cyberware(s)' },
+    atout: { list: 'Atouts existants',     add: 'Nouvel atout',      plural: 'atout(s)' },
+    shop:  { list: 'Objets de la boutique', add: 'Nouvel objet',     plural: 'objet(s)' },
+  };
 
   // =====================================================
   // ÉTAT
   // =====================================================
-  let data = { cyber: [], atout: [] };
+  let data = { cyber: [], atout: [], shop: [] };
   let mode = 'cyber';
   let editingId = null;
   let idTouched = false;
-  let dirty = { cyber: false, atout: false };       // modifications non publiées
-  let changes = { cyber: [], atout: [] };           // journal pour le message de commit
-  let remoteSha = { cyber: null, atout: null };     // version GitHub sur laquelle on travaille
+  let dirty = { cyber: false, atout: false, shop: false };       // modifications non publiées
+  let changes = { cyber: [], atout: [], shop: [] };              // journal pour le message de commit
+  let remoteSha = { cyber: null, atout: null, shop: null };      // version GitHub ('new' = fichier à créer)
   let token = '';
   let publishing = false;
+  let shopMissing = false;                                       // data/boutique.json n'existe pas encore
+  let pendingUploads = {};                                       // chemin -> { base64, dataUrl } (images à envoyer)
+  let uploadedPreview = {};                                      // chemin -> dataUrl (images envoyées cette session)
+  let formPending = null;                                        // image choisie dans le formulaire
 
   const $ = (id) => document.getElementById(id);
 
@@ -388,6 +453,19 @@
   }
 
   function toInt(value) { const n = parseInt(value, 10); return Number.isFinite(n) ? n : 0; }
+
+  function safeImage(src) {
+    const s = String(src || '').trim();
+    if (!s) return true;
+    if (/^https?:\/\//i.test(s)) return true;
+    return /^[\w\-./]+$/.test(s) && !s.includes('..');
+  }
+  function previewSrc(path) {
+    if (!path) return '';
+    if (pendingUploads[path]) return pendingUploads[path].dataUrl;
+    if (uploadedPreview[path]) return uploadedPreview[path];
+    return path;
+  }
 
   // =====================================================
   // TOKEN (stocké dans ce navigateur uniquement)
@@ -447,11 +525,22 @@
     return { sha: j.sha, text: fromBase64(j.content) };
   }
 
-  async function ghPutFile(path, text, sha, message) {
+  // Renvoie le sha d'un fichier existant, ou null s'il n'existe pas
+  async function ghGetSha(path) {
+    const res = await fetch(`${GH_API}/repos/${GITHUB_REPO}/contents/${path}?ref=${encodeURIComponent(GITHUB_BRANCH)}`, { headers: ghHeaders(), cache: 'no-store' });
+    if (res.status === 404) return null;
+    if (!res.ok) throw await ghError(res);
+    const j = await res.json();
+    return j.sha || null;
+  }
+
+  async function ghPutRaw(path, base64, sha, message) {
+    const body = { message, content: base64, branch: GITHUB_BRANCH };
+    if (sha && sha !== 'new') body.sha = sha;
     const res = await fetch(`${GH_API}/repos/${GITHUB_REPO}/contents/${path}`, {
       method: 'PUT',
       headers: ghHeaders({ 'Content-Type': 'application/json' }),
-      body: JSON.stringify({ message, content: toBase64(text), sha, branch: GITHUB_BRANCH }),
+      body: JSON.stringify(body),
     });
     if (!res.ok) throw await ghError(res);
     return res.json();
@@ -467,36 +556,59 @@
   // CHARGEMENT
   // =====================================================
   async function loadFromSite() {
-    async function one(path) {
+    async function one(path, optional) {
       const res = await fetch(path, { cache: 'no-store' });
+      if (res.status === 404 && optional) return null;
       if (!res.ok) throw new Error(path + ' (HTTP ' + res.status + ')');
       return parseList(await res.text(), path);
     }
     data.cyber = await one(FILES.cyber);
     data.atout = await one(FILES.atout);
-    remoteSha = { cyber: null, atout: null };
+    const shop = await one(FILES.shop, true);
+    shopMissing = (shop === null);
+    data.shop = shop || [];
+    remoteSha = { cyber: null, atout: null, shop: null };
   }
 
   async function loadFromGithub() {
     const [c, a] = await Promise.all([ghGetFile(FILES.cyber), ghGetFile(FILES.atout)]);
     data.cyber = parseList(c.text, FILES.cyber);
     data.atout = parseList(a.text, FILES.atout);
-    remoteSha = { cyber: c.sha, atout: a.sha };
+    remoteSha.cyber = c.sha;
+    remoteSha.atout = a.sha;
+    try {
+      const s = await ghGetFile(FILES.shop);
+      data.shop = parseList(s.text, FILES.shop);
+      remoteSha.shop = s.sha;
+      shopMissing = false;
+    } catch (e) {
+      if (e.status !== 404) throw e;
+      data.shop = [];
+      remoteSha.shop = 'new';
+      shopMissing = true;
+    }
   }
 
   function resetLocalState() {
-    dirty = { cyber: false, atout: false };
-    changes = { cyber: [], atout: [] };
+    dirty = { cyber: false, atout: false, shop: false };
+    changes = { cyber: [], atout: [], shop: [] };
+    pendingUploads = {};
+    formPending = null;
+  }
+
+  function countsText() {
+    return `${data.cyber.length} cyberware(s), ${data.atout.length} atout(s), ${data.shop.length} objet(s) de boutique`;
   }
 
   async function init() {
     buildStatsGrid();
+    buildShopCategories();
     token = readToken();
 
     if (token) {
       try {
         await loadFromGithub();
-        setStatus(`Connecté à GitHub (${GITHUB_REPO}). Données à jour : ${data.cyber.length} cyberware(s), ${data.atout.length} atout(s).`, 'ok');
+        setStatus(`Connecté à GitHub (${GITHUB_REPO}). Données à jour : ${countsText()}.`, 'ok');
       } catch (e) {
         setStatus('Connexion GitHub impossible : ' + e.message + ' Chargement depuis le site à la place (publication désactivée).', 'error');
         try { await loadFromSite(); } catch (e2) { setStatus('Chargement impossible : ' + e2.message, 'error'); }
@@ -504,7 +616,7 @@
     } else {
       try {
         await loadFromSite();
-        setStatus(`Données chargées depuis le site : ${data.cyber.length} cyberware(s), ${data.atout.length} atout(s). Connecte-toi à GitHub pour publier d'ici.`, 'ok');
+        setStatus(`Données chargées depuis le site : ${countsText()}. Connecte-toi à GitHub pour publier d'ici.`, 'ok');
       } catch (e) {
         setStatus('Chargement impossible : ' + e.message + '. Utilise « Importer un JSON à la main » pour partir de ton fichier.', 'error');
       }
@@ -525,7 +637,7 @@
     const fb = $('authFeedback');
     const t = $('tokenInput').value.trim();
     if (!t) { fb.className = 'form-feedback error'; fb.textContent = 'Colle ton token avant de te connecter.'; return; }
-    if ((dirty.cyber || dirty.atout) && !confirm('Se connecter recharge les données depuis GitHub et efface tes modifications non publiées. Continuer ?')) return;
+    if (MODES.some(m => dirty[m]) && !confirm('Se connecter recharge les données depuis GitHub et efface tes modifications non publiées. Continuer ?')) return;
 
     token = t;
     fb.className = 'form-feedback'; fb.textContent = 'Vérification…';
@@ -542,26 +654,26 @@
     $('tokenInput').value = '';
     fb.textContent = '';
     resetLocalState();
-    setStatus(`Connecté à GitHub (${GITHUB_REPO}). Données à jour : ${data.cyber.length} cyberware(s), ${data.atout.length} atout(s).`, 'ok');
+    setStatus(`Connecté à GitHub (${GITHUB_REPO}). Données à jour : ${countsText()}.`, 'ok');
     renderAll();
   });
 
   $('logoutBtn').addEventListener('click', () => {
-    if ((dirty.cyber || dirty.atout) && !confirm('Tu as des modifications non publiées. Te déconnecter quand même ?')) return;
+    if (MODES.some(m => dirty[m]) && !confirm('Tu as des modifications non publiées. Te déconnecter quand même ?')) return;
     clearToken();
     token = '';
-    remoteSha = { cyber: null, atout: null };
+    remoteSha = { cyber: null, atout: null, shop: null };
     setStatus('Déconnecté de GitHub.', '');
     renderOutput();
   });
 
   $('reloadBtn').addEventListener('click', async () => {
-    if ((dirty.cyber || dirty.atout) && !confirm('Recharger depuis GitHub efface tes modifications non publiées. Continuer ?')) return;
+    if (MODES.some(m => dirty[m]) && !confirm('Recharger depuis GitHub efface tes modifications non publiées. Continuer ?')) return;
     try {
       await loadFromGithub();
       resetLocalState();
       $('publishFeedback').textContent = '';
-      setStatus(`Données rechargées depuis GitHub : ${data.cyber.length} cyberware(s), ${data.atout.length} atout(s).`, 'ok');
+      setStatus(`Données rechargées depuis GitHub : ${countsText()}.`, 'ok');
       renderAll();
     } catch (e) {
       $('publishFeedback').className = 'form-feedback error';
@@ -570,7 +682,7 @@
   });
 
   // =====================================================
-  // MODE (cyberware / atout)
+  // MODE (cyberware / atout / boutique)
   // =====================================================
   document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -589,7 +701,7 @@
     const q = $('search').value.trim().toLowerCase();
     const all = data[mode];
     const arr = all.filter(i => !q || String(i.nom || '').toLowerCase().includes(q) || String(i.id || '').toLowerCase().includes(q));
-    $('listTitle').textContent = mode === 'cyber' ? 'Cyberwares existants' : 'Atouts existants';
+    $('listTitle').textContent = MODE_TEXT[mode].list;
     $('listCount').textContent = all.length;
 
     if (arr.length === 0) {
@@ -597,21 +709,34 @@
       return;
     }
 
-    $('list').innerHTML = arr.map(i => `
-      <div class="list-row ${mode === 'atout' ? 'is-atout' : ''} ${i.id === editingId ? 'editing' : ''}">
-        <div class="list-main">
-          <span class="list-name">${mode === 'cyber' ? `<span class="dot ${i.nature === 'illegal' ? 'illegal' : 'legal'}"></span>` : ''}${h(i.nom)}</span>
-          <span class="list-sub">${mode === 'cyber' ? h(ZONES[i.categorie] || i.categorie) + ' — ' : ''}${h(i.id)}</span>
-        </div>
+    $('list').innerHTML = arr.map(i => {
+      let lead = '', sub = '';
+      if (mode === 'cyber') {
+        lead = `<span class="dot ${i.nature === 'illegal' ? 'illegal' : 'legal'}"></span>`;
+        sub = h(ZONES[i.categorie] || i.categorie) + ' — ' + h(i.id);
+      } else if (mode === 'shop') {
+        sub = h(SHOP_CATEGORIES[i.categorie] || i.categorie) + ' — ' + h((i.prix || 0) + ' €$');
+      } else {
+        sub = h(i.id);
+      }
+      const thumb = (mode === 'shop' && i.image) ? `<img class="list-thumb" src="${h(previewSrc(i.image))}" alt="">` : '';
+      return `
+      <div class="list-row ${mode === 'atout' ? 'is-atout' : ''} ${mode === 'shop' ? 'is-shop' : ''} ${i.id === editingId ? 'editing' : ''}">
+        <div class="list-lead">${thumb}<div class="list-main">
+          <span class="list-name">${lead}${h(i.nom)}</span>
+          <span class="list-sub">${sub}</span>
+        </div></div>
         <div class="list-actions">
           <button class="mini-btn" data-edit="${h(i.id)}">Modifier</button>
           <button class="mini-btn danger" data-del="${h(i.id)}">Supprimer</button>
         </div>
-      </div>
-    `).join('');
+      </div>`;
+    }).join('');
   }
 
   $('search').addEventListener('input', renderList);
+  // Une miniature introuvable (image pas encore déployée) est simplement masquée
+  $('list').addEventListener('error', (e) => { if (e.target && e.target.tagName === 'IMG') e.target.style.visibility = 'hidden'; }, true);
 
   $('list').addEventListener('click', (e) => {
     const editBtn = e.target.closest('[data-edit]');
@@ -628,6 +753,9 @@
       `<div class="stat-input"><label>${k}</label><input type="number" id="c_stat_${k}" value="0"></div>`
     ).join('');
   }
+  function buildShopCategories() {
+    $('s_categorie').innerHTML = Object.entries(SHOP_CATEGORIES).map(([k, l]) => `<option value="${k}">${h(l)}</option>`).join('');
+  }
 
   function renderIncompatible(selected) {
     const sel = selected || [];
@@ -642,25 +770,35 @@
     $('c_incompatible').innerHTML = items.length ? items.join('') : '<span style="color:var(--text-dim);font-size:10px;">Aucun autre cyberware pour le moment.</span>';
   }
 
-  function setMode(isCyber) {
-    $('formCyber').style.display = isCyber ? 'block' : 'none';
-    $('formAtout').style.display = isCyber ? 'none' : 'block';
+  function setForms() {
+    $('formCyber').style.display = mode === 'cyber' ? 'block' : 'none';
+    $('formAtout').style.display = mode === 'atout' ? 'block' : 'none';
+    $('formShop').style.display = mode === 'shop' ? 'block' : 'none';
+  }
+
+  function setPreview(src) {
+    const el = $('s_preview');
+    if (!src) { el.textContent = 'Aucune image'; return; }
+    el.innerHTML = `<img src="${h(src)}" alt="">`;
   }
 
   function resetForm() {
     editingId = null;
     idTouched = false;
-    setMode(mode === 'cyber');
-    ['c_nom','c_id','c_emplacement','c_effets','c_description','a_nom','a_id','a_effets','a_description'].forEach(id => $(id).value = '');
-    ['c_cybercap','c_humanite','c_ram','c_glace'].forEach(id => $(id).value = 0);
+    formPending = null;
+    setForms();
+    ['c_nom','c_id','c_emplacement','c_effets','c_description','a_nom','a_id','a_effets','a_description','s_nom','s_id','s_image','s_description'].forEach(id => $(id).value = '');
+    ['c_cybercap','c_humanite','c_ram','c_glace','s_prix'].forEach(id => $(id).value = 0);
     STAT_KEYS.forEach(k => $('c_stat_' + k).value = 0);
     $('c_categorie').value = 'tete';
+    $('s_categorie').value = 'armes';
+    setPreview('');
     document.querySelector('input[name="c_nature"][value="legal"]').checked = true;
     renderIncompatible([]);
-    $('formTitle').textContent = mode === 'cyber' ? 'Nouveau cyberware' : 'Nouvel atout';
+    $('formTitle').textContent = MODE_TEXT[mode].add;
     $('saveBtn').textContent = 'Ajouter';
     $('editingBanner').style.display = 'none';
-    $('c_id_hint').textContent = $('a_id_hint').textContent = 'Lettres minuscules, chiffres et _ uniquement.';
+    ['c_id_hint', 'a_id_hint', 's_id_hint'].forEach(id => $(id).textContent = 'Lettres minuscules, chiffres et _ uniquement.');
     $('formFeedback').textContent = '';
     $('formFeedback').className = 'form-feedback';
     renderList();
@@ -673,7 +811,8 @@
     if (!item) return;
     editingId = id;
     idTouched = true;
-    setMode(mode === 'cyber');
+    formPending = null;
+    setForms();
 
     if (mode === 'cyber') {
       $('c_nom').value = item.nom || '';
@@ -690,11 +829,19 @@
       $('c_glace').value = item.glace || 0;
       STAT_KEYS.forEach(k => $('c_stat_' + k).value = (item.statistiques || {})[k] || 0);
       renderIncompatible(item.incompatibleWith || []);
-    } else {
+    } else if (mode === 'atout') {
       $('a_nom').value = item.nom || '';
       $('a_id').value = item.id || '';
       $('a_effets').value = item.effets || '';
       $('a_description').value = item.description || '';
+    } else {
+      $('s_nom').value = item.nom || '';
+      $('s_id').value = item.id || '';
+      $('s_categorie').value = SHOP_CATEGORIES[item.categorie] ? item.categorie : 'divers';
+      $('s_prix').value = item.prix || 0;
+      $('s_image').value = item.image || '';
+      $('s_description').value = item.description || '';
+      setPreview(previewSrc(item.image));
     }
 
     $('formTitle').textContent = 'Modifier : ' + item.nom;
@@ -708,8 +855,62 @@
 
   $('c_nom').addEventListener('input', (e) => { if (!idTouched && !editingId) $('c_id').value = slugify(e.target.value); });
   $('a_nom').addEventListener('input', (e) => { if (!idTouched && !editingId) $('a_id').value = slugify(e.target.value); });
-  $('c_id').addEventListener('input', () => { idTouched = true; });
-  $('a_id').addEventListener('input', () => { idTouched = true; });
+  $('s_nom').addEventListener('input', (e) => { if (!idTouched && !editingId) $('s_id').value = slugify(e.target.value); });
+  ['c_id', 'a_id', 's_id'].forEach(id => $(id).addEventListener('input', () => { idTouched = true; }));
+
+  // ---- Image de la boutique ----
+  $('s_image').addEventListener('input', (e) => { formPending = null; setPreview(previewSrc(e.target.value.trim())); });
+
+  $('s_pick').addEventListener('click', () => {
+    const fb = $('formFeedback');
+    if (!token) {
+      fb.className = 'form-feedback error';
+      fb.textContent = 'Connecte-toi à GitHub (cadre de droite) pour envoyer une image, ou colle le chemin / l\'adresse d\'une image déjà en ligne.';
+      return;
+    }
+    $('s_file').click();
+  });
+
+  function resizeImage(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const max = 800;
+        const scale = Math.min(1, max / Math.max(img.width, img.height));
+        const w = Math.max(1, Math.round(img.width * scale));
+        const hgt = Math.max(1, Math.round(img.height * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = hgt;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#10151d';
+        ctx.fillRect(0, 0, w, hgt);
+        ctx.drawImage(img, 0, 0, w, hgt);
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+        URL.revokeObjectURL(url);
+        resolve({ dataUrl, base64: dataUrl.split(',')[1] });
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Image illisible.')); };
+      img.src = url;
+    });
+  }
+
+  $('s_file').addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (!file) return;
+    const fb = $('formFeedback');
+    try {
+      formPending = await resizeImage(file);
+      setPreview(formPending.dataUrl);
+      $('s_image').value = '';
+      fb.className = 'form-feedback ok';
+      fb.textContent = 'Image prête : elle sera envoyée dans ' + IMAGE_DIR + '/ à la publication.';
+    } catch (err) {
+      fb.className = 'form-feedback error';
+      fb.textContent = err.message;
+    }
+  });
 
   // =====================================================
   // LECTURE + VALIDATION
@@ -734,11 +935,21 @@
         incompatibleWith: Array.from($('c_incompatible').querySelectorAll('input:checked')).map(i => i.value),
       };
     }
+    if (mode === 'atout') {
+      return {
+        id: $('a_id').value.trim(),
+        nom: $('a_nom').value.trim(),
+        effets: $('a_effets').value.trim(),
+        description: $('a_description').value.trim(),
+      };
+    }
     return {
-      id: $('a_id').value.trim(),
-      nom: $('a_nom').value.trim(),
-      effets: $('a_effets').value.trim(),
-      description: $('a_description').value.trim(),
+      id: $('s_id').value.trim(),
+      nom: $('s_nom').value.trim(),
+      categorie: $('s_categorie').value,
+      prix: toInt($('s_prix').value),
+      image: formPending ? '' : $('s_image').value.trim(),
+      description: $('s_description').value.trim(),
     };
   }
 
@@ -752,6 +963,11 @@
       if (!item.emplacementDetaille) errors.push('L\'emplacement détaillé est obligatoire.');
       ['cybercapacite', 'humanite', 'ram', 'glace'].forEach(k => { if (item[k] < 0) errors.push('Les coûts et bonus ne peuvent pas être négatifs.'); });
       if (item.incompatibleWith.includes(item.id)) errors.push('Un cyberware ne peut pas être incompatible avec lui-même.');
+    }
+    if (mode === 'shop') {
+      if (!SHOP_CATEGORIES[item.categorie]) errors.push('Choisis une catégorie.');
+      if (item.prix < 0) errors.push('Le prix ne peut pas être négatif.');
+      if (!safeImage(item.image)) errors.push('Image invalide : utilise un chemin (images/boutique/objet.jpg) ou une adresse https://…');
     }
     return Array.from(new Set(errors));
   }
@@ -772,6 +988,14 @@
       fb.className = 'form-feedback error';
       fb.innerHTML = errors.map(h).join('<br>');
       return;
+    }
+
+    // Image choisie dans le formulaire : on la rattache à l'objet
+    if (mode === 'shop' && formPending) {
+      const path = `${IMAGE_DIR}/${item.id}.jpg`;
+      item.image = path;
+      pendingUploads[path] = formPending;
+      formPending = null;
     }
 
     const wasEditing = editingId !== null;
@@ -807,6 +1031,7 @@
         if (Array.isArray(c.incompatibleWith)) c.incompatibleWith = c.incompatibleWith.filter(x => x !== id);
       });
     }
+    if (mode === 'shop' && item.image && pendingUploads[item.image]) delete pendingUploads[item.image];
     markChanged('suppression « ' + item.nom + ' »');
     if (editingId === id) resetForm();
     else { renderIncompatible(currentChecked()); renderList(); }
@@ -833,7 +1058,17 @@
         if (!ZONES[c.categorie]) warnings.push(`${c.nom} : zone inconnue « ${c.categorie} ».`);
       });
     }
+    if (mode === 'shop') {
+      arr.forEach(s => {
+        if (!SHOP_CATEGORIES[s.categorie]) warnings.push(`${s.nom} : catégorie inconnue « ${s.categorie} » (affiché dans « Divers »).`);
+        if (!safeImage(s.image)) warnings.push(`${s.nom} : image invalide.`);
+      });
+    }
     return warnings;
+  }
+
+  function pendingImagePaths() {
+    return Object.keys(pendingUploads).filter(p => data.shop.some(i => i.image === p));
   }
 
   function commitMessage() {
@@ -848,14 +1083,18 @@
     $('output').value = JSON.stringify(data[mode], null, 2);
     $('dirtyFlag').textContent = token ? '● non publié' : '● non exporté';
     $('dirtyFlag').classList.toggle('on', dirty[mode]);
-    $('githubLink').href = `https://github.com/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/${FILES[mode]}`;
+
+    const fileMissing = mode === 'shop' && (shopMissing || remoteSha.shop === 'new');
+    $('githubLink').href = fileMissing
+      ? `https://github.com/${GITHUB_REPO}/new/${GITHUB_BRANCH}?filename=${encodeURIComponent(FILES.shop)}`
+      : `https://github.com/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/${FILES[mode]}`;
+    $('githubLink').textContent = fileMissing ? 'Créer ce fichier sur GitHub' : 'Ouvrir ce fichier sur GitHub';
 
     const w = globalWarnings();
     const box = $('warnBox');
     box.classList.toggle('on', w.length > 0);
     box.innerHTML = w.length ? '<b>À vérifier avant de publier :</b><br>' + w.map(h).join('<br>') : '';
 
-    // Zone de publication
     $('authConnected').style.display = token ? 'block' : 'none';
     $('authDisconnected').style.display = token ? 'none' : 'block';
     if (token) {
@@ -864,12 +1103,15 @@
       if (publishing) $('publishBtn').textContent = 'Publication…';
       else if (!remoteSha[mode]) $('publishBtn').textContent = 'Recharge depuis GitHub pour publier';
       else $('publishBtn').textContent = dirty[mode] ? 'Publier sur GitHub' : 'Rien à publier';
-      $('commitPreview').textContent = dirty[mode] ? 'Message du commit : ' + commitMessage() : '';
+      const imgs = mode === 'shop' ? pendingImagePaths().length : 0;
+      $('commitPreview').textContent = dirty[mode]
+        ? 'Message du commit : ' + commitMessage() + (imgs ? ` (+ envoi de ${imgs} image(s))` : '')
+        : '';
     }
   }
 
   function renderAll() {
-    setMode(mode === 'cyber');
+    setForms();
     resetForm();
     renderOutput();
   }
@@ -894,16 +1136,32 @@
     renderOutput();
 
     try {
+      // 1. Images de la boutique (si besoin)
+      if (mode === 'shop') {
+        const paths = pendingImagePaths();
+        for (let i = 0; i < paths.length; i++) {
+          const p = paths[i];
+          fb.textContent = `Envoi de l'image ${i + 1}/${paths.length} (${p})…`;
+          const sha = await ghGetSha(p);
+          await ghPutRaw(p, pendingUploads[p].base64, sha, 'Admin : image ' + p.split('/').pop());
+          uploadedPreview[p] = pendingUploads[p].dataUrl;
+          delete pendingUploads[p];
+        }
+      }
+
+      // 2. Fichier JSON
+      fb.textContent = 'Publication du fichier…';
       const text = JSON.stringify(data[mode], null, 2) + '\n';
-      const res = await ghPutFile(FILES[mode], text, remoteSha[mode], commitMessage());
+      const res = await ghPutRaw(FILES[mode], toBase64(text), remoteSha[mode], commitMessage());
       remoteSha[mode] = res.content.sha;
+      if (mode === 'shop') shopMissing = false;
       dirty[mode] = false;
       changes[mode] = [];
       const url = res.commit && res.commit.html_url ? res.commit.html_url : '';
       fb.className = 'form-feedback ok';
       fb.innerHTML = 'Publié sur GitHub. Vercel redéploie en ~30 s.' + (url ? ` <a href="${h(url)}" target="_blank" rel="noopener">Voir le commit</a>` : '');
-      const other = mode === 'cyber' ? 'atout' : 'cyber';
-      if (dirty[other]) fb.innerHTML += `<br>L'autre onglet (${other === 'cyber' ? 'cyberwares' : 'atouts'}) a aussi des modifications non publiées.`;
+      const others = MODES.filter(m => m !== mode && dirty[m]);
+      if (others.length) fb.innerHTML += `<br>Autres onglets avec des modifications non publiées : ${others.map(m => MODE_TEXT[m].plural.replace('(s)', 's')).join(', ')}.`;
     } catch (e) {
       fb.className = 'form-feedback error';
       fb.textContent = e.message;
@@ -973,7 +1231,7 @@
   });
 
   window.addEventListener('beforeunload', (e) => {
-    if (dirty.cyber || dirty.atout) { e.preventDefault(); e.returnValue = ''; }
+    if (MODES.some(m => dirty[m])) { e.preventDefault(); e.returnValue = ''; }
   });
 
   init();
