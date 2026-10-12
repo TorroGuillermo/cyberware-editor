@@ -1,0 +1,82 @@
+[
+  {
+    "id": "pistolet_leger",
+    "nom": "Pistolet léger",
+    "categorie": "armes",
+    "prix": 450,
+    "image": "",
+    "description": "Arme de poing compacte et discrète, idéale pour les rues de Night City. Chargeur de 12 balles."
+  },
+  {
+    "id": "fusil_assaut",
+    "nom": "Fusil d'assaut",
+    "categorie": "armes",
+    "prix": 1800,
+    "image": "",
+    "description": "Arme automatique fiable, utilisée par les gangs et les corpos. Rafale contrôlée, chargeur de 30."
+  },
+  {
+    "id": "katana_combat",
+    "nom": "Katana de combat",
+    "categorie": "armes",
+    "prix": 900,
+    "image": "",
+    "description": "Lame équilibrée au fil affûté, pour ceux qui préfèrent régler leurs comptes au corps à corps."
+  },
+  {
+    "id": "gilet_pare_balles",
+    "nom": "Gilet pare-balles",
+    "categorie": "armures",
+    "prix": 600,
+    "image": "",
+    "description": "Protection légère du torse contre les projectiles de petit calibre. Se porte sous une veste."
+  },
+  {
+    "id": "veste_renforcee",
+    "nom": "Veste renforcée",
+    "categorie": "armures",
+    "prix": 350,
+    "image": "",
+    "description": "Veste en cuir doublée de fibres résistantes. Style de rue et protection correcte."
+  },
+  {
+    "id": "stimulant_combat",
+    "nom": "Stimulant de combat",
+    "categorie": "consommables",
+    "prix": 80,
+    "image": "",
+    "description": "Injection qui accélère les réflexes pendant quelques minutes. Gare à la descente."
+  },
+  {
+    "id": "kit_soins",
+    "nom": "Kit de soins",
+    "categorie": "consommables",
+    "prix": 120,
+    "image": "",
+    "description": "Bandages, coagulant et analgésiques pour stabiliser une blessure sur le terrain."
+  },
+  {
+    "id": "kit_reparation",
+    "nom": "Kit de réparation",
+    "categorie": "outils",
+    "prix": 150,
+    "image": "",
+    "description": "Tout le nécessaire pour bricoler une prothèse, une arme ou un appareil en panne."
+  },
+  {
+    "id": "cyberdeck_portable",
+    "nom": "Cyberdeck portable",
+    "categorie": "outils",
+    "prix": 1200,
+    "image": "",
+    "description": "Terminal d'intrusion compact pour les netrunners en déplacement."
+  },
+  {
+    "id": "moto_urbaine",
+    "nom": "Moto urbaine",
+    "categorie": "vehicules",
+    "prix": 3500,
+    "image": "",
+    "description": "Rapide, agile et facile à garer. Parfaite pour filer entre les embouteillages."
+  }
+]
