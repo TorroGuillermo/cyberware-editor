@@ -83,6 +83,26 @@
 
   .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; }
 
+  /* Panneaux « terminal » : fond noir pour une meilleure lisibilité (stats, état, implants) */
+  .left-column .panel, .zone-panel { background: #040608; border-color: #ff3b3b66; }
+  .left-column .stat-name { color: #f4f6fa; }
+  .left-column .stat-row { border-bottom-color: #ffffff1c; }
+  .left-column .pip { background: #000; border-color: #ff3b3b99; height: 15px; }
+  .left-column .pip.base { background: var(--amber); border-color: var(--amber); }
+  .left-column .pip.bonus { background: var(--red); border-color: var(--red); }
+  .left-column .pip.malus { background: #000; border: 1px dashed var(--blue); }
+  .left-column .stat-btn, .left-column .profile-btn { background: #000; }
+  .left-column .stat-btn:hover { background: var(--red); }
+  .left-column .profile-btn.active { background: var(--red); }
+  .left-column .bar-track { background: #000; border-color: #ff3b3b77; }
+  .left-column .name-input { background: #000; }
+  .zone-panel .zone-tab { background: #000; }
+  .zone-panel .zone-tab.active { background: var(--red); }
+  .zone-panel .cy-row { background: #090c11; border-color: #ff3b3b55; }
+  .zone-panel .cy-row:hover { background: #10151d; border-color: var(--border-strong); }
+  .zone-panel .cy-row.item-equipped { border-color: var(--amber); }
+  .zone-panel .preview { background: #090c11; }
+
   .panel-title {
     font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim);
     margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
@@ -501,6 +521,23 @@
   }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
   .toast.error { border-color: var(--red); color: var(--red); }
+
+  /* ---- Thème vert de la boutique ---- */
+  #tab-shop, #detailDrawer.shop-theme {
+    --red: #4caf7d; --red-dim: #3a8a62;
+    --amber: #5fd08f; --amber-dim: #3f9a68;
+    --border: #4caf7d44; --border-strong: #4caf7d99;
+    --text-faint: #7fa592;
+  }
+  #detailDrawer.shop-theme .equip-error { color: #ff3b3b; }
+  #tab-shop .shop-card { background: #070d0a; }
+  #tab-shop .shop-card:hover { box-shadow: 0 6px 22px #4caf7d33; }
+  #tab-shop .search-input, #tab-shop .select-input, #tab-shop .zone-tab { background: #070d0a; }
+  #tab-shop .zone-tab.active { background: #4caf7d; border-color: #4caf7d; color: #000; }
+  #tab-shop .wallet input { background: #030705; }
+  .tab-btn[data-tab="shop"]:hover { color: #4caf7d; border-color: #4caf7d; }
+  .tab-btn[data-tab="shop"].active { background: #4caf7d; border-color: #4caf7d; color: #000; }
+  body[data-tab="shop"] .tabs { border-bottom-color: #4caf7d99; }
 </style>
 </head>
 <body>
@@ -960,6 +997,7 @@
   function switchTab(name, updateHash) {
     if (!TABS.includes(name)) name = 'sheet';
     activeTab = name;
+    document.body.dataset.tab = name;
     TABS.forEach(t => { $('tab-' + t).hidden = (t !== name); });
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === name));
     hideTooltip();
@@ -1664,6 +1702,7 @@
 
   function openDrawer(type, id) {
     drawerState = { type, id };
+    drawer.classList.toggle('shop-theme', type === 'shop');
     hideTooltip();
     renderDrawer();
     drawer.classList.add('open');
