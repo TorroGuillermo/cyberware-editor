@@ -256,6 +256,10 @@
           <div class="field"><label>Bonus RAM</label><input type="number" id="c_ram" value="0" min="0"></div>
           <div class="field"><label>Bonus Glace</label><input type="number" id="c_glace" value="0" min="0"></div>
         </div>
+        <div class="field-row">
+          <div class="field"><label>Prix (€$)</label><input type="number" id="c_prix" value="0" min="0"></div>
+          <div class="field"><div class="hint" style="margin-top:24px;">Prix d'installation : débité de l'argent du joueur à l'équipement, remboursé s'il retire l'implant. 0 = gratuit.</div></div>
+        </div>
         <div class="field">
           <label>Modificateurs de statistiques</label>
           <div class="stats-grid" id="statsGrid"></div>
@@ -713,7 +717,7 @@
       let lead = '', sub = '';
       if (mode === 'cyber') {
         lead = `<span class="dot ${i.nature === 'illegal' ? 'illegal' : 'legal'}"></span>`;
-        sub = h(ZONES[i.categorie] || i.categorie) + ' — ' + h(i.id);
+        sub = h(ZONES[i.categorie] || i.categorie) + ' — ' + h(i.id) + ' — ' + h((i.prix || 0) + ' €$');
       } else if (mode === 'shop') {
         sub = h(SHOP_CATEGORIES[i.categorie] || i.categorie) + ' — ' + h((i.prix || 0) + ' €$');
       } else {
@@ -788,7 +792,7 @@
     formPending = null;
     setForms();
     ['c_nom','c_id','c_emplacement','c_effets','c_description','a_nom','a_id','a_effets','a_description','s_nom','s_id','s_image','s_description'].forEach(id => $(id).value = '');
-    ['c_cybercap','c_humanite','c_ram','c_glace','s_prix'].forEach(id => $(id).value = 0);
+    ['c_cybercap','c_humanite','c_ram','c_glace','c_prix','s_prix'].forEach(id => $(id).value = 0);
     STAT_KEYS.forEach(k => $('c_stat_' + k).value = 0);
     $('c_categorie').value = 'tete';
     $('s_categorie').value = 'armes';
@@ -827,6 +831,7 @@
       $('c_humanite').value = item.humanite || 0;
       $('c_ram').value = item.ram || 0;
       $('c_glace').value = item.glace || 0;
+      $('c_prix').value = item.prix || 0;
       STAT_KEYS.forEach(k => $('c_stat_' + k).value = (item.statistiques || {})[k] || 0);
       renderIncompatible(item.incompatibleWith || []);
     } else if (mode === 'atout') {
@@ -928,6 +933,7 @@
         description: $('c_description').value.trim(),
         cybercapacite: toInt($('c_cybercap').value),
         humanite: toInt($('c_humanite').value),
+        prix: toInt($('c_prix').value),
         nature: document.querySelector('input[name="c_nature"]:checked').value,
         statistiques,
         ram: toInt($('c_ram').value),
@@ -961,7 +967,7 @@
     else if (data[mode].some(i => i.id === item.id && i.id !== editingId)) errors.push(`L'identifiant « ${item.id} » existe déjà.`);
     if (mode === 'cyber') {
       if (!item.emplacementDetaille) errors.push('L\'emplacement détaillé est obligatoire.');
-      ['cybercapacite', 'humanite', 'ram', 'glace'].forEach(k => { if (item[k] < 0) errors.push('Les coûts et bonus ne peuvent pas être négatifs.'); });
+      ['cybercapacite', 'humanite', 'ram', 'glace', 'prix'].forEach(k => { if (item[k] < 0) errors.push('Les coûts et bonus ne peuvent pas être négatifs.'); });
       if (item.incompatibleWith.includes(item.id)) errors.push('Un cyberware ne peut pas être incompatible avec lui-même.');
     }
     if (mode === 'shop') {
