@@ -83,25 +83,6 @@
 
   .panel { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 4px; padding: 18px 20px; }
 
-  /* Panneaux « terminal » : fond noir pour une meilleure lisibilité (stats, état, implants) */
-  .left-column .panel, .zone-panel { background: #040608; border-color: #ff3b3b66; }
-  .left-column .stat-name { color: #f4f6fa; }
-  .left-column .stat-row { border-bottom-color: #ffffff1c; }
-  .left-column .pip { background: #000; border-color: #ff3b3b99; height: 15px; }
-  .left-column .pip.base { background: var(--amber); border-color: var(--amber); }
-  .left-column .pip.bonus { background: var(--red); border-color: var(--red); }
-  .left-column .pip.malus { background: #000; border: 1px dashed var(--blue); }
-  .left-column .stat-btn, .left-column .profile-btn { background: #000; }
-  .left-column .stat-btn:hover { background: var(--red); }
-  .left-column .profile-btn.active { background: var(--red); }
-  .left-column .bar-track { background: #000; border-color: #ff3b3b77; }
-  .left-column .name-input { background: #000; }
-  .zone-panel .zone-tab { background: #000; }
-  .zone-panel .zone-tab.active { background: var(--red); }
-  .zone-panel .cy-row { background: #090c11; border-color: #ff3b3b55; }
-  .zone-panel .cy-row:hover { background: #10151d; border-color: var(--border-strong); }
-  .zone-panel .cy-row.item-equipped { border-color: var(--amber); }
-  .zone-panel .preview { background: #090c11; }
 
   .panel-title {
     font-size: 12.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim);
@@ -185,6 +166,13 @@
 
   .money-line { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); }
   .money-line b { color: var(--amber); font-size: 15px; letter-spacing: 0; }
+  .money-line .money-field { display: flex; align-items: center; gap: 8px; }
+  .money-line input {
+    width: 130px; background: #05070a; border: 1px solid var(--border-strong); color: var(--amber);
+    font-family: inherit; font-size: 15px; font-weight: bold; padding: 6px 8px; border-radius: 3px; text-align: right; letter-spacing: 0;
+  }
+  .money-line input:focus { outline: none; border-color: var(--amber); }
+  .badge.price { color: var(--green); border-color: #4caf7d88; }
 
   /* ---- Squelette central ---- */
   .skeleton-panel { flex: 1; min-width: 320px; display: flex; flex-direction: column; align-items: center; }
@@ -279,6 +267,7 @@
   .detail-field .field-label { color: var(--text-dim); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
   .detail-field .field-value { color: var(--text); line-height: 1.5; }
   .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  .detail-grid.three { grid-template-columns: 1fr 1fr 1fr; }
 
   .preview { background: var(--bg-row); border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 4px; padding: 12px 14px; margin: 18px 0 4px; }
   .preview-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--amber); margin-bottom: 10px; }
@@ -640,7 +629,7 @@
             <div class="bar-note">Augmentée uniquement par certains implants.</div>
           </div>
 
-          <div class="money-line"><span>Argent</span><b id="sheetMoney">0</b></div>
+          <div class="money-line"><label for="sheetMoney">Argent</label><span class="money-field"><input type="number" id="sheetMoney" min="0" step="1" value="0"><b>€$</b></span></div>
         </div>
 
       </div>
@@ -823,6 +812,7 @@
       atouts: [],
       argent: 0,
       inventaire: [],   // [{ id, qty }]
+      paye: {},         // implants installés : { id: prix payé } (sert au remboursement)
     };
   }
 
@@ -964,7 +954,13 @@
     if (invRemoved) notes.push(`${invRemoved} objet(s) de l'inventaire n'existent plus dans la boutique : retirés.`);
     const inventaire = [...inv].map(([id, qty]) => ({ id, qty }));
 
-    return { character: { nom, baseStats, cybercapMax: cc, equipped: eq.kept, atouts: at.kept, argent, inventaire }, notes };
+    const paye = {};
+    eq.kept.forEach(id => {
+      const v = parseInt(src.paye && src.paye[id], 10);
+      if (Number.isFinite(v) && v > 0) paye[id] = Math.min(v, 999999999);
+    });
+
+    return { character: { nom, baseStats, cybercapMax: cc, equipped: eq.kept, atouts: at.kept, argent, inventaire, paye }, notes };
   }
 
   function hasProgress() {
@@ -1173,7 +1169,8 @@
     $('glaceFill').style.width = Math.min(100, (computed.glaceBonus / RESOURCE_CONFIG.glace.max) * 100) + '%';
     $('glaceValue').textContent = computed.glaceBonus + ' / ' + RESOURCE_CONFIG.glace.max;
 
-    $('sheetMoney').textContent = money(character.argent);
+    const mi = $('sheetMoney');
+    if (document.activeElement !== mi) mi.value = character.argent;
   }
 
   // =====================================================
@@ -1246,8 +1243,7 @@
     container.querySelectorAll('[data-remove]').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        character.equipped = character.equipped.filter(id => id !== btn.dataset.remove);
-        refreshAll();
+        unequipItem(btn.dataset.remove);
       });
     });
   }
@@ -1292,6 +1288,26 @@
   // =====================================================
   // PANNEAU DE DROITE : liste de la zone / détail d'un cyberware
   // =====================================================
+  function equipItem(item) {
+    const price = item.prix || 0;
+    character.equipped.push(item.id);
+    character.argent -= price;
+    if (price > 0) character.paye[item.id] = price;
+    refreshAll();
+    if (price > 0) toast(`${item.nom} installé (−${money(price)})`);
+  }
+
+  // Retirer un implant rembourse ce qui a été payé pour lui (rien si installé avant les prix)
+  function unequipItem(id) {
+    const item = getItem(id);
+    const refund = character.paye[id] || 0;
+    character.equipped = character.equipped.filter(x => x !== id);
+    delete character.paye[id];
+    character.argent += refund;
+    refreshAll();
+    if (refund > 0) toast(`${item ? item.nom : 'Implant'} retiré (+${money(refund)} remboursés)`);
+  }
+
   function canEquip(item) {
     if (character.equipped.includes(item.id)) return { ok: true };
     const projected = computed.cybercapUsed + (item.cybercapacite || 0);
@@ -1305,6 +1321,10 @@
       .map(id => getItem(id))
       .find(eq => eq && ((eq.incompatibleWith || []).includes(item.id) || (item.incompatibleWith || []).includes(eq.id)));
     if (conflict) return { ok: false, reason: `Incompatible avec « ${conflict.nom} » déjà équipé.` };
+    const price = item.prix || 0;
+    if (price > character.argent) {
+      return { ok: false, reason: `Argent insuffisant : il te manque ${money(price - character.argent)}. Règle ton argent dans « État du personnage » ou dans la boutique.` };
+    }
     return { ok: true };
   }
 
@@ -1353,6 +1373,7 @@
             ${isEquipped ? '<span class="badge equipped-tag">Équipé</span>' : ''}
             <span class="badge cc">${h(item.cybercapacite)} CC</span>
             <span class="badge hu">-${h(item.humanite)} HU</span>
+            ${item.prix ? `<span class="badge price">${h(money(item.prix))}</span>` : ''}
             ${item.ram ? `<span class="badge ram">+${h(item.ram)} RAM</span>` : ''}
             ${item.glace ? `<span class="badge glace">+${h(item.glace)} GLC</span>` : ''}
           </div>
@@ -1400,6 +1421,10 @@
     const ccOver = ccAfter > character.cybercapMax;
     rows.push(`<div class="pv-row"><span class="pv-label">Cybercapacité</span><span class="pv-values">${computed.cybercapUsed}<span class="pv-arrow">→</span><b class="pv-after ${ccOver ? 'bad' : ''}">${ccAfter}</b> / ${character.cybercapMax}</span></div>`);
 
+    const paid = character.paye[item.id] || 0;
+    const moneyDelta = equipping ? -(item.prix || 0) : paid;
+    if (moneyDelta !== 0) rows.push(pvRow('Argent', character.argent, character.argent + moneyDelta, 'upGood', ' ' + CURRENCY));
+
     if (item.ram) rows.push(pvRow('RAM', computed.ramBonus, computed.ramBonus + sign * item.ram, 'upGood', ' / ' + RESOURCE_CONFIG.ram.max));
     if (item.glace) rows.push(pvRow('Glace', computed.glaceBonus, computed.glaceBonus + sign * item.glace, 'upGood', ' / ' + RESOURCE_CONFIG.glace.max));
 
@@ -1436,16 +1461,19 @@
       <div class="detail-field"><div class="field-label">Emplacement</div><div class="field-value">${h(ZONES[item.categorie] || item.categorie)} — ${h(item.emplacementDetaille)}</div></div>
       <div class="detail-field"><div class="field-label">Effets</div><div class="field-value">${h(item.effets)}</div></div>
       <div class="detail-field"><div class="field-label">Description</div><div class="field-value">${h(item.description)}</div></div>
-      <div class="detail-grid">
-        <div class="detail-field"><div class="field-label">Cybercapacité</div><div class="field-value">${h(item.cybercapacite)}</div></div>
-        <div class="detail-field"><div class="field-label">Coût en humanité</div><div class="field-value">-${h(item.humanite)}</div></div>
+      <div class="detail-grid three">
+        <div class="detail-field"><div class="field-label">Cybercap.</div><div class="field-value">${h(item.cybercapacite)}</div></div>
+        <div class="detail-field"><div class="field-label">Humanité</div><div class="field-value">-${h(item.humanite)}</div></div>
+        <div class="detail-field"><div class="field-label">Prix</div><div class="field-value">${item.prix ? h(money(item.prix)) : 'Gratuit'}</div></div>
       </div>
       <div class="detail-field"><div class="field-label">Statistiques</div><div class="field-value">${h(statsText)}</div></div>
       ${incompat ? `<div class="detail-field"><div class="field-label">Incompatible avec</div><div class="field-value">${h(incompat)}</div></div>` : ''}
       ${previewHtml(item, !isEquipped)}
       <div class="detail-actions">
         <button class="equip-btn ${isEquipped ? 'remove' : ''}" id="equipBtn" ${(!isEquipped && !check.ok) ? 'disabled' : ''}>
-          ${isEquipped ? 'Retirer' : 'Équiper'}
+          ${isEquipped
+            ? ((character.paye[item.id] || 0) > 0 ? `Retirer · +${h(money(character.paye[item.id]))}` : 'Retirer')
+            : (item.prix ? `Installer · ${h(money(item.prix))}` : 'Équiper')}
         </button>
         ${(!isEquipped && !check.ok) ? `<span class="equip-error">${h(check.reason)}</span>` : ''}
       </div>
@@ -1453,13 +1481,8 @@
 
     $('backBtn').addEventListener('click', () => { selectedCyberId = null; renderZonePanel(true); });
     $('equipBtn').addEventListener('click', () => {
-      if (isEquipped) {
-        character.equipped = character.equipped.filter(id => id !== item.id);
-      } else {
-        if (!canEquip(item).ok) return;
-        character.equipped.push(item.id);
-      }
-      refreshAll();
+      if (isEquipped) unequipItem(item.id);
+      else if (canEquip(item).ok) equipItem(item);
     });
   }
 
@@ -1650,15 +1673,19 @@
     renderShopGrid();
   }
 
-  $('walletInput').addEventListener('input', (e) => {
-    let v = parseInt(e.target.value, 10);
+  // Modifier l'argent (depuis la fiche ou la boutique) : met à jour tout ce qui en dépend
+  function setMoney(raw) {
+    let v = parseInt(raw, 10);
     if (!Number.isFinite(v) || v < 0) v = 0;
     character.argent = Math.min(v, 999999999);
-    $('sheetMoney').textContent = money(character.argent);
-    renderShopGrid();
+    [$('sheetMoney'), $('walletInput')].forEach(el => { if (document.activeElement !== el) el.value = character.argent; });
+    renderZonePanel();
+    if (activeTab === 'shop') renderShopGrid();
     if (drawerState && drawerState.type === 'shop') renderDrawer();
     schedulePersist();
-  });
+  }
+  $('walletInput').addEventListener('input', (e) => setMoney(e.target.value));
+  $('sheetMoney').addEventListener('input', (e) => setMoney(e.target.value));
   $('shopSearch').addEventListener('input', (e) => { shopFilter.q = e.target.value; renderShopGrid(); });
   $('shopSort').addEventListener('change', (e) => { shopFilter.sort = e.target.value; renderShopGrid(); });
 
@@ -1812,6 +1839,7 @@
       atouts: character.atouts,
       argent: character.argent,
       inventaire: character.inventaire,
+      paye: character.paye,
     };
     try {
       return btoa(encodeURIComponent(JSON.stringify(payload)));
