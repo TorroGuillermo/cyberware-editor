@@ -8,6 +8,7 @@
     "description": "Remplacement oculaire complet, standard chez Kiroshi. Fiable et discret.",
     "cybercapacite": 40,
     "humanite": 5,
+    "prix": 1000,
     "nature": "legal",
     "statistiques": {
       "Esprit": 1
